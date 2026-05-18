@@ -17,6 +17,19 @@ npm run dev
 npm run build
 ```
 
+## Code Review Graph
+
+This repository uses [`code-review-graph`](https://github.com/tirth8205/code-review-graph) as an optional maintenance aid.
+
+After meaningful code or content-structure changes, update the graph and review the impact before pushing:
+
+```bash
+code-review-graph build
+npm run build
+```
+
+When using an MCP-enabled coding agent, ask it to run the `code-review-graph` review context for this repository before finalizing changes. For small documentation-only edits, a quick graph update is enough; for scripts, routing, generated content, or build configuration changes, review blast radius and affected flows.
+
 Cloudflare Pages:
 
 | Setting | Value |
