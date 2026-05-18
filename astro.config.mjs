@@ -51,6 +51,21 @@ export default defineConfig({
       ],
       head: [
         {
+          tag: 'link',
+          attrs: {
+            rel: 'icon',
+            type: 'image/png',
+            href: '/favicon.png',
+          },
+        },
+        {
+          tag: 'link',
+          attrs: {
+            rel: 'apple-touch-icon',
+            href: '/apple-touch-icon.png',
+          },
+        },
+        {
           tag: 'meta',
           attrs: {
             name: 'keywords',

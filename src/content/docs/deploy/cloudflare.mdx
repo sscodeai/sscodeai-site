@@ -14,11 +14,12 @@ description: Astro + Starlight site を Cloudflare Pages に deploy する設定
 | Framework preset | Astro |
 | Build command | `npm run build` |
 | Build output directory | `dist` |
-| Node.js version | 20 or later |
+| Node.js version | 22 |
 
 ## Local Build
 
 ```bash
+mise install
 npm install
 npm run build
 ```
@@ -32,6 +33,15 @@ npm run build
 3. Build settings を設定
 4. Custom domain を接続
 5. Search Console / Analytics を設定
+
+## Favicon
+
+The site serves the GitHub avatar style image as both favicon and Apple touch icon:
+
+```text
+/favicon.png
+/apple-touch-icon.png
+```
 
 ## Dynamic Features
 
