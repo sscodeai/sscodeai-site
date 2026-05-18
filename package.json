@@ -1,0 +1,18 @@
+{
+  "name": "sscodeai-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "npm run sync:content && astro build",
+    "preview": "astro preview",
+    "sync:content": "node scripts/sync-content.js"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.3.14",
+    "@astrojs/sitemap": "^3.6.0",
+    "@astrojs/starlight": "^0.37.0",
+    "astro": "^5.18.1"
+  }
+}

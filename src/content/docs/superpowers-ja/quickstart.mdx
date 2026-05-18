@@ -1,0 +1,40 @@
+---
+title: superpowers-ja Quickstart
+description: superpowers-ja を project に install し、日本語 AI coding workflow を使い始める。
+---
+
+# superpowers-ja Quickstart
+
+`superpowers-ja` は AI coding agent に planning、TDD、debugging、review、verification、日本語開発現場向け workflow を追加します。
+
+## Install
+
+```bash
+cd /path/to/your/project
+npx superpowers-ja
+```
+
+Tool を明示する場合:
+
+```bash
+npx superpowers-ja --tool claude
+npx superpowers-ja --tool cursor
+npx superpowers-ja --tool codex
+npx superpowers-ja --tool gemini
+```
+
+## First Prompt
+
+```text
+ユーザー一覧に CSV エクスポートを追加したいです。
+文字コード、権限、大量データ、監査ログも含めて設計から整理してください。
+```
+
+## What Changes
+
+AI はすぐ実装せず、要求、制約、受入条件、検証方法を先に整理します。
+
+## Next
+
+- [Skills Overview](/superpowers-ja/skills/)
+- [Claude Code Install](/tutorials/install-superpowers-ja-claude-code/)

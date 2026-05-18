@@ -1,0 +1,41 @@
+---
+title: Overview
+description: SSCodeAI は superpowers-ja と agency-agents-ja を中心に、日本の IT 開発現場向け AI workflow を整理する技術ブログ兼ドキュメントサイトです。
+---
+
+# SSCodeAI
+
+SSCodeAI は、日本の IT 開発、SIer、受託開発、自社サービス、SaaS、EC、製造業 DX で使える AI coding workflow と agent library を整理するサイトです。
+
+## Projects
+
+### superpowers-ja
+
+AI coding agent に計画、TDD、systematic debugging、code review、完了前検証、日本語の開発現場向け workflow を追加します。
+
+- Claude Code / Cursor / Codex CLI / Gemini CLI / OpenCode などに対応
+- 日本語 code review、障害報告、受入テスト仕様、Git 運用を補強
+- `npx superpowers-ja` で project に install
+
+### agency-agents-ja
+
+日本の現場で使いやすい AI 専門家 agent と workflow の library です。
+
+- 要件定義、設計、QA、障害対応、PM、sales、support、legal、finance などを収録
+- Backlog / Redmine / Jira、GitHub / GitLab / Bitbucket、kintone、LINE WORKS を想定
+- `superpowers-ja` の `workflow-runner` と組み合わせて複数 role workflow を実行
+
+## Site Architecture
+
+この site は Astro + Starlight で構成します。
+
+- Documentation: Starlight
+- Blog and tutorials: MDX content
+- Deployment: Cloudflare Pages
+- Content sync: `scripts/sync-content.js`
+
+## Recommended Reader Paths
+
+- 初めて使う: [superpowers-ja Quickstart](/superpowers-ja/quickstart/)
+- agent catalog を見る: [agency-agents-ja Overview](/agency-agents-ja/)
+- Cloudflare に deploy する: [Cloudflare Deploy](/deploy/cloudflare/)

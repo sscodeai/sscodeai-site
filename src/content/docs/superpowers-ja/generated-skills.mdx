@@ -1,0 +1,34 @@
+---
+title: Generated Skill Catalog
+description: superpowers-ja skills directory から自動生成した skill catalog。
+---
+
+# Generated Skill Catalog
+
+この page は `npm run sync:content` で `../superpowers-ja/skills` から生成します。
+
+| Skill | Description | Path |
+| --- | --- | --- |
+| `brainstorming` | 創造的な作業の前に必ず使用する。機能作成、component 構築、機能追加、振る舞い変更では、実装前にユーザー意図、要求、設計を探索する。 | `brainstorming` |
+| `dispatching-parallel-agents` | 共有状態や順序依存がなく、独立して進められる task が 2 つ以上ある場合に使用する。 | `dispatching-parallel-agents` |
+| `executing-plans` | レビュー checkpoint を含む実装計画を、別 session で段階的に実行する場合に使用する。 | `executing-plans` |
+| `finishing-a-development-branch` | 実装完了後、テスト通過後、作業を merge / PR / 保持 / 破棄のどれで終えるか判断する場合に使用する。 | `finishing-a-development-branch` |
+| `japanese-acceptance-test-spec` | 日本の SI / 受託開発 / 自社サービス開発向けに、受入テスト仕様書、検収観点、UAT シナリオ、受入条件、証跡、判定基準を作成・レビューする。顧客検収、QA、リリース前確認、Backlog / Redmine / Jira ticket の acceptance criteria を整理する必要がある場合に使用する。 | `japanese-acceptance-test-spec` |
+| `japanese-code-review` | 日本の開発現場向けコードレビュー参考。丁寧だが曖昧にしない指摘、重大度ラベル、承認前チェック、SI/受託/自社開発での証跡の残し方。ユーザーが明示的に /japanese-code-review を指定した場合のみ使用し、自動起動しない。 | `japanese-code-review` |
+| `japanese-code-review-graph` | code-review-graph を任意導入している repository で、PR/MR の影響範囲、依存関係、risk、test gap を日本の IT 開発現場向けに整理する。大規模 codebase、既存システム、SI/受託開発、Backlog / Redmine / Jira のレビュー証跡、リリース判定で blast radius analysis が必要な場合に使用する。code-review-graph が未導入の場合は導入を強制せず、通常の code review に fallback する。 | `japanese-code-review-graph` |
+| `japanese-commit-conventions` | 日本語チーム向け commit / changelog 規約。Conventional Commits を日本語 subject/body、Backlog/Redmine/Jira チケット、release note、commitlint と合わせて運用する参考。ユーザーが明示的に /japanese-commit-conventions を指定した場合のみ使用し、自動起動しない。 | `japanese-commit-conventions` |
+| `japanese-documentation` | 日本語技術文書の作成参考。仕様書、基本設計、詳細設計、README、API 仕様、運用手順での日英混在、敬体/常体、表記ゆれ、受入条件、証跡の残し方。ユーザーが明示的に /japanese-documentation を指定した場合のみ使用し、自動起動しない。 | `japanese-documentation` |
+| `japanese-git-workflow` | 日本の IT 開発現場向け Git / PR / CI 運用参考。GitHub、GitLab、Bitbucket、Backlog、Redmine、Jira、ブランチ戦略、承認、証跡、リリース管理。ユーザーが明示的に /japanese-git-workflow を指定した場合のみ使用し、自動起動しない。 | `japanese-git-workflow` |
+| `japanese-incident-report` | 日本の IT 開発・運用現場向けの障害報告書、インシデント初報、続報、最終報告、原因分析、再発防止策を作成・レビューする。顧客向け、社内向け、SIer/受託開発、自社サービス運用で、影響範囲、時系列、暫定対応、恒久対応、再発防止、検証証跡を整理する必要がある場合に使用する。 | `japanese-incident-report` |
+| `mcp-builder` | MCP server 構築方法論。AI assistant を外部能力へ接続する production-ready な MCP tool を体系的に設計、実装、テストする。 | `mcp-builder` |
+| `receiving-code-review` | コードレビュー指摘を受けた後、反映前に使用する。特に指摘が曖昧、または技術的疑問がある場合、盲目的に従わず検証する。 | `receiving-code-review` |
+| `requesting-code-review` | task 完了時、重要機能の実装後、merge 前に使用し、成果物が要求を満たしているか検証する。 | `requesting-code-review` |
+| `subagent-driven-development` | 現在の session で、独立 task を含む実装計画を進める場合に使用する。 | `subagent-driven-development` |
+| `systematic-debugging` | bug、test failure、異常動作に遭遇した場合、修正案を出す前に使用する。 | `systematic-debugging` |
+| `test-driven-development` | 機能実装または bug 修正時、実装コードを書く前に使用する。 | `test-driven-development` |
+| `using-git-worktrees` | 現在の作業ツリーから隔離した feature 開発を始める場合、または実装計画の実行前に使用する。git worktree で安全な隔離作業区を作る。 | `using-git-worktrees` |
+| `using-superpowers` | すべての会話開始時に使用する。skill の探し方と使い方を確立し、回答や確認質問の前に関連 skill を確認する。 | `using-superpowers` |
+| `verification-before-completion` | 完了、修正済み、テスト通過を宣言する前、commit や PR 作成前に使用する。検証コマンドを実行し、証拠に基づいて述べる。 | `verification-before-completion` |
+| `workflow-runner` | Claude Code / OpenClaw / Cursor などで YAML multi-agent workflow を直接実行する。API key は不要で、現在の会話の LLM を実行エンジンとして使う。ユーザーが .yaml workflow を渡した場合、または複数ロールでの協調作業を求めた場合に使用する。 | `workflow-runner` |
+| `writing-plans` | 仕様や要求があり、多段階 task として実装する必要がある場合、コードを書く前に使用する。 | `writing-plans` |
+| `writing-skills` | 新しい skill の作成、既存 skill の編集、または公開前の効果検証を行う場合に使用する。 | `writing-skills` |

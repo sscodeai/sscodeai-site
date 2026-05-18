@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="SSCodeAI">
+  <rect width="64" height="64" rx="12" fill="#111827"/>
+  <path d="M15 39c4 5 9 7 16 7 9 0 15-4 15-10 0-5-3-8-11-10l-7-2c-4-1-6-2-6-5s3-5 8-5c4 0 8 1 12 4l4-7c-4-3-9-5-16-5-9 0-16 5-16 12 0 6 4 9 12 11l7 2c4 1 5 2 5 5 0 2-3 4-8 4s-9-2-13-6l-2 5z" fill="#f9fafb"/>
+  <path d="M47 45h5v5h-5z" fill="#38bdf8"/>
+</svg>

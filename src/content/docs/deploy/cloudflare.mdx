@@ -1,0 +1,38 @@
+---
+title: Cloudflare Deploy
+description: Astro + Starlight site を Cloudflare Pages に deploy する設定。
+---
+
+# Cloudflare Deploy
+
+この site は静的 site として build できるため、Cloudflare Pages にそのまま deploy できます。
+
+## Build Settings
+
+| Setting | Value |
+| --- | --- |
+| Framework preset | Astro |
+| Build command | `npm run build` |
+| Build output directory | `dist` |
+| Node.js version | 20 or later |
+
+## Local Build
+
+```bash
+npm install
+npm run build
+```
+
+`dist/` が生成されれば Cloudflare Pages で配信できます。
+
+## Production Flow
+
+1. GitHub に site repository を push
+2. Cloudflare Pages で repository を接続
+3. Build settings を設定
+4. Custom domain を接続
+5. Search Console / Analytics を設定
+
+## Dynamic Features
+
+最初は静的 site で十分です。後から必要になったら Cloudflare Workers / Pages Functions / KV / D1 / R2 を追加します。

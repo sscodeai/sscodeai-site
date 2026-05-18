@@ -1,0 +1,167 @@
+#!/usr/bin/env node
+
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'fs';
+import { basename, dirname, join, relative, resolve } from 'path';
+import { fileURLToPath } from 'url';
+
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const workspace = resolve(root, '..');
+const docsDir = resolve(root, 'src/content/docs');
+
+function ensureDir(path) {
+  mkdirSync(path, { recursive: true });
+}
+
+function write(path, content) {
+  ensureDir(dirname(path));
+  writeFileSync(path, content, 'utf8');
+}
+
+function escapeMd(text) {
+  return String(text || '').replace(/\|/g, '\\|').replace(/\n/g, ' ');
+}
+
+function parseFrontmatter(text) {
+  const match = text.match(/^---\s*\n([\s\S]*?)\n---/);
+  const data = {};
+  if (!match) return data;
+  for (const line of match[1].split('\n')) {
+    const m = line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
+    if (!m) continue;
+    data[m[1]] = m[2].replace(/^["']|["']$/g, '').trim();
+  }
+  return data;
+}
+
+function listFiles(dir, predicate, out = []) {
+  if (!existsSync(dir)) return out;
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) listFiles(full, predicate, out);
+    else if (predicate(full)) out.push(full);
+  }
+  return out;
+}
+
+function syncSuperpowersSkills() {
+  const skillsRoot = resolve(workspace, 'superpowers-ja/skills');
+  const files = listFiles(skillsRoot, (file) => basename(file) === 'SKILL.md');
+  const rows = files.map((file) => {
+    const rel = relative(skillsRoot, dirname(file));
+    const fm = parseFrontmatter(readFileSync(file, 'utf8'));
+    return {
+      name: fm.name || rel,
+      description: fm.description || '',
+      path: rel,
+    };
+  }).sort((a, b) => a.name.localeCompare(b.name));
+
+  const table = rows
+    .map((row) => `| \`${escapeMd(row.name)}\` | ${escapeMd(row.description)} | \`${escapeMd(row.path)}\` |`)
+    .join('\n');
+
+  write(resolve(docsDir, 'superpowers-ja/generated-skills.mdx'), `---
+title: Generated Skill Catalog
+description: superpowers-ja skills directory から自動生成した skill catalog。
+---
+
+# Generated Skill Catalog
+
+この page は \`npm run sync:content\` で \`../superpowers-ja/skills\` から生成します。
+
+| Skill | Description | Path |
+| --- | --- | --- |
+${table}
+`);
+}
+
+function syncAgencyAgents() {
+  const repoRoot = resolve(workspace, 'agency-agents-ja');
+  const ignore = new Set(['docs', 'examples', 'scripts', 'workflows']);
+  const files = listFiles(repoRoot, (file) => {
+    if (!file.endsWith('.md')) return false;
+    const rel = relative(repoRoot, file);
+    const [top] = rel.split('/');
+    return !ignore.has(top) && rel !== 'README.md' && rel !== 'ROADMAP.md' && rel !== 'CLAUDE.md';
+  });
+
+  const rows = files.map((file) => {
+    const rel = relative(repoRoot, file);
+    const fm = parseFrontmatter(readFileSync(file, 'utf8'));
+    const category = rel.split('/')[0];
+    return {
+      name: fm.name || basename(file, '.md'),
+      description: fm.description || '',
+      category,
+      path: rel,
+    };
+  }).sort((a, b) => a.category.localeCompare(b.category) || a.name.localeCompare(b.name));
+
+  const byCategory = new Map();
+  for (const row of rows) {
+    if (!byCategory.has(row.category)) byCategory.set(row.category, []);
+    byCategory.get(row.category).push(row);
+  }
+
+  const sections = [...byCategory.entries()].map(([category, agents]) => {
+    const table = agents
+      .map((row) => `| \`${escapeMd(row.name)}\` | ${escapeMd(row.description)} | \`${escapeMd(row.path)}\` |`)
+      .join('\n');
+    return `## ${category}
+
+| Agent | Description | Path |
+| --- | --- | --- |
+${table}`;
+  }).join('\n\n');
+
+  write(resolve(docsDir, 'agency-agents-ja/generated-agent-catalog.mdx'), `---
+title: Generated Agent Catalog
+description: agency-agents-ja の agent files から自動生成した catalog。
+---
+
+# Generated Agent Catalog
+
+この page は \`npm run sync:content\` で \`../agency-agents-ja\` から生成します。
+
+${sections}
+`);
+}
+
+function syncAgencyWorkflows() {
+  const workflowsRoot = resolve(workspace, 'agency-agents-ja/workflows');
+  const files = listFiles(workflowsRoot, (file) => file.endsWith('.yaml') || file.endsWith('.yml'));
+  const rows = files.map((file) => {
+    const text = readFileSync(file, 'utf8');
+    const name = text.match(/^name:\s*(.+)$/m)?.[1]?.replace(/^["']|["']$/g, '') || basename(file);
+    const description = text.match(/^description:\s*(.+)$/m)?.[1]?.replace(/^["']|["']$/g, '') || '';
+    return {
+      name,
+      description,
+      path: relative(resolve(workspace, 'agency-agents-ja'), file),
+    };
+  }).sort((a, b) => a.name.localeCompare(b.name));
+
+  const table = rows
+    .map((row) => `| \`${escapeMd(row.name)}\` | ${escapeMd(row.description)} | \`${escapeMd(row.path)}\` |`)
+    .join('\n');
+
+  write(resolve(docsDir, 'agency-agents-ja/generated-workflows.mdx'), `---
+title: Generated Workflow Catalog
+description: agency-agents-ja workflows directory から自動生成した workflow catalog。
+---
+
+# Generated Workflow Catalog
+
+この page は \`npm run sync:content\` で \`../agency-agents-ja/workflows\` から生成します。
+
+| Workflow | Description | Path |
+| --- | --- | --- |
+${table}
+`);
+}
+
+syncSuperpowersSkills();
+syncAgencyAgents();
+syncAgencyWorkflows();
+
+console.log('Generated docs from superpowers-ja and agency-agents-ja.');

@@ -1,0 +1,28 @@
+---
+title: SIer 要件レビュー workflow
+description: agency-agents-ja と superpowers-ja workflow-runner で Backlog ticket の要件と受入条件を整理する。
+---
+
+# SIer 要件レビュー workflow
+
+## Scenario
+
+Backlog ticket、既存仕様書、顧客メモから、要件、未確認事項、受入条件、risk を整理します。
+
+## Prompt
+
+```text
+superpowers-ja の workflow-runner を使って
+agency-agents-ja/workflows/japanese-sier-requirements-review.yaml を実行してください。
+
+ticket は PROJ-1234、spec は docs/spec.md です。
+成果物は要件整理、未確認事項、受入条件、レビュー観点に分けてください。
+```
+
+## Expected Output
+
+- 要件 summary
+- 不明点と確認先
+- 受入条件
+- 非機能 / 運用 / privacy 観点
+- 次 action

@@ -1,0 +1,36 @@
+---
+title: Claude Code に superpowers-ja を install する
+description: Claude Code project に superpowers-ja を導入する step-by-step tutorial。
+---
+
+# Claude Code に superpowers-ja を install する
+
+## Goal
+
+Claude Code が project 内の `.claude/skills/` から superpowers-ja skills を利用できる状態にします。
+
+## Steps
+
+```bash
+cd /path/to/your/project
+npx superpowers-ja --tool claude
+```
+
+Claude Code を再起動し、次のように依頼します。
+
+```text
+この project で使える superpowers-ja skills を確認してください。
+```
+
+## Verify
+
+```bash
+ls .claude/skills
+test -f .claude/skills/using-superpowers/SKILL.md
+```
+
+## Next Prompt
+
+```text
+brainstorming skill を使って、ユーザー管理の CSV export 機能を設計してください。
+```

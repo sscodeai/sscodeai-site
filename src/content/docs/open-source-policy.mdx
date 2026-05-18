@@ -1,0 +1,38 @@
+---
+title: Open Source Policy
+description: SSCodeAI site と関連コンテンツをどこまで open source にするかの推奨方針。
+---
+
+# Open Source Policy
+
+この site は、基本的には public repository として運用するのがおすすめです。
+
+## Public に向くもの
+
+- product docs
+- install guide
+- tutorial
+- video transcript
+- reusable examples
+- generated agent / workflow catalog
+- release notes
+
+Public にすると、検索エンジンが content を拾いやすくなり、GitHub 上の信頼性も積み上がります。
+
+## Private に残すもの
+
+- 未公開 launch plan
+- 顧客名、案件名、契約情報
+- analytics export
+- paid course の完成 script
+- sponsor / partner negotiation notes
+- まだ検証していない主張や比較表
+
+## Recommended Setup
+
+| Repository | Visibility | Purpose |
+| --- | --- | --- |
+| `sscodeai-site` | Public | docs、blog、tutorial、video transcript |
+| `sscodeai-private-content` | Private | drafts、paid material、customer-specific notes |
+| `superpowers-ja` | Public | package and source |
+| `agency-agents-ja` | Public | agent and workflow catalog |
