@@ -1,0 +1,49 @@
+---
+title: superpowers-ja で受入テスト仕様を作る
+description: japanese-acceptance-test-spec skill を使って検収条件、UAT、証跡付き test case を整理する tutorial。
+---
+
+# superpowers-ja で受入テスト仕様を作る
+
+## Goal
+
+Backlog / Redmine / Jira ticket の内容から、顧客検収に使える受入テスト仕様を作ります。
+
+## Prompt
+
+```text
+japanese-acceptance-test-spec を使って、注文 CSV export の受入テスト仕様書を作成してください。
+
+対象 ticket: PROJ-1234
+対象機能: 注文一覧 CSV export
+検収環境: UAT
+観点: Shift_JIS、権限、大量データ、検索条件反映、監査ログ、エラー文言
+証跡保存先: Backlog comment
+```
+
+## Expected Sections
+
+- 概要
+- 受入条件
+- 対象範囲 / 対象外
+- 前提条件
+- テストケース
+- 異常系・境界値
+- 非機能・運用観点
+- 判定
+- 関連リンク
+
+## Better Acceptance Criteria
+
+Avoid:
+
+```text
+CSV が正しく出ること
+```
+
+Prefer:
+
+```text
+管理者 role で注文一覧を開き、検索条件「注文日: 2026-05-01 - 2026-05-31」を指定して CSV export したとき、
+画面表示と同じ条件の注文のみが Shift_JIS CSV として出力され、監査ログに実行者、実行日時、検索条件、件数が記録されること。
+```

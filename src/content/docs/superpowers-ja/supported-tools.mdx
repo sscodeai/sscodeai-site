@@ -1,0 +1,56 @@
+---
+title: Supported Tools
+description: superpowers-ja が対応する AI coding tools と install 先 directory。
+---
+
+# Supported Tools
+
+`superpowers-ja` は project 内の AI coding tool を検出し、対応する skills directory に files を copy します。
+
+## Install
+
+```bash
+cd /path/to/project
+npx superpowers-ja
+```
+
+Tool を明示する場合:
+
+```bash
+npx superpowers-ja --tool claude
+npx superpowers-ja --tool cursor
+npx superpowers-ja --tool codex
+npx superpowers-ja --tool gemini
+```
+
+## Tool Mapping
+
+| Tool | Install path |
+| --- | --- |
+| Claude Code / Copilot CLI | `.claude/skills/` |
+| Cursor | `.cursor/skills/` |
+| Codex CLI | `.codex/skills/` |
+| Gemini CLI | `.gemini/skills/` |
+| OpenCode | `.opencode/skills/` |
+| Aider | `.aider/skills/` |
+| Kiro | `.kiro/steering/` |
+| Windsurf | `.windsurf/skills/` |
+| Trae | `.trae/skills/` |
+| VS Code Copilot | `.github/superpowers/` |
+| Hermes Agent | `.hermes/skills/` |
+| Antigravity | `.antigravity/skills/` |
+| OpenClaw | `skills/` |
+| DeerFlow | `skills/custom/` |
+| Qwen Code | `.qwen/skills/` |
+| Claw Code | `.claw/skills/` |
+
+## Home Directory Guard
+
+Do not install into `~`. Install per project so the bootstrap files and skills do not affect unrelated workspaces.
+
+`~` には install しないでください。project ごとに install することで、bootstrap files と skills が他の workspace に影響しません。
+
+## Related Docs
+
+- [Quickstart](/superpowers-ja/quickstart/)
+- [Troubleshooting](/superpowers-ja/troubleshooting/)

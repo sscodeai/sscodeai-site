@@ -1,0 +1,57 @@
+---
+title: Troubleshooting
+description: superpowers-ja の uninstall、home directory guard、install troubleshooting。
+---
+
+# Troubleshooting
+
+## Uninstall
+
+```bash
+cd /path/to/your/project
+npx superpowers-ja --uninstall
+```
+
+This removes installed skill directories and the `superpowers-ja` bootstrap sections from files such as `CLAUDE.md`, `GEMINI.md`, `HERMES.md`, and `CONVENTIONS.md`.
+
+`CLAUDE.md`、`GEMINI.md`、`HERMES.md`、`CONVENTIONS.md` などに追加された `superpowers-ja` section と installed skill directories を削除します。手書きの既存 content は保持します。
+
+## Installed in Home Directory
+
+If you accidentally installed into `~`, uninstall from `~`.
+
+```bash
+cd ~
+npx superpowers-ja --uninstall
+```
+
+Then install again from the actual project directory.
+
+```bash
+cd /path/to/your/project
+npx superpowers-ja
+```
+
+## Tool Not Detected
+
+If auto-detection does not find your AI coding tool, specify it explicitly.
+
+```bash
+npx superpowers-ja --tool claude
+npx superpowers-ja --tool cursor
+npx superpowers-ja --tool codex
+npx superpowers-ja --tool gemini
+```
+
+## Verify Install
+
+```bash
+ls .claude/skills
+test -f .claude/skills/using-superpowers/SKILL.md
+```
+
+Replace `.claude/skills` with the install path for your tool.
+
+## Optional Integrations
+
+`code-review-graph` is not installed by `superpowers-ja`. Install and configure it separately only for repositories that need graph-based review.

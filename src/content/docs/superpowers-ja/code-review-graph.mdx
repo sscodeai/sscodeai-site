@@ -1,0 +1,45 @@
+---
+title: Code Review Graph Integration
+description: superpowers-ja と code-review-graph を組み合わせた影響範囲 review。
+---
+
+# Code Review Graph Integration
+
+`code-review-graph` is an optional integration. `superpowers-ja` does not install it automatically.
+
+`code-review-graph` は optional integration です。`superpowers-ja` installer は自動 install しません。
+
+## When to Use
+
+- PR / MR の影響範囲を説明したい
+- 大きい existing codebase で関連 file を追い切れない
+- API、DB、batch、external service へ波及する可能性がある
+- Backlog / Redmine / Jira に review 証跡を残したい
+- Release 判定で test gap、monitoring、rollback の影響を整理したい
+
+## Basic Flow
+
+```bash
+code-review-graph build
+```
+
+Then ask the AI coding agent to use `japanese-code-review-graph`.
+
+```text
+japanese-code-review-graph を使って、この PR の影響範囲、risk、test gap を整理してください。
+Graph output と diff の両方を根拠にし、未確認事項は [question] としてください。
+```
+
+## Review Output
+
+| Section | Purpose |
+| --- | --- |
+| Change summary | 対象 ticket、PR/MR、変更 file |
+| Graph impact | API / data / batch / external / operations への影響候補 |
+| Review findings | `[must]` / `[should]` / `[nits]` / `[question]` |
+| Test gap | 不足している automated / manual test |
+| Release check | monitoring、rollback、migration、runbook、customer notice |
+
+## Fallback
+
+If the graph is missing, stale, or unavailable, do not block the work. Use normal `japanese-code-review` or `requesting-code-review` and clearly state that graph context was not used.

@@ -1,0 +1,43 @@
+---
+title: Quality and Evals
+description: superpowers-ja の audit、eval transcript、品質管理方針。
+---
+
+# Quality and Evals
+
+`superpowers-ja` manages quality with audit scripts, release notes, and eval transcripts.
+
+`superpowers-ja` は audit scripts、release notes、eval transcripts で品質を管理します。
+
+## Audit
+
+```bash
+bash scripts/audit.sh --quick --no-upstream
+bash scripts/audit.sh
+```
+
+| Category | Checks |
+| --- | --- |
+| Static validation | JSON parse、`SKILL.md` frontmatter、symlink、hook permissions |
+| Installer behavior | install / reinstall / uninstall for supported tools |
+| Upstream alignment | hooks、brainstorm scripts、core skill structure drift |
+| Cross references | README links、skill references、bootstrap paths |
+
+## Eval Transcripts
+
+Original Japanese skills are evaluated with practical scenario transcripts.
+
+| Eval | Scenario |
+| --- | --- |
+| `japanese-incident-report` | 顧客向け障害最終報告 |
+| `japanese-acceptance-test-spec` | 注文 CSV export の受入テスト仕様 |
+| `japanese-code-review-graph` | 影響範囲 review と test gap |
+
+## Done Criteria
+
+- Japanese wording fits SIer、受託開発、自社サービス contexts
+- Requirements、acceptance criteria、impact、evidence、approval are explicit
+- Behavior-changing instructions are preserved
+- `node bin/superpowers-ja.js --help` passes
+- `bash scripts/audit.sh --quick` passes
+- Updated skills are included in `npm pack --dry-run --json`

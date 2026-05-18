@@ -1,0 +1,42 @@
+---
+title: superpowers-ja で障害報告書を作る
+description: japanese-incident-report skill を使って初報、続報、最終報告、再発防止を整理する tutorial。
+---
+
+# superpowers-ja で障害報告書を作る
+
+## Goal
+
+障害対応後に、顧客向けまたは社内向けの報告書を、時系列、影響範囲、対応、原因、再発防止、検証証跡に分けて整理します。
+
+## Prompt
+
+```text
+japanese-incident-report を使って、障害最終報告を作成してください。
+
+報告対象: 顧客向け
+発生日時: 2026-05-18 10:20 JST
+検知日時: 2026-05-18 10:27 JST
+復旧日時: 2026-05-18 11:05 JST
+影響: 注文 CSV export が一部 timeout
+対応: worker concurrency を下げ、queue を再実行
+証跡: alert、PR、Backlog ticket、監視 dashboard
+```
+
+## Expected Sections
+
+- 概要
+- 影響範囲
+- 時系列
+- 原因
+- 実施した対応
+- 再発防止策
+- 検証証跡
+- 未解決事項
+
+## Tips
+
+- 原因が未確定なら断定しない
+- JST で時系列を揃える
+- 暫定対応、恒久対応、再発防止を混同しない
+- 個人名の責任追及ではなく process 改善に寄せる

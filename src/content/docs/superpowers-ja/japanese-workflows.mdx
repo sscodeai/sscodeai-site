@@ -1,0 +1,51 @@
+---
+title: Japanese Workflows
+description: superpowers-ja の日本向け original skills と実務 scenario。
+---
+
+# Japanese Workflows
+
+`superpowers-ja` は upstream skills の日本語化だけでなく、日本の IT 開発現場で頻出する成果物を original skills として提供します。
+
+## Original Skills
+
+| Skill | Use case |
+| --- | --- |
+| `japanese-code-review` | 日本語 team 向け code review、重大度、承認条件 |
+| `japanese-code-review-graph` | `code-review-graph` を使った影響範囲、risk、test gap review |
+| `japanese-incident-report` | 障害初報、続報、最終報告、RCA、再発防止 |
+| `japanese-acceptance-test-spec` | 受入テスト仕様、検収条件、UAT、証跡 |
+| `japanese-git-workflow` | Backlog / Redmine / Jira と Git branch / PR / CI 運用 |
+| `japanese-documentation` | 仕様書、設計書、README、API document の日本語表現 |
+| `japanese-commit-conventions` | 日本語 team で使う Conventional Commits / changelog |
+
+## Incident Report Prompt
+
+```text
+japanese-incident-report を使って、顧客向けの障害最終報告を作成してください。
+JST の時系列、影響範囲、暫定対応、恒久対応、再発防止、検証証跡を分けてください。
+```
+
+## Acceptance Test Prompt
+
+```text
+japanese-acceptance-test-spec を使って、注文 CSV export の受入テスト仕様を作成してください。
+Shift_JIS、権限、大量データ、監査ログ、検収証跡を含めてください。
+```
+
+## Code Review Prompt
+
+```text
+japanese-code-review を使って、この PR を日本語で review してください。
+重大度は [must] [should] [nits] [question] に分け、承認前の確認事項も出してください。
+```
+
+## Workflow Runner Integration
+
+`workflow-runner` skill と `agency-agents-ja` を組み合わせると、複数 role の workflow を現在の AI coding session 内で実行できます。
+
+```text
+superpowers-ja の workflow-runner を使って
+agency-agents-ja/workflows/japanese-sier-requirements-review.yaml を実行してください。
+ticket は PROJ-1234、spec は docs/spec.md です。
+```

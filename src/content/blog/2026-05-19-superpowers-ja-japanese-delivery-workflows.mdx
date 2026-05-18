@@ -1,0 +1,31 @@
+---
+title: superpowers-ja が日本の開発現場で補うもの
+description: AI coding agent に、日本の SIer・受託開発・自社サービス運用で必要な確認、証跡、報告の流れを追加する理由。
+pubDate: 2026-05-19
+---
+
+# superpowers-ja が日本の開発現場で補うもの
+
+AI coding agent は実装速度を大きく上げます。しかし、日本の開発現場では「動く code」だけでは完了になりません。
+
+実務では、要件、受入条件、検証証跡、障害報告、承認、運用引き継ぎまでがつながります。`superpowers-ja` は、この現場の流れを AI agent の作業手順として補強します。
+
+## すぐ実装しない
+
+たとえば「CSV export を追加して」と依頼されたとき、実装前に次を確認します。
+
+- 文字コードは Shift_JIS / UTF-8 のどちらか
+- 想定件数と非同期処理の要否
+- 権限、個人情報、監査ログ
+- Backlog / Jira ticket と受入条件
+- UAT / 検収時の証跡
+
+## 日本語で証跡を残す
+
+`japanese-incident-report`、`japanese-acceptance-test-spec`、`japanese-code-review` は、顧客、QA、開発、運用が同じ内容を確認できる形で output を整えます。
+
+## Graph review も optional にする
+
+大きい codebase では `code-review-graph` を使い、影響範囲、risk、test gap を review 証跡として残せます。一方で、小さい変更や graph が未導入の project では通常 review に fallback します。
+
+この「必要なときだけ強くする」設計が、現場導入では重要です。
