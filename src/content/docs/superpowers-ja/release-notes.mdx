@@ -7,19 +7,44 @@ description: superpowers-ja の公開 release summary。
 
 This page summarizes the public release history of `superpowers-ja`.
 
-## v0.3.0
+## v0.3.0 (2026-05-19)
+
+npm: [`superpowers-ja@0.3.0`](https://www.npmjs.com/package/superpowers-ja)
+GitHub: [v0.3.0 tag](https://github.com/sscodeai/superpowers-ja/releases/tag/v0.3.0)
 
 ### Added
 
-- `japanese-incident-report`
-- `japanese-acceptance-test-spec`
-- `japanese-code-review-graph`
-- Japanese localization for `subagent-driven-development`
-- Eval transcript workflow and initial scenario transcripts
+- `japanese-incident-report` — 障害初報、続報、最終報告、原因分析、再発防止策
+- `japanese-acceptance-test-spec` — 受入条件、検収、UAT、証跡付き test case
+- `japanese-code-review-graph` — `code-review-graph` 任意連携の影響範囲 review
+- `subagent-driven-development` の日本語化
+- `evals/` 配下に skill eval transcript 運用と初期 scenario transcripts を追加
+
+### Improved
+
+- `scripts/audit.sh` の category 名、failure message、一時ファイル / 一時ディレクトリ cleanup を整理
+- `docs/release-checklist.md` を追加し、release 前の version sync、audit、package contents、eval 確認を整理
+- Claude Code / Cursor / Claw Code 用 install guide を追加し、core tool の bootstrap 挙動を明記
+- demo 録画 guide と VHS tape の sample prompt / output を日本語 scenario に更新
+- 手動 install 手順の `skills/skills` 入れ子化 risk を修正し、audit で再発検知
 
 ### Focus
 
-v0.3.0 strengthened Japanese IT delivery workflows around incident reporting, acceptance testing, graph-assisted review, and eval-based quality control.
+v0.3.0 strengthened Japanese IT delivery workflows around incident reporting, acceptance testing, graph-assisted review, and eval-based quality control. Release infrastructure (audit cleanup, release checklist, per-tool install guides) was hardened in the same cycle.
+
+## v0.2.0 (2026-05-16)
+
+ROADMAP Phase 1 (高頻度 skill) の日本語化を完了。agent が頻繁に呼び出す 7 個の上流 skill を、日本の SI / 受託 / 自社サービス開発で自然に読める形に翻訳しました。
+
+### Phase 1 完了 skills
+
+- `brainstorming`
+- `executing-plans`
+- `finishing-a-development-branch`
+- `using-superpowers`
+- `test-driven-development`
+- `systematic-debugging`
+- `verification-before-completion`
 
 ## v0.1.0
 

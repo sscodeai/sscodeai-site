@@ -52,6 +52,19 @@ test -f .claude/skills/using-superpowers/SKILL.md
 
 Replace `.claude/skills` with the install path for your tool.
 
+## Nested `skills/skills` After Manual Install
+
+手動 install で skill files を copy する際、copy 先を `skills/` ではなく `skills/skills/` へ入れてしまうケースがあります。AI agent は `skills/<skill-name>/SKILL.md` を期待するため、`skills/skills/<skill-name>/SKILL.md` 構造だと skill が認識されません。
+
+確認:
+
+```bash
+ls .claude/skills            # 直下に skill ディレクトリが並んでいること
+test -d .claude/skills/skills && echo "nested layout detected"
+```
+
+`skills/skills/` が出来てしまった場合は、中身を一段上に移して空 directory を削除します。`scripts/audit.sh` (v0.3.0 以降) はこの入れ子構造を自動検出します。
+
 ## Optional Integrations
 
 `code-review-graph` is not installed by `superpowers-ja`. Install and configure it separately only for repositories that need graph-based review.
