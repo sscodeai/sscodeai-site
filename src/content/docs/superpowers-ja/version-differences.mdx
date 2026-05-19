@@ -1,0 +1,116 @@
+---
+title: Version Differences
+description: upstream superpowers、superpowers-zh、superpowers-ja の違いと本土適応の整理。
+---
+
+# superpowers 系 version の違い
+
+`superpowers` 系 project は同じ workflow philosophy を共有していますが、対象 reader、導入体験、本土適応の重点が異なります。
+
+## まとめ
+
+| Project | 主な対象 | Skills | 重点 |
+| --- | --- | ---: | --- |
+| `superpowers` | 英語圏の AI coding agent 利用者 | 14 | 汎用的な software development methodology |
+| `superpowers-zh` | 中国語で開発する team、中国国内 platform を使う team | 20 | 中国語化、国内 Git / CI / community への適応 |
+| `superpowers-ja` | 日本語を母語または業務言語として使う IT 開発 team | 23 | 日本の SIer、受託開発、自社 service、情シスで必要な証跡と業務 workflow |
+
+## upstream `superpowers`
+
+upstream は、AI coding agent がいきなり実装へ飛び込まず、設計、計画、TDD、review、検証を順に進めるための method set です。
+
+主な特徴:
+
+- brainstorming、writing-plans、executing-plans による設計から実装への流れ
+- test-driven-development による red / green / refactor
+- systematic-debugging による原因調査
+- requesting-code-review / receiving-code-review による review loop
+- subagent-driven-development による task 分割と review
+- finishing-a-development-branch による branch 完了判断
+
+upstream は「方法論の中核」です。特定の国や業界の ticket、承認、検収、障害報告、文書文化までは深く扱いません。
+
+## `superpowers-zh`
+
+`superpowers-zh` は upstream skill を中国語化し、中国の開発者 ecosystem に寄せた拡張を加えています。
+
+本土適応の例:
+
+- 中国語での code review、commit、documentation
+- Gitee、Coding、極狐 GitLab、CNB など国内 platform を想定した Git workflow
+- Gitee Go、Coding CI、極狐 CI、`.cnb.yml` などの CI / CD 文脈
+- 中文排版、中英混排、自然な中文 technical writing
+- WeChat / QQ など中国語圏 community への導線
+- `npx superpowers-zh` による多 tool 一括導入
+
+代表的な追加 skill:
+
+| Skill | 用途 |
+| --- | --- |
+| `chinese-code-review` | 国内 team 向けの中文 code review 表現 |
+| `chinese-git-workflow` | Gitee / Coding / 極狐 GitLab / CNB を含む Git 運用 |
+| `chinese-documentation` | 中文 document、排版、中英混排 |
+| `chinese-commit-conventions` | 中文 team 向け Conventional Commits |
+| `mcp-builder` | MCP server / tool 構築 |
+| `workflow-runner` | YAML workflow による multi-role 実行 |
+
+## `superpowers-ja`
+
+`superpowers-ja` は upstream の開発 method を日本語化するだけでなく、日本の IT 開発現場で「完了」と見なされるために必要な確認、文書、証跡を workflow に入れます。
+
+対象 scenario:
+
+- SIer / 受託開発
+- 自社 service / SaaS 開発
+- 情シス / 社内 DX
+- 顧客検収がある project
+- 障害報告や運用引き継ぎが必要な system
+- Backlog / Redmine / Jira と PR / MR / CI を紐づける team
+
+本土適応の例:
+
+- 丁寧だが重大度を曖昧にしない日本語 review
+- `[must]` / `[should]` / `[nits]` / `[question]` による指摘分類
+- 仕様、受入条件、検収、UAT、証跡の整理
+- 障害初報、続報、最終報告、RCA、再発防止策
+- Backlog / Redmine / Jira と GitHub / GitLab / Bitbucket の連携を想定
+- Shift_JIS、個人情報、監査ログ、大量 data、運用引き継ぎなど日本の業務 system で出やすい確認観点
+- `code-review-graph` を任意導入した影響範囲、risk、test gap review
+
+代表的な追加 skill:
+
+| Skill | 用途 |
+| --- | --- |
+| `japanese-code-review` | 日本語 team 向け code review、重大度、承認前確認 |
+| `japanese-code-review-graph` | code graph を使った影響範囲、risk、test gap review |
+| `japanese-incident-report` | 障害初報、続報、最終報告、RCA、再発防止 |
+| `japanese-acceptance-test-spec` | 受入テスト仕様、検収条件、UAT、証跡 |
+| `japanese-git-workflow` | Backlog / Redmine / Jira と Git branch / PR / CI 運用 |
+| `japanese-documentation` | 仕様書、設計書、README、API document の日本語表現 |
+| `japanese-commit-conventions` | 日本語 team で使う Conventional Commits / changelog |
+
+## 実務での違い
+
+同じ「注文 CSV export を追加する」依頼でも、重視する確認観点が変わります。
+
+| Project | AI agent が補強する観点 |
+| --- | --- |
+| `superpowers` | 要件確認、設計、TDD、review、検証 |
+| `superpowers-zh` | 中文での要件確認、国内 Git / CI、中文 review、中文 documentation |
+| `superpowers-ja` | 文字コード、権限、個人情報、監査ログ、受入条件、検収証跡、障害時の報告、release / rollback |
+
+`superpowers-ja` は、日本語を母語または業務言語として使う人が、顧客、PM、QA、運用担当、上司にそのまま共有しやすい形で成果物を作ることを重視します。
+
+## 選び方
+
+| 状況 | 推奨 |
+| --- | --- |
+| 英語で汎用的な AI coding methodology を使いたい | `superpowers` |
+| 中国語 team、中国国内 platform、中文 document が中心 | `superpowers-zh` |
+| 日本語 team、検収、障害報告、証跡、Backlog / Redmine / Jira が中心 | `superpowers-ja` |
+
+## Related
+
+- [superpowers-ja Skills](/superpowers-ja/skills/)
+- [Japanese Workflows](/superpowers-ja/japanese-workflows/)
+- [Code Review Graph Integration](/superpowers-ja/code-review-graph/)
