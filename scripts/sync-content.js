@@ -21,6 +21,33 @@ function escapeMd(text) {
   return String(text || '').replace(/\|/g, '\\|').replace(/\n/g, ' ');
 }
 
+function escapeHtml(text) {
+  return String(text || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function catalogTable(headers, rows) {
+  const thead = headers.map((header) => `<th>${escapeHtml(header)}</th>`).join('');
+  const tbody = rows
+    .map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join('')}</tr>`)
+    .join('\n');
+  return `<table>
+<thead>
+<tr>${thead}</tr>
+</thead>
+<tbody>
+${tbody}
+</tbody>
+</table>`;
+}
+
+function codeCell(text) {
+  return `<code>${escapeHtml(text)}</code>`;
+}
+
 function parseFrontmatter(text) {
   const match = text.match(/^---\s*\n([\s\S]*?)\n---/);
   const data = {};
@@ -77,12 +104,12 @@ ${table}
 
 function syncAgencyAgents() {
   const repoRoot = resolve(workspace, 'agency-agents-ja');
-  const ignore = new Set(['docs', 'examples', 'scripts', 'workflows']);
+  const ignore = new Set(['.claude', 'docs', 'examples', 'scripts', 'workflows']);
   const files = listFiles(repoRoot, (file) => {
     if (!file.endsWith('.md')) return false;
     const rel = relative(repoRoot, file);
     const [top] = rel.split('/');
-    return !ignore.has(top) && rel !== 'README.md' && rel !== 'ROADMAP.md' && rel !== 'CLAUDE.md';
+    return !ignore.has(top) && !['AGENT-LIST.md', 'README.md', 'ROADMAP.md', 'CLAUDE.md'].includes(rel);
   });
 
   const rows = files.map((file) => {
@@ -104,13 +131,13 @@ function syncAgencyAgents() {
   }
 
   const sections = [...byCategory.entries()].map(([category, agents]) => {
-    const table = agents
-      .map((row) => `| \`${escapeMd(row.name)}\` | ${escapeMd(row.description)} | \`${escapeMd(row.path)}\` |`)
-      .join('\n');
+    const table = catalogTable(['Agent', 'Description', 'Path'], agents.map((row) => [
+      codeCell(row.name),
+      escapeHtml(row.description),
+      codeCell(row.path),
+    ]));
     return `## ${category}
 
-| Agent | Description | Path |
-| --- | --- | --- |
 ${table}`;
   }).join('\n\n');
 
@@ -141,9 +168,11 @@ function syncAgencyWorkflows() {
     };
   }).sort((a, b) => a.name.localeCompare(b.name));
 
-  const table = rows
-    .map((row) => `| \`${escapeMd(row.name)}\` | ${escapeMd(row.description)} | \`${escapeMd(row.path)}\` |`)
-    .join('\n');
+  const table = catalogTable(['Workflow', 'Description', 'Path'], rows.map((row) => [
+    codeCell(row.name),
+    escapeHtml(row.description),
+    codeCell(row.path),
+  ]));
 
   write(resolve(docsDir, 'agency-agents-ja/generated-workflows.mdx'), `---
 title: Generated Workflow Catalog
@@ -154,8 +183,6 @@ description: agency-agents-ja workflows directory から自動生成した workf
 
 この page は \`npm run sync:content\` で \`../agency-agents-ja/workflows\` から生成します。
 
-| Workflow | Description | Path |
-| --- | --- | --- |
 ${table}
 `);
 }

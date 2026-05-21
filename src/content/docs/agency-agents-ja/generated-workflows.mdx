@@ -7,32 +7,37 @@ description: agency-agents-ja workflows directory から自動生成した workf
 
 この page は `npm run sync:content` で `../agency-agents-ja/workflows` から生成します。
 
-| Workflow | Description | Path |
-| --- | --- | --- |
-| `acceptance-readiness-review` | 検収条件、QA 結果、証跡、未解決事項、顧客承認の受入 readiness | `workflows/acceptance-readiness-review.yaml` |
-| `ai-governance-rollout` | 社内 AI 利用 policy、prompt、automation governance、training | `workflows/ai-governance-rollout.yaml` |
-| `api-integration-delivery` | API 連携の要件、backend design、API test、document | `workflows/api-integration-delivery.yaml` |
-| `b2b-lead-generation` | B2B lead generation、SEO、広告、webinar、営業 follow-up | `workflows/b2b-lead-generation.yaml` |
-| `b2b-saas-release` | B2B SaaS release、QA、release note、CS | `workflows/b2b-saas-release.yaml` |
-| `business-ui-readiness-review` | 業務画面、管理画面、form / table、accessibility、design system、frontend 実装 readiness | `workflows/business-ui-readiness-review.yaml` |
-| `change-management-review` | 仕様変更、影響分析、承認、release 準備 | `workflows/change-management-review.yaml` |
-| `csv-data-migration-readiness` | CSV / Excel / Shift_JIS 取込、データ移行、DB 反映、検収 evidence | `workflows/csv-data-migration-readiness.yaml` |
-| `customer-health-review` | 顧客 health、support analytics、account strategy、risk | `workflows/customer-health-review.yaml` |
-| `enterprise-architecture-roadmap` | 全社 architecture、data governance、security、legacy modernization | `workflows/enterprise-architecture-roadmap.yaml` |
-| `incident-report` | 障害整理、security review、顧客向け報告 | `workflows/incident-report.yaml` |
-| `it-onboarding-offboarding` | 入退社、協力会社参画、権限、貸与品、研修、監査証跡の joiner / mover / leaver 管理 | `workflows/it-onboarding-offboarding.yaml` |
-| `japan-go-to-market-campaign` | 日本市場 GTM、導入事例、community、SNS、partner、広告 | `workflows/japan-go-to-market-campaign.yaml` |
-| `japanese-sier-requirements-review` | SIer / 受託開発の要件、設計、検収準備 | `workflows/japanese-sier-requirements-review.yaml` |
-| `kintone-business-app` | kintone 業務 app 設計 | `workflows/kintone-business-app.yaml` |
-| `manufacturing-dx-assessment` | 製造業 DX / 工場 IoT assessment | `workflows/manufacturing-dx-assessment.yaml` |
-| `oss-localization-launch` | 上流 OSS project を日本市場向けに初回ローカライズして公開するための workflow。翻訳、用語集、positioning、license / 商標確認、公開 plan、Backlog / Redmine / Jira ticket、初週 KPI までを日本 IT 現場向けに整える | `workflows/oss-localization-launch.yaml` |
-| `oss-upstream-sync` | fork 後の OSS project を継続的に上流追従するための workflow。upstream release / commit の分類、fork 独自改修との衝突確認、翻訳追従、release note への反映、Backlog / Redmine / Jira ticket 化、四半期 sync 健全性 review までを日本 IT 現場向けに整える | `workflows/oss-upstream-sync.yaml` |
-| `quality-governance-review` | 品質方針、QA gate、不具合傾向、検収 readiness | `workflows/quality-governance-review.yaml` |
-| `release-readiness-review` | release 判定、observability、privacy、検収 evidence | `workflows/release-readiness-review.yaml` |
-| `revenue-governance-review` | RevOps、data governance、監査、BCP | `workflows/revenue-governance-review.yaml` |
-| `rfp-response` | RFP 回答、提案、SLA / 保守観点 | `workflows/rfp-response.yaml` |
-| `saas-contract-privacy-billing-review` | SaaS / 業務委託契約、個人情報、インボイス、電子帳簿保存法の導入前 review | `workflows/saas-contract-privacy-billing-review.yaml` |
-| `service-delivery-review` | SLA、問い合わせ、障害、service review、CS action | `workflows/service-delivery-review.yaml` |
-| `software-supply-chain-review` | npm / PyPI / Maven などソフトウェア依存、OSS license、CVE、SBOM、provenance、委託先承認、incident readiness を日本 IT 現場向けに review | `workflows/software-supply-chain-review.yaml` |
-| `technical-documentation-review` | 技術 document、knowledge base、引き継ぎ evidence | `workflows/technical-documentation-review.yaml` |
-| `vendor-cost-review` | vendor 調達、risk、FinOps、pricing、契約単位 | `workflows/vendor-cost-review.yaml` |
+<table>
+<thead>
+<tr><th>Workflow</th><th>Description</th><th>Path</th></tr>
+</thead>
+<tbody>
+<tr><td><code>acceptance-readiness-review</code></td><td>検収条件、QA 結果、証跡、未解決事項、顧客承認の受入 readiness</td><td><code>workflows/acceptance-readiness-review.yaml</code></td></tr>
+<tr><td><code>ai-governance-rollout</code></td><td>社内 AI 利用 policy、prompt、automation governance、training</td><td><code>workflows/ai-governance-rollout.yaml</code></td></tr>
+<tr><td><code>api-integration-delivery</code></td><td>API 連携の要件、backend design、API test、document</td><td><code>workflows/api-integration-delivery.yaml</code></td></tr>
+<tr><td><code>b2b-lead-generation</code></td><td>B2B lead generation、SEO、広告、webinar、営業 follow-up</td><td><code>workflows/b2b-lead-generation.yaml</code></td></tr>
+<tr><td><code>b2b-saas-release</code></td><td>B2B SaaS release、QA、release note、CS</td><td><code>workflows/b2b-saas-release.yaml</code></td></tr>
+<tr><td><code>business-ui-readiness-review</code></td><td>業務画面、管理画面、form / table、accessibility、design system、frontend 実装 readiness</td><td><code>workflows/business-ui-readiness-review.yaml</code></td></tr>
+<tr><td><code>change-management-review</code></td><td>仕様変更、影響分析、承認、release 準備</td><td><code>workflows/change-management-review.yaml</code></td></tr>
+<tr><td><code>csv-data-migration-readiness</code></td><td>CSV / Excel / Shift_JIS 取込、データ移行、DB 反映、検収 evidence</td><td><code>workflows/csv-data-migration-readiness.yaml</code></td></tr>
+<tr><td><code>customer-health-review</code></td><td>顧客 health、support analytics、account strategy、risk</td><td><code>workflows/customer-health-review.yaml</code></td></tr>
+<tr><td><code>enterprise-architecture-roadmap</code></td><td>全社 architecture、data governance、security、legacy modernization</td><td><code>workflows/enterprise-architecture-roadmap.yaml</code></td></tr>
+<tr><td><code>incident-report</code></td><td>障害整理、security review、顧客向け報告</td><td><code>workflows/incident-report.yaml</code></td></tr>
+<tr><td><code>it-onboarding-offboarding</code></td><td>入退社、協力会社参画、権限、貸与品、研修、監査証跡の joiner / mover / leaver 管理</td><td><code>workflows/it-onboarding-offboarding.yaml</code></td></tr>
+<tr><td><code>japan-go-to-market-campaign</code></td><td>日本市場 GTM、導入事例、community、SNS、partner、広告</td><td><code>workflows/japan-go-to-market-campaign.yaml</code></td></tr>
+<tr><td><code>japanese-sier-requirements-review</code></td><td>SIer / 受託開発の要件、設計、検収準備</td><td><code>workflows/japanese-sier-requirements-review.yaml</code></td></tr>
+<tr><td><code>kintone-business-app</code></td><td>kintone 業務 app 設計</td><td><code>workflows/kintone-business-app.yaml</code></td></tr>
+<tr><td><code>manufacturing-dx-assessment</code></td><td>製造業 DX / 工場 IoT assessment</td><td><code>workflows/manufacturing-dx-assessment.yaml</code></td></tr>
+<tr><td><code>oss-localization-launch</code></td><td>上流 OSS project を日本市場向けに初回ローカライズして公開するための workflow。翻訳、用語集、positioning、license / 商標確認、公開 plan、Backlog / Redmine / Jira ticket、初週 KPI までを日本 IT 現場向けに整える</td><td><code>workflows/oss-localization-launch.yaml</code></td></tr>
+<tr><td><code>oss-upstream-sync</code></td><td>fork 後の OSS project を継続的に上流追従するための workflow。upstream release / commit の分類、fork 独自改修との衝突確認、翻訳追従、release note への反映、Backlog / Redmine / Jira ticket 化、四半期 sync 健全性 review までを日本 IT 現場向けに整える</td><td><code>workflows/oss-upstream-sync.yaml</code></td></tr>
+<tr><td><code>quality-governance-review</code></td><td>品質方針、QA gate、不具合傾向、検収 readiness</td><td><code>workflows/quality-governance-review.yaml</code></td></tr>
+<tr><td><code>release-readiness-review</code></td><td>release 判定、observability、privacy、検収 evidence</td><td><code>workflows/release-readiness-review.yaml</code></td></tr>
+<tr><td><code>revenue-governance-review</code></td><td>RevOps、data governance、監査、BCP</td><td><code>workflows/revenue-governance-review.yaml</code></td></tr>
+<tr><td><code>rfp-response</code></td><td>RFP 回答、提案、SLA / 保守観点</td><td><code>workflows/rfp-response.yaml</code></td></tr>
+<tr><td><code>saas-contract-privacy-billing-review</code></td><td>SaaS / 業務委託契約、個人情報、インボイス、電子帳簿保存法の導入前 review</td><td><code>workflows/saas-contract-privacy-billing-review.yaml</code></td></tr>
+<tr><td><code>service-delivery-review</code></td><td>SLA、問い合わせ、障害、service review、CS action</td><td><code>workflows/service-delivery-review.yaml</code></td></tr>
+<tr><td><code>software-supply-chain-review</code></td><td>npm / PyPI / Maven などソフトウェア依存、OSS license、CVE、SBOM、provenance、委託先承認、incident readiness を日本 IT 現場向けに review</td><td><code>workflows/software-supply-chain-review.yaml</code></td></tr>
+<tr><td><code>technical-documentation-review</code></td><td>技術 document、knowledge base、引き継ぎ evidence</td><td><code>workflows/technical-documentation-review.yaml</code></td></tr>
+<tr><td><code>vendor-cost-review</code></td><td>vendor 調達、risk、FinOps、pricing、契約単位</td><td><code>workflows/vendor-cost-review.yaml</code></td></tr>
+</tbody>
+</table>
