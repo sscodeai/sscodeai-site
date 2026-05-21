@@ -17,6 +17,12 @@ function write(path, content) {
   writeFileSync(path, content, 'utf8');
 }
 
+function sourceExists(path, label) {
+  if (existsSync(path)) return true;
+  console.warn(`Skipping ${label}: source path not found at ${path}`);
+  return false;
+}
+
 function escapeMd(text) {
   return String(text || '').replace(/\|/g, '\\|').replace(/\n/g, ' ');
 }
@@ -72,6 +78,7 @@ function listFiles(dir, predicate, out = []) {
 
 function syncSuperpowersSkills() {
   const skillsRoot = resolve(workspace, 'superpowers-ja/skills');
+  if (!sourceExists(skillsRoot, 'superpowers-ja skills sync')) return;
   const files = listFiles(skillsRoot, (file) => basename(file) === 'SKILL.md');
   const rows = files.map((file) => {
     const rel = relative(skillsRoot, dirname(file));
@@ -104,6 +111,7 @@ ${table}
 
 function syncAgencyAgents() {
   const repoRoot = resolve(workspace, 'agency-agents-ja');
+  if (!sourceExists(repoRoot, 'agency-agents-ja agent sync')) return;
   const ignore = new Set(['.claude', 'docs', 'examples', 'scripts', 'workflows']);
   const files = listFiles(repoRoot, (file) => {
     if (!file.endsWith('.md')) return false;
@@ -156,6 +164,7 @@ ${sections}
 
 function syncAgencyWorkflows() {
   const workflowsRoot = resolve(workspace, 'agency-agents-ja/workflows');
+  if (!sourceExists(workflowsRoot, 'agency-agents-ja workflow sync')) return;
   const files = listFiles(workflowsRoot, (file) => file.endsWith('.yaml') || file.endsWith('.yml'));
   const rows = files.map((file) => {
     const text = readFileSync(file, 'utf8');
