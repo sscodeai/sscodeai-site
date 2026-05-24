@@ -1,6 +1,6 @@
 ---
 title: agency-agents-ja Overview
-description: 日本の IT 開発現場向け AI 専門家 agent library。266 agents (97 japan-original + 169 upstream-aligned) と 26 workflows を収録。
+description: 日本の IT 開発現場向け AI 専門家 agent library。266 agents (97 japan-original + 169 upstream-aligned skeleton) と 27 workflows を収録。
 ---
 
 # agency-agents-ja
@@ -18,8 +18,8 @@ description: 日本の IT 開発現場向け AI 専門家 agent library。266 ag
 |---|---|
 | Total agents | **266** |
 | ⭐ Japan-market originals (`source: japan-original`) | **97** |
-| Upstream-aligned agents (`source: upstream`) | **169** |
-| Workflows | **26** |
+| Upstream-aligned skeleton agents (`source: upstream`) | **169** |
+| Workflows | **27** |
 | Categories | 17 |
 
 ## Two kinds of agents
@@ -33,7 +33,7 @@ description: 日本の IT 開発現場向け AI 専門家 agent library。266 ag
 - **個人情報保護法 / インボイス制度 / 電帳法** compliance agents
 - **製造業 DX / 公共 sector** specialists
 
-### Upstream-aligned (169)
+### Upstream-aligned skeleton agents (169)
 
 上流 `msitarzewski/agency-agents` の agent inventory に 1:1 対応する agent。`upstream_path:` で元 file への mapping を保持。
 
@@ -48,7 +48,7 @@ grep -rl '^translation_status: adapted'    . | wc -l   # 0
 ## Catalog
 
 - [Generated Agent Catalog](/agency-agents-ja/generated-agent-catalog/) — 266 agent 全件、source 別に表示
-- [Generated Workflow Catalog](/agency-agents-ja/generated-workflows/) — 26 workflow 全件
+- [Generated Workflow Catalog](/agency-agents-ja/generated-workflows/) — 27 workflow 全件
 
 ## Frontmatter schema
 
