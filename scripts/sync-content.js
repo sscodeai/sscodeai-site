@@ -7,6 +7,25 @@ import { fileURLToPath } from 'url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const workspace = resolve(root, '..');
 const docsDir = resolve(root, 'src/content/docs');
+const agencyAgentDirs = new Set([
+  'academic',
+  'engineering',
+  'project-management',
+  'testing',
+  'product',
+  'marketing',
+  'paid-media',
+  'finance',
+  'game-development',
+  'hr',
+  'design',
+  'legal',
+  'sales',
+  'spatial-computing',
+  'support',
+  'supply-chain',
+  'specialized',
+]);
 
 function ensureDir(path) {
   mkdirSync(path, { recursive: true });
@@ -112,12 +131,11 @@ ${table}
 function syncAgencyAgents() {
   const repoRoot = resolve(workspace, 'agency-agents-ja');
   if (!sourceExists(repoRoot, 'agency-agents-ja agent sync')) return;
-  const ignore = new Set(['.claude', 'docs', 'examples', 'scripts', 'workflows']);
   const files = listFiles(repoRoot, (file) => {
     if (!file.endsWith('.md')) return false;
     const rel = relative(repoRoot, file);
     const [top] = rel.split('/');
-    return !ignore.has(top) && !['AGENT-LIST.md', 'README.md', 'ROADMAP.md', 'CLAUDE.md'].includes(rel);
+    return agencyAgentDirs.has(top);
   });
 
   const rows = files.map((file) => {
@@ -156,12 +174,13 @@ function syncAgencyAgents() {
   const sections = [...byCategory.entries()].map(([category, agents]) => {
     const jaCount = agents.filter((r) => r.source === 'japan-original').length;
     const upCount = agents.filter((r) => r.source === 'upstream').length;
-    const table = catalogTable(['', 'Agent', 'Source', 'Description', 'Path'], agents.map((row) => [
+    const table = catalogTable(['', 'Agent', 'Source', 'Status', 'Description', 'Path'], agents.map((row) => [
       row.source === 'japan-original' ? '⭐' : '',
       codeCell(row.name),
       row.source === 'japan-original'
         ? 'japan-original'
         : (row.upstreamName ? `upstream (${escapeHtml(row.upstreamName)})` : 'upstream'),
+      escapeHtml(row.translationStatus),
       escapeHtml(row.description),
       codeCell(row.path),
     ]));
@@ -185,6 +204,20 @@ Total: **${total}** agents (⭐ **${japanOriginal}** japan-original + **${upstre
 ⭐ は日本市場向けに独自設計された agent (\`source: japan-original\`)、それ以外は上流 [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents) 由来の skeleton agent (\`source: upstream\`) です。
 
 ${sections}
+`);
+}
+
+function copyAgencyGeneratedReport(sourceName, targetSlug, title, description) {
+  const repoRoot = resolve(workspace, 'agency-agents-ja');
+  const sourcePath = resolve(repoRoot, sourceName);
+  if (!sourceExists(sourcePath, `agency-agents-ja ${sourceName} sync`)) return;
+  const body = readFileSync(sourcePath, 'utf8');
+  write(resolve(docsDir, `agency-agents-ja/${targetSlug}.mdx`), `---
+title: ${title}
+description: ${description}
+---
+
+${body}
 `);
 }
 
@@ -226,6 +259,18 @@ ${table}
 
 syncSuperpowersSkills();
 syncAgencyAgents();
+copyAgencyGeneratedReport(
+  'TRANSLATION-PROGRESS.md',
+  'generated-translation-progress',
+  'Generated Translation Progress',
+  'agency-agents-ja の translation_status frontmatter から自動生成した翻訳進捗。',
+);
+copyAgencyGeneratedReport(
+  'UPSTREAM-COVERAGE.md',
+  'generated-upstream-coverage',
+  'Generated Upstream Coverage',
+  'agency-agents-ja の upstream_path frontmatter から自動生成した上流 coverage report。',
+);
 syncAgencyWorkflows();
 
 console.log('Generated docs from superpowers-ja and agency-agents-ja.');

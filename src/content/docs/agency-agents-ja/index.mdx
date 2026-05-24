@@ -37,18 +37,18 @@ description: 日本の IT 開発現場向け AI 専門家 agent library。266 ag
 
 上流 `msitarzewski/agency-agents` の agent inventory に 1:1 対応する agent。`upstream_path:` で元 file への mapping を保持。
 
-現在は `translation_status: skeleton` の状態 — frontmatter、role boundaries、Japan-context wrapper は配置済みだが、本格的な prompt 翻訳は進行中。`grep` で進捗を確認できる:
+現在は `translation_status: skeleton` の状態 — frontmatter、role boundaries、Japan-context wrapper は配置済みだが、本格的な prompt 翻訳は進行中。生成された進捗 page でも確認できる:
 
-```bash
-grep -rl '^translation_status: skeleton'   . | wc -l   # 169
-grep -rl '^translation_status: translated' . | wc -l   # 0
-grep -rl '^translation_status: adapted'    . | wc -l   # 0
-```
+- skeleton: **169**
+- translated: **0**
+- adapted: **0**
 
 ## Catalog
 
 - [Generated Agent Catalog](/agency-agents-ja/generated-agent-catalog/) — 266 agent 全件、source 別に表示
 - [Generated Workflow Catalog](/agency-agents-ja/generated-workflows/) — 27 workflow 全件
+- [Generated Translation Progress](/agency-agents-ja/generated-translation-progress/) — category 別の skeleton / translated / adapted
+- [Generated Upstream Coverage](/agency-agents-ja/generated-upstream-coverage/) — upstream_path の欠落・重複 check
 
 ## Frontmatter schema
 
@@ -63,7 +63,7 @@ grep -rl '^translation_status: adapted'    . | wc -l   # 0
 | `source` | ✅ | `japan-original` \| `upstream` | 由来 |
 | `upstream_path` | source=upstream 必須 | string | 上流 file への path |
 | `upstream_name` | optional | string | 上流 agent の英文名 (日本語名が divergent な場合) |
-| `translation_status` | optional | `skeleton` \| `translated` \| `adapted` | 翻訳状態 |
+| `translation_status` | source=upstream 必須 | `skeleton` \| `translated` \| `adapted` | 翻訳状態 |
 
 CI (`scripts/validate.sh`) でこの schema を強制しています。
 
