@@ -1,32 +1,77 @@
 ---
 title: agency-agents-ja Overview
-description: 日本の IT 開発現場向け AI 専門家 agent library の概要。
+description: 日本の IT 開発現場向け AI 専門家 agent library。266 agents (97 japan-original + 169 upstream-aligned) と 26 workflows を収録。
 ---
 
 # agency-agents-ja
 
-`agency-agents-ja` は、日本の IT 開発、SIer、受託開発、自社サービス、SaaS、EC、製造業 DX で使える AI 専門家 agent library です。
+`agency-agents-ja` は、日本の IT 開発、SIer、受託開発、自社サービス、SaaS、EC、製造業 DX、公共 sector で使える AI 専門家 agent library です。
 
-## Covered Areas
+- **Repository**: [sscodeai/agency-agents-ja](https://github.com/sscodeai/agency-agents-ja)
+- **Latest release**: v0.1.0 (2026-05-24)
+- **License**: MIT
+- **Upstream**: [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents) (synced from `main` as of 2026-05-24)
 
-- Engineering
-- Project management
-- Testing / QA
-- Product
-- Legal / compliance
-- Marketing / sales
-- Support / customer success
-- Finance / internal audit
-- HR / training
-- Design
-- Supply chain
-- Specialized DX scenarios
+## Stats
+
+| Metric | Count |
+|---|---|
+| Total agents | **266** |
+| ⭐ Japan-market originals (`source: japan-original`) | **97** |
+| Upstream-aligned agents (`source: upstream`) | **169** |
+| Workflows | **26** |
+| Categories | 17 |
+
+## Two kinds of agents
+
+### ⭐ Japan-market originals (97)
+
+日本の現場向けに独自設計された agent。production-ready で、上流の英文 library には存在しない。
+
+- **SIer / 受託開発 / 多重下請** workflow agents
+- **kintone / LINE WORKS / Sansan / freee** integration specialists
+- **個人情報保護法 / インボイス制度 / 電帳法** compliance agents
+- **製造業 DX / 公共 sector** specialists
+
+### Upstream-aligned (169)
+
+上流 `msitarzewski/agency-agents` の agent inventory に 1:1 対応する agent。`upstream_path:` で元 file への mapping を保持。
+
+現在は `translation_status: skeleton` の状態 — frontmatter、role boundaries、Japan-context wrapper は配置済みだが、本格的な prompt 翻訳は進行中。`grep` で進捗を確認できる:
+
+```bash
+grep -rl '^translation_status: skeleton'   . | wc -l   # 169
+grep -rl '^translation_status: translated' . | wc -l   # 0
+grep -rl '^translation_status: adapted'    . | wc -l   # 0
+```
+
+## Catalog
+
+- [Generated Agent Catalog](/agency-agents-ja/generated-agent-catalog/) — 266 agent 全件、source 別に表示
+- [Generated Workflow Catalog](/agency-agents-ja/generated-workflows/) — 26 workflow 全件
+
+## Frontmatter schema
+
+各 agent file は以下の frontmatter を持ちます:
+
+| Field | Required | Values | Purpose |
+|---|---|---|---|
+| `name` | ✅ | string | agent 名 (日本語) |
+| `description` | ✅ | string | 1 行 summary |
+| `emoji` | ✅ | string | UI 用 emoji |
+| `color` | ✅ | hex | UI 用 color |
+| `source` | ✅ | `japan-original` \| `upstream` | 由来 |
+| `upstream_path` | source=upstream 必須 | string | 上流 file への path |
+| `upstream_name` | optional | string | 上流 agent の英文名 (日本語名が divergent な場合) |
+| `translation_status` | optional | `skeleton` \| `translated` \| `adapted` | 翻訳状態 |
+
+CI (`scripts/validate.sh`) でこの schema を強制しています。
 
 ## Main Use
 
 ```text
-engineering/engineering-japanese-requirements-engineer.md を使って、
-この Backlog ticket の要件と受入条件を整理してください。
+engineering/engineering-kintone-developer.md を使って、
+この Backlog ticket の kintone customize 要件を整理してください。
 ```
 
 ## Workflow Runner
