@@ -164,6 +164,9 @@ function syncAgencyAgents() {
   const total = rows.length;
   const japanOriginal = rows.filter((r) => r.source === 'japan-original').length;
   const upstream = rows.filter((r) => r.source === 'upstream').length;
+  const adapted = rows.filter((r) => r.translationStatus === 'adapted').length;
+  const translated = rows.filter((r) => r.translationStatus === 'translated').length;
+  const skeleton = rows.filter((r) => r.translationStatus === 'skeleton').length;
 
   const byCategory = new Map();
   for (const row of rows) {
@@ -186,7 +189,7 @@ function syncAgencyAgents() {
     ]));
     return `## ${category}
 
-Total: ${agents.length} (⭐ ${jaCount} japan-original + ${upCount} upstream-aligned skeleton)
+Total: ${agents.length} (⭐ ${jaCount} japan-original + ${upCount} upstream-aligned)
 
 ${table}`;
   }).join('\n\n');
@@ -198,10 +201,12 @@ description: agency-agents-ja の agent files から自動生成した catalog�
 
 # Generated Agent Catalog
 
-Total: **${total}** agents (⭐ **${japanOriginal}** japan-original + **${upstream}** upstream-aligned skeleton)
+Total: **${total}** agents (⭐ **${japanOriginal}** japan-original + **${upstream}** upstream-aligned)
+
+Upstream translation status: **${adapted}** adapted to Japan, **${translated}** literally translated, **${skeleton}** skeleton.
 
 この page は \`npm run sync:content\` で \`../agency-agents-ja\` から生成します。
-⭐ は日本市場向けに独自設計された agent (\`source: japan-original\`)、それ以外は上流 [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents) 由来の skeleton agent (\`source: upstream\`) です。
+⭐ は日本市場向けに独自設計された agent (\`source: japan-original\`)、それ以外は上流 [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents) 由来 (\`source: upstream\`、現状はすべて \`translation_status: adapted\`) です。
 
 ${sections}
 `);

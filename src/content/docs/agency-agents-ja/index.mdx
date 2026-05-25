@@ -1,6 +1,6 @@
 ---
 title: agency-agents-ja Overview
-description: 日本の IT 開発現場向け AI 専門家 agent library。266 agents (97 japan-original + 169 upstream-aligned skeleton) と 27 workflows を収録。
+description: 日本の IT 開発現場向け AI 専門家 agent library。281 agents (97 japan-original + 184 upstream-aligned adapted to Japan) と 27 workflows を収録。
 ---
 
 # agency-agents-ja
@@ -8,7 +8,7 @@ description: 日本の IT 開発現場向け AI 専門家 agent library。266 ag
 `agency-agents-ja` は、日本の IT 開発、SIer、受託開発、自社サービス、SaaS、EC、製造業 DX、公共 sector で使える AI 専門家 agent library です。
 
 - **Repository**: [sscodeai/agency-agents-ja](https://github.com/sscodeai/agency-agents-ja)
-- **Latest release**: v0.1.0 (2026-05-24)
+- **Latest release**: v0.2.0 (2026-05-26)
 - **License**: MIT
 - **Upstream**: [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents) (synced from `main` as of 2026-05-24)
 
@@ -16,9 +16,9 @@ description: 日本の IT 開発現場向け AI 専門家 agent library。266 ag
 
 | Metric | Count |
 |---|---|
-| Total agents | **266** |
+| Total agents | **281** |
 | ⭐ Japan-market originals (`source: japan-original`) | **97** |
-| Upstream-aligned skeleton agents (`source: upstream`) | **169** |
+| Upstream-aligned, adapted to Japan (`source: upstream`, `translation_status: adapted`) | **184** |
 | Workflows | **27** |
 | Categories | 17 |
 
@@ -33,22 +33,22 @@ description: 日本の IT 開発現場向け AI 専門家 agent library。266 ag
 - **個人情報保護法 / インボイス制度 / 電帳法** compliance agents
 - **製造業 DX / 公共 sector** specialists
 
-### Upstream-aligned skeleton agents (169)
+### Upstream-aligned, adapted to Japan (184)
 
 上流 `msitarzewski/agency-agents` の agent inventory に 1:1 対応する agent。`upstream_path:` で元 file への mapping を保持。
 
-現在は `translation_status: skeleton` の状態 — frontmatter、role boundaries、Japan-context wrapper は配置済みだが、本格的な prompt 翻訳は進行中。生成された進捗 page でも確認できる:
+現在は `translation_status: adapted` — 上流 prompt の直訳ではなく、role-level intent を保ったまま日本市場向けに書き直し済み（description、役割、想定シーン、必ず確認すること すべて日本実務向け）。
 
-- skeleton: **169**
-- translated: **0**
-- adapted: **0**
+```bash
+grep -rl '^translation_status: adapted'    . | wc -l   # 184 — 適応済み
+grep -rl '^translation_status: translated' . | wc -l   # 0   — 直訳
+grep -rl '^translation_status: skeleton'   . | wc -l   # 0   — 未着手
+```
 
 ## Catalog
 
-- [Generated Agent Catalog](/agency-agents-ja/generated-agent-catalog/) — 266 agent 全件、source 別に表示
+- [Generated Agent Catalog](/agency-agents-ja/generated-agent-catalog/) — 281 agent 全件、source 別に表示
 - [Generated Workflow Catalog](/agency-agents-ja/generated-workflows/) — 27 workflow 全件
-- [Generated Translation Progress](/agency-agents-ja/generated-translation-progress/) — category 別の skeleton / translated / adapted
-- [Generated Upstream Coverage](/agency-agents-ja/generated-upstream-coverage/) — upstream_path の欠落・重複 check
 
 ## Frontmatter schema
 
@@ -63,9 +63,18 @@ description: 日本の IT 開発現場向け AI 専門家 agent library。266 ag
 | `source` | ✅ | `japan-original` \| `upstream` | 由来 |
 | `upstream_path` | source=upstream 必須 | string | 上流 file への path |
 | `upstream_name` | optional | string | 上流 agent の英文名 (日本語名が divergent な場合) |
-| `translation_status` | source=upstream 必須 | `skeleton` \| `translated` \| `adapted` | 翻訳状態 |
+| `translation_status` | source=upstream 必須 | `adapted` \| `translated` \| `skeleton` | 適応状態。本 repo の標準は `adapted` |
 
 CI (`scripts/validate.sh`) でこの schema を強制しています。
+
+## 上流の framework 文書
+
+agent 以外に、上流の framework 文書を以下の 2 directory で **英語のまま** 保持しています:
+
+- [`strategy/`](https://github.com/sscodeai/agency-agents-ja/tree/main/strategy) — 16 files (executive brief, playbooks, runbooks, coordination)
+- [`integrations/`](https://github.com/sscodeai/agency-agents-ja/tree/main/integrations) — 14 files (Claude Code / Cursor / Gemini CLI / GitHub Copilot / MCP memory integration guides)
+
+これらは agent ではないため `source:` frontmatter を持たず、`scripts/validate.sh` の対象外です。日本語化は roadmap 上の項目。
 
 ## Main Use
 
