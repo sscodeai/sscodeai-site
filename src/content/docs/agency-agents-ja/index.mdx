@@ -67,6 +67,23 @@ grep -rl '^translation_status: skeleton'   . | wc -l   # 0   — 未着手
 
 CI (`scripts/validate.sh`) でこの schema を強制しています。
 
+## Quality & Maintenance
+
+`adapted` を本 repo の標準とすると、品質基準と上流追従の仕組みが必要になります。以下の npm script と GitHub Actions で担保しています:
+
+| Command | 目的 |
+|---|---|
+| `npm run validate` | frontmatter schema、agent list、workflow を一括 check |
+| `npm run generate` | AGENT-LIST / workflow 表 / TRANSLATION-PROGRESS / UPSTREAM-COVERAGE を再生成 |
+| `npm run check:adapted-quality` | `translation_status: adapted` agent が日本語で書き直されているかを heuristics で check |
+| `npm run check:upstream-parity` | 上流 `main` を fetch し、本 repo に欠けている upstream agent path を検出 |
+| `npm run test:maintenance` | 上記の maintenance script 群の smoke test |
+
+参考ドキュメント:
+
+- [`docs/localization-review-checklist-ja.md`](https://github.com/sscodeai/agency-agents-ja/blob/main/docs/localization-review-checklist-ja.md) — 日本語 `adapted` の品質基準（description / 役割 / 想定シーン / 必ず確認すること の review 観点）
+- [`.github/workflows/upstream-parity.yml`](https://github.com/sscodeai/agency-agents-ja/blob/main/.github/workflows/upstream-parity.yml) — 定期実行で上流 `main` との差分を検出
+
 ## 上流の framework 文書
 
 agent 以外に、上流の framework 文書を以下の 2 directory で **英語のまま** 保持しています:
