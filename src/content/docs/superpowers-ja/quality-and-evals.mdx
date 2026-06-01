@@ -20,8 +20,14 @@ bash scripts/audit.sh
 | --- | --- |
 | Static validation | JSON parse、`SKILL.md` frontmatter、symlink、hook permissions |
 | Installer behavior | install / reinstall / uninstall for supported tools |
-| Upstream alignment | hooks、brainstorm scripts、core skill structure drift |
+| Upstream alignment | hooks、brainstorm scripts、core skill structure drift、full skill drift report |
 | Cross references | README links、skill references、bootstrap paths |
+
+For upstream sync review:
+
+```bash
+node scripts/check-upstream-skill-drift.js upstream/main
+```
 
 ## Eval Transcripts
 
@@ -32,6 +38,10 @@ Original Japanese skills are evaluated with practical scenario transcripts.
 | `japanese-incident-report` | 顧客向け障害最終報告 |
 | `japanese-acceptance-test-spec` | 注文 CSV export の受入テスト仕様 |
 | `japanese-code-review-graph` | 影響範囲 review と test gap |
+| `japanese-code-review` | 権限・監査ログを含む PR review |
+| `japanese-git-workflow` | 本番 hotfix の branch / PR / release 運用 |
+| `japanese-documentation` | 外部連携 API の保守引き継ぎ document |
+| `japanese-commit-conventions` | 日本語 commit と changelog entry |
 
 ## Release Checklist
 

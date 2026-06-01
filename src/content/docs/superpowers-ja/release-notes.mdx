@@ -7,6 +7,26 @@ description: superpowers-ja の公開 release summary。
 
 This page summarizes the public release history of `superpowers-ja`.
 
+## v0.3.1 (2026-06-01)
+
+npm: [`superpowers-ja@0.3.1`](https://www.npmjs.com/package/superpowers-ja)
+GitHub: [v0.3.1 tag](https://github.com/sscodeai/superpowers-ja/releases/tag/v0.3.1)
+
+### Added
+
+- `writing-skills` を上流 v5.1.0 へ adapted 同期
+- Claude Search Optimization、Iron Law、Bulletproofing、Skill Creation Checklist、Real-World Impact、Anti-Pattern の理由付けを取り込み
+- 日本向け original skill の eval transcript を追加:
+  - `japanese-code-review`
+  - `japanese-git-workflow`
+  - `japanese-documentation`
+  - `japanese-commit-conventions`
+- `scripts/check-upstream-skill-drift.js` を追加し、全 skill の上流見出し差分、local-only skill、追加 / 欠落 file を report できるようにしました
+
+### Focus
+
+v0.3.1 is a maintenance release: upstream `writing-skills` parity, broader eval evidence, and a reusable drift report for future upstream sync work.
+
 ## v0.3.0 (2026-05-19)
 
 npm: [`superpowers-ja@0.3.0`](https://www.npmjs.com/package/superpowers-ja)
