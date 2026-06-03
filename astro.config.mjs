@@ -27,6 +27,9 @@ export default defineConfig({
           items: [
             { label: 'Home', link: '/' },
             { label: 'Overview', link: '/overview/' },
+            { label: 'Projects', link: '/projects/' },
+            { label: 'Profile', link: '/profile/' },
+            { label: 'Resume', link: '/resume/' },
             { label: 'Cloudflare Deploy', link: '/deploy/cloudflare/' },
             { label: 'Content Strategy', link: '/content-strategy/' },
             { label: 'Open Source Policy', link: '/open-source-policy/' },
