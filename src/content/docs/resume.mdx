@@ -1,25 +1,60 @@
 ---
 title: Resume
-description: Public resume placeholder for SSCodeAI.
+description: SSCodeAI の公開 project resume。open source project、技術領域、公開成果物を整理。
 ---
 
 # Resume
 
-This is a placeholder for a public resume page.
+SSCodeAI の公開 resume は、個人情報ではなく公開 project と成果物を中心に整理します。
 
-公開 resume page の placeholder です。
+## Summary
 
-## Suggested Sections
+SSCodeAI は、日本の IT 開発現場で使える AI coding workflow と agent library を整備しています。upstream open source project を参考にしながら、日本語 team、検収、証跡、障害報告、運用引き継ぎ、compliance を考慮した local adaptation を行います。
 
-- Summary
-- Technical focus
-- Open source projects
-- Work experience
-- Selected projects
-- Skills
-- Languages
-- Contact
+## Public Projects
+
+| Project | Role | Public output |
+| --- | --- | --- |
+| `superpowers-ja` | Japanese workflow adaptation and maintenance | skill catalog、tool install docs、audit scripts、eval transcripts、release notes |
+| `agency-agents-ja` | Japanese agent library adaptation and expansion | 293 agents、27 workflows、translation progress、upstream coverage、SSCodeAI article links |
+| `sscodeai-site` | Documentation and publication site | docs、tutorials、blog、generated project catalogs、Cloudflare deploy docs |
+
+## Technical Focus
+
+- AI coding agent workflow design
+- Prompt / skill localization for Japanese development teams
+- Agent role design for SIer、受託開発、自社 service、SaaS、EC、製造業 DX、公共 sector
+- Documentation automation with Astro / Starlight / MDX
+- Release hygiene: validation scripts、generated docs sync、version notes、quality reports
+
+## Representative Work
+
+### superpowers-ja
+
+- Claude Code、Cursor、Codex CLI、Gemini CLI、OpenCode など複数 tool 向けの install docs を整備
+- 日本語 code review、障害報告、受入テスト仕様、Git 運用などの workflow を追加
+- upstream / 中文版との差分を [version differences](/superpowers-ja/version-differences/) に整理
+- audit script と eval transcript で release quality を確認
+
+### agency-agents-ja
+
+- 上流 `agency-agents` を参考に、日本市場向けに agent role を adapted
+- 中文版 `agency-agents-zh` の IoT / 財務反欺诈などの発想を日本向け agent として localize
+- source、translation_status、upstream_path を frontmatter に持たせ、generated docs に同期
+- README と coverage report で upstream / zh への謝辞と日本向け差分を明記
+
+### sscodeai-site
+
+- `superpowers-ja` と `agency-agents-ja` から docs を自動生成
+- agent catalog、workflow catalog、translation progress、upstream coverage を公開
+- Cloudflare Pages 向けの static build と sitemap を整備
+
+## Public Signals
+
+- GitHub: [github.com/sscodeai](https://github.com/sscodeai)
+- Project overview: [Projects](/projects/)
+- Open source policy: [Open Source Policy](/open-source-policy/)
 
 ## Privacy Notes
 
-Keep the public resume concise. Do not include private phone numbers, home address, confidential customer information, or internal project details.
+This resume intentionally avoids private phone numbers, home address, customer names, contract details, and internal project information.
