@@ -21,6 +21,7 @@ const agencyAgentDirs = new Set([
   'design',
   'legal',
   'sales',
+  'security',
   'spatial-computing',
   'support',
   'supply-chain',

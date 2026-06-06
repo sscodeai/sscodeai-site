@@ -1,6 +1,6 @@
 ---
 title: agency-agents-ja Overview
-description: 日本の IT 開発現場向け AI 専門家 agent library。293 agents (109 japan-original + 184 upstream-aligned adapted to Japan) と 27 workflows を収録。
+description: 日本の IT 開発現場向け AI 専門家 agent library。323 agents (114 japan-original + 209 upstream-aligned adapted to Japan) と 27 workflows を収録。
 ---
 
 # agency-agents-ja
@@ -8,46 +8,46 @@ description: 日本の IT 開発現場向け AI 専門家 agent library。293 ag
 `agency-agents-ja` は、日本の IT 開発、SIer、受託開発、自社サービス、SaaS、EC、製造業 DX、公共 sector で使える AI 専門家 agent library です。
 
 - **Repository**: [sscodeai/agency-agents-ja](https://github.com/sscodeai/agency-agents-ja)
-- **Latest release**: v0.2.0 (2026-05-26)
+- **Latest release**: v0.3.0 (2026-06-06)
 - **License**: MIT
-- **Upstream**: [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents) (synced from `main` as of 2026-05-31)
+- **Upstream**: [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents) (synced from `main` as of 2026-06-06)
 
 ## Stats
 
 | Metric | Count |
 |---|---|
-| Total agents | **293** |
-| ⭐ Japan-market originals (`source: japan-original`) | **109** |
-| Upstream-aligned, adapted to Japan (`source: upstream`, `translation_status: adapted`) | **184** |
+| Total agents | **323** |
+| ⭐ Japan-market originals (`source: japan-original`) | **114** |
+| Upstream-aligned, adapted to Japan (`source: upstream`, `translation_status: adapted`) | **209** |
 | Workflows | **27** |
-| Categories | 17 |
+| Categories | 18 |
 
 ## Two kinds of agents
 
-### ⭐ Japan-market originals (109)
+### ⭐ Japan-market originals (114)
 
 日本の現場向けに独自設計された agent。production-ready で、上流の英文 library には存在しない。
 
 - **SIer / 受託開発 / 多重下請** workflow agents
 - **kintone / LINE WORKS / Sansan / freee** integration specialists
 - **個人情報保護法 / インボイス制度 / 電帳法** compliance agents
-- **製造業 DX / 公共 sector** specialists
+- **製造業 DX / 公共 sector / security operations** specialists
 
-### Upstream-aligned, adapted to Japan (184)
+### Upstream-aligned, adapted to Japan (209)
 
 上流 `msitarzewski/agency-agents` の agent inventory に 1:1 対応する agent。`upstream_path:` で元 file への mapping を保持。
 
 現在は `translation_status: adapted` — 上流 prompt の直訳ではなく、role-level intent を保ったまま日本市場向けに書き直し済み（description、役割、想定シーン、必ず確認すること すべて日本実務向け）。
 
 ```bash
-grep -rl '^translation_status: adapted'    . | wc -l   # 184 — 適応済み
+grep -rl '^translation_status: adapted'    . | wc -l   # 209 — 適応済み
 grep -rl '^translation_status: translated' . | wc -l   # 0   — 直訳
 grep -rl '^translation_status: skeleton'   . | wc -l   # 0   — 未着手
 ```
 
 ## Catalog
 
-- [Generated Agent Catalog](/agency-agents-ja/generated-agent-catalog/) — 293 agent 全件、source 別に表示
+- [Generated Agent Catalog](/agency-agents-ja/generated-agent-catalog/) — 323 agent 全件、source 別に表示
 - [Generated Workflow Catalog](/agency-agents-ja/generated-workflows/) — 27 workflow 全件
 
 ## Frontmatter schema
@@ -59,7 +59,7 @@ grep -rl '^translation_status: skeleton'   . | wc -l   # 0   — 未着手
 | `name` | ✅ | string | agent 名 (日本語) |
 | `description` | ✅ | string | 1 行 summary |
 | `emoji` | ✅ | string | UI 用 emoji |
-| `color` | ✅ | hex | UI 用 color |
+| `color` | ✅ | keyword or quoted hex | UI 用 color |
 | `source` | ✅ | `japan-original` \| `upstream` | 由来 |
 | `upstream_path` | source=upstream 必須 | string | 上流 file への path |
 | `upstream_name` | optional | string | 上流 agent の英文名 (日本語名が divergent な場合) |
