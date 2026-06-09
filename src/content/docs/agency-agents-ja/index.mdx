@@ -1,26 +1,27 @@
 ---
 title: agency-agents-ja Overview
-description: 日本の IT 開発現場向け AI 専門家 agent library。323 agents (114 japan-original + 209 upstream-aligned adapted to Japan) と 27 workflows を収録。
+description: 日本の IT 開発現場向け AI 専門家 agent library。346 agents (114 japan-original + 232 upstream-aligned adapted to Japan) と 27 workflows を収録。
 ---
 
 # agency-agents-ja
 
-`agency-agents-ja` は、日本の IT 開発、SIer、受託開発、自社サービス、SaaS、EC、製造業 DX、公共 sector で使える AI 専門家 agent library です。
+`agency-agents-ja` は、日本の IT 開発、SIer、受託開発、自社サービス、SaaS、EC、製造業 DX、GIS / 地図・空間データ、公共 sector で使える AI 専門家 agent library です。
 
 - **Repository**: [sscodeai/agency-agents-ja](https://github.com/sscodeai/agency-agents-ja)
 - **Latest release**: v0.3.0 (2026-06-06)
+- **npm**: `npx agency-agents-ja install`
 - **License**: MIT
-- **Upstream**: [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents) (synced from `main` as of 2026-06-06)
+- **Upstream**: [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents) (synced from `main` as of 2026-06-08)
 
 ## Stats
 
 | Metric | Count |
 |---|---|
-| Total agents | **323** |
+| Total agents | **346** |
 | ⭐ Japan-market originals (`source: japan-original`) | **114** |
-| Upstream-aligned, adapted to Japan (`source: upstream`, `translation_status: adapted`) | **209** |
+| Upstream-aligned, adapted to Japan (`source: upstream`, `translation_status: adapted`) | **232** |
 | Workflows | **27** |
-| Categories | 18 |
+| Categories | 19 |
 
 ## Two kinds of agents
 
@@ -33,21 +34,21 @@ description: 日本の IT 開発現場向け AI 専門家 agent library。323 ag
 - **個人情報保護法 / インボイス制度 / 電帳法** compliance agents
 - **製造業 DX / 公共 sector / security operations** specialists
 
-### Upstream-aligned, adapted to Japan (209)
+### Upstream-aligned, adapted to Japan (232)
 
 上流 `msitarzewski/agency-agents` の agent inventory に 1:1 対応する agent。`upstream_path:` で元 file への mapping を保持。
 
 現在は `translation_status: adapted` — 上流 prompt の直訳ではなく、role-level intent を保ったまま日本市場向けに書き直し済み（description、役割、想定シーン、必ず確認すること すべて日本実務向け）。
 
 ```bash
-grep -rl '^translation_status: adapted'    . | wc -l   # 209 — 適応済み
+grep -rl '^translation_status: adapted'    . | wc -l   # 232 — 適応済み
 grep -rl '^translation_status: translated' . | wc -l   # 0   — 直訳
 grep -rl '^translation_status: skeleton'   . | wc -l   # 0   — 未着手
 ```
 
 ## Catalog
 
-- [Generated Agent Catalog](/agency-agents-ja/generated-agent-catalog/) — 323 agent 全件、source 別に表示
+- [Generated Agent Catalog](/agency-agents-ja/generated-agent-catalog/) — 346 agent 全件、source 別に表示
 - [Generated Workflow Catalog](/agency-agents-ja/generated-workflows/) — 27 workflow 全件
 
 ## Frontmatter schema

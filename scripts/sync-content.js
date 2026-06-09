@@ -17,6 +17,7 @@ const agencyAgentDirs = new Set([
   'paid-media',
   'finance',
   'game-development',
+  'gis',
   'hr',
   'design',
   'legal',
