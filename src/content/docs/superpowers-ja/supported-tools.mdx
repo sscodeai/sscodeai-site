@@ -60,6 +60,14 @@ v0.3 系では次の install guide を整備しています。tool ごとの boo
 | Claw Code | `.claw/skills/` | [docs/README.claw.md](https://github.com/sscodeai/superpowers-ja/blob/main/docs/README.claw.md) |
 | Qoder | `.qoder/skills/` + `.qoder/rules/` | [docs/README.qoder.md](https://github.com/sscodeai/superpowers-ja/blob/main/docs/README.qoder.md) |
 
+## Qoder Notes
+
+Qoder では `.qoder/rules/superpowers-ja.md` を `trigger: always_on` として生成し、会話開始時に superpowers-ja の基本ルールと skill index を参照しやすくします。
+
+Claude Code の `EnterPlanMode` / `ExitPlanMode` は Qoder では `EnterSpecMode` / `ExitSpecMode` 相当として扱います。`Task` delegation は `general-purpose`、`explore-agent`、`plan-agent`、`qoder-guide` など近い agent に読み替えます。
+
+Quest MCP tools が利用できる環境では、codebase search、symbol search、problems check、preview、memory、rules fetch を補助的に使えます。詳細は [Qoder tool mapping reference](https://github.com/sscodeai/superpowers-ja/blob/main/skills/using-superpowers/references/qoder-tools.md) を参照してください。
+
 ## Home Directory Guard
 
 Do not install into `~`. Install per project so the bootstrap files and skills do not affect unrelated workspaces.
