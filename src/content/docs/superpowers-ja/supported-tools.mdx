@@ -53,7 +53,7 @@ v0.3 系では次の install guide を整備しています。tool ごとの boo
 | Trae | `.trae/skills/` | [docs/README.trae.md](https://github.com/sscodeai/superpowers-ja/blob/main/docs/README.trae.md) |
 | VS Code Copilot | `.github/superpowers/` | [docs/README.vscode.md](https://github.com/sscodeai/superpowers-ja/blob/main/docs/README.vscode.md) |
 | Hermes Agent | `.hermes/skills/` | [docs/README.hermes.md](https://github.com/sscodeai/superpowers-ja/blob/main/docs/README.hermes.md) |
-| Antigravity | `.antigravity/skills/` | [docs/README.antigravity.md](https://github.com/sscodeai/superpowers-ja/blob/main/docs/README.antigravity.md) |
+| Antigravity | `.agents/skills/` | [docs/README.antigravity.md](https://github.com/sscodeai/superpowers-ja/blob/main/docs/README.antigravity.md) |
 | OpenClaw | `skills/` | [docs/README.openclaw.md](https://github.com/sscodeai/superpowers-ja/blob/main/docs/README.openclaw.md) |
 | DeerFlow | `skills/custom/` | [docs/README.deerflow.md](https://github.com/sscodeai/superpowers-ja/blob/main/docs/README.deerflow.md) |
 | Qwen Code | `.qwen/skills/` | [docs/README.qwen.md](https://github.com/sscodeai/superpowers-ja/blob/main/docs/README.qwen.md) |
@@ -67,6 +67,10 @@ Qoder では `.qoder/rules/superpowers-ja.md` を `trigger: always_on` として
 Claude Code の `EnterPlanMode` / `ExitPlanMode` は Qoder では `EnterSpecMode` / `ExitSpecMode` 相当として扱います。`Task` delegation は `general-purpose`、`explore-agent`、`plan-agent`、`qoder-guide` など近い agent に読み替えます。
 
 Quest MCP tools が利用できる環境では、codebase search、symbol search、problems check、preview、memory、rules fetch を補助的に使えます。詳細は [Qoder tool mapping reference](https://github.com/sscodeai/superpowers-ja/blob/main/skills/using-superpowers/references/qoder-tools.md) を参照してください。
+
+## Antigravity Notes
+
+Antigravity uses `.agents/skills/` and `.agents/rules.md`. If no known tool marker is present, `npx superpowers-ja` now stops and asks for `--tool` instead of silently installing Claude Code files.
 
 ## Home Directory Guard
 

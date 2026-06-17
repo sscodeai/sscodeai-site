@@ -14,9 +14,12 @@ This page summarizes the public release history of `superpowers-ja`.
 - Qoder support: `npx superpowers-ja --tool qoder` installs skills to `.qoder/skills/` and writes `.qoder/rules/superpowers-ja.md`.
 - Qoder install guide and tool mapping reference.
 - Contribution templates now ask for model, harness, harness version, installed plugins, and human review evidence.
+- Skill frontmatter now includes `version`, `license`, and `metadata.hermes.tags`.
 
 ### Improved
 
+- Antigravity install path now uses `.agents/skills/` and `.agents/rules.md`.
+- Auto-detect no longer silently falls back to `.claude/skills/` when no known tool marker is present.
 - Trae docs clarify that manual skill copying does not create the bootstrap rule.
 - Installer audit now covers 18 tools.
 - Qoder tool mapping now documents Spec mode, agent delegation, and Quest MCP helper tools.
