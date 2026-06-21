@@ -52,6 +52,23 @@ grep -rl '^translation_status: skeleton'   . | wc -l   # 0   — 未着手
 - [Generated Agent Catalog](/agency-agents-ja/generated-agent-catalog/) — 346 agent 全件、source 別に表示
 - [Generated Workflow Catalog](/agency-agents-ja/generated-workflows/) — 27 workflow 全件
 
+## Install Notes
+
+`agency-agents-ja` は Claude Code、GitHub Copilot、Antigravity、Gemini CLI、OpenCode、OpenClaw、Cursor、Aider、Windsurf、Kimi Code、Qwen Code に対応しています。
+
+```bash
+npx agency-agents-ja install
+npx agency-agents-ja install --tool claude-code
+./scripts/convert.sh
+./scripts/install.sh --tool openclaw
+```
+
+- **Claude Code / GitHub Copilot**: native `.md` agent を直接 copy します。
+- **Cursor / OpenCode / Aider / Windsurf / Qwen Code**: project-scoped です。導入したい project directory で install script を実行します。
+- **Antigravity / Gemini CLI / OpenClaw / Kimi Code**: `integrations/` 配下の変換済み file が必要です。先に `./scripts/convert.sh` を実行します。
+- **OpenClaw**: `SOUL.md` + `AGENTS.md` + `IDENTITY.md` の multi-agent workspace として使えます。
+- **Qwen Code**: install 後に `/agents manage` を実行するか session を再起動すると、新しい subagent を認識しやすくなります。
+
 ## Related Tools
 
 - [`local-agent-toolkit`](https://github.com/jnMetaCode/local-agent-toolkit) — agent の memory、skill 管理、実行 trace を local-first に扱う toolkit。付属の `skillet` CLI は、`agency-agents-ja` のような agent / skill 群の導入フロー整理に使えます。
