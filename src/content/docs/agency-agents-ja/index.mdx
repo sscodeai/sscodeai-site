@@ -54,18 +54,20 @@ grep -rl '^translation_status: skeleton'   . | wc -l   # 0   — 未着手
 
 ## Install Notes
 
-`agency-agents-ja` は Claude Code、GitHub Copilot、Antigravity、Gemini CLI、OpenCode、OpenClaw、Cursor、Aider、Windsurf、Kimi Code、Qwen Code に対応しています。
+`agency-agents-ja` は Claude Code、GitHub Copilot、Antigravity、Gemini CLI、OpenCode、OpenClaw、Cursor、Aider、Windsurf、Kimi Code、Qwen Code、Codex、Osaurus に対応しています。
 
 ```bash
 npx agency-agents-ja install
 npx agency-agents-ja install --tool claude-code
 ./scripts/convert.sh
 ./scripts/install.sh --tool openclaw
+./scripts/install.sh --tool codex
+./scripts/install.sh --tool osaurus
 ```
 
 - **Claude Code / GitHub Copilot**: native `.md` agent を直接 copy します。
 - **Cursor / OpenCode / Aider / Windsurf / Qwen Code**: project-scoped です。導入したい project directory で install script を実行します。
-- **Antigravity / Gemini CLI / OpenClaw / Kimi Code**: `integrations/` 配下の変換済み file が必要です。先に `./scripts/convert.sh` を実行します。
+- **Antigravity / Gemini CLI / OpenClaw / Kimi Code / Codex / Osaurus**: `integrations/` 配下の変換済み file が必要です。先に `./scripts/convert.sh` を実行します。
 - **OpenClaw**: `SOUL.md` + `AGENTS.md` + `IDENTITY.md` の multi-agent workspace として使えます。
 - **Qwen Code**: install 後に `/agents manage` を実行するか session を再起動すると、新しい subagent を認識しやすくなります。
 
@@ -112,7 +114,7 @@ CI (`scripts/validate.sh`) でこの schema を強制しています。
 agent 以外に、上流の framework 文書を以下の 2 directory で **英語のまま** 保持しています:
 
 - [`strategy/`](https://github.com/sscodeai/agency-agents-ja/tree/main/strategy) — 16 files (executive brief, playbooks, runbooks, coordination)
-- [`integrations/`](https://github.com/sscodeai/agency-agents-ja/tree/main/integrations) — 14 files (Claude Code / Cursor / Gemini CLI / GitHub Copilot / MCP memory integration guides)
+- [`integrations/`](https://github.com/sscodeai/agency-agents-ja/tree/main/integrations) — 17 files (Claude Code / Cursor / Gemini CLI / GitHub Copilot / MCP memory integration guides)
 
 これらは agent ではないため `source:` frontmatter を持たず、`scripts/validate.sh` の対象外です。日本語化は roadmap 上の項目。
 
