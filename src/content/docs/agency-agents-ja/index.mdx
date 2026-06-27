@@ -71,6 +71,22 @@ npx agency-agents-ja install --tool claude-code
 - **OpenClaw**: `SOUL.md` + `AGENTS.md` + `IDENTITY.md` の multi-agent workspace として使えます。
 - **Qwen Code**: install 後に `/agents manage` を実行するか session を再起動すると、新しい subagent を認識しやすくなります。
 
+標準の install 先を変えたい場合は、環境変数で path を上書きできます。代表例:
+
+| Tool | 環境変数 |
+|---|---|
+| Claude Code | `CLAUDE_AGENTS_DIR` |
+| GitHub Copilot | `GITHUB_AGENT_DIR`, `COPILOT_AGENT_DIR` |
+| Antigravity | `ANTIGRAVITY_SKILLS_DIR` |
+| Gemini CLI | `GEMINI_EXTENSION_DIR` |
+| OpenCode | `OPENCODE_AGENTS_DIR` |
+| OpenClaw | `OPENCLAW_DIR` |
+| Cursor | `CURSOR_RULES_DIR` |
+| Qwen Code | `QWEN_AGENTS_DIR` |
+| Kimi Code | `KIMI_AGENTS_DIR` |
+| Codex | `CODEX_AGENTS_DIR` |
+| Osaurus | `OSAURUS_SKILLS_DIR` |
+
 ## Related Tools
 
 - [`local-agent-toolkit`](https://github.com/jnMetaCode/local-agent-toolkit) — agent の memory、skill 管理、実行 trace を local-first に扱う toolkit。付属の `skillet` CLI は、`agency-agents-ja` のような agent / skill 群の導入フロー整理に使えます。
