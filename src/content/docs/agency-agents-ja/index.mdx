@@ -1,6 +1,6 @@
 ---
 title: agency-agents-ja Overview
-description: 日本の IT 開発現場向け AI 専門家 agent library。346 agents (114 japan-original + 232 upstream-aligned adapted to Japan) と 27 workflows を収録。
+description: 日本の IT 開発現場向け AI 専門家 agent library。347 agents (114 japan-original + 233 upstream-aligned adapted to Japan) と 27 workflows を収録。
 ---
 
 # agency-agents-ja
@@ -11,15 +11,15 @@ description: 日本の IT 開発現場向け AI 専門家 agent library。346 ag
 - **Latest release**: v0.3.0 (2026-06-06)
 - **npm**: `npx agency-agents-ja install`
 - **License**: MIT
-- **Upstream**: [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents) (synced from `main` as of 2026-06-08)
+- **Upstream**: [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents) (synced through `7632f06` as of 2026-06-30)
 
 ## Stats
 
 | Metric | Count |
 |---|---|
-| Total agents | **346** |
+| Total agents | **347** |
 | ⭐ Japan-market originals (`source: japan-original`) | **114** |
-| Upstream-aligned, adapted to Japan (`source: upstream`, `translation_status: adapted`) | **232** |
+| Upstream-aligned, adapted to Japan (`source: upstream`, `translation_status: adapted`) | **233** |
 | Workflows | **27** |
 | Categories | 19 |
 
@@ -35,26 +35,26 @@ description: 日本の IT 開発現場向け AI 専門家 agent library。346 ag
 - **製造業 DX / 公共 sector / security operations** specialists
 - **資格・語学・留学** の学習計画 agents（TOEIC、英検、IELTS / TOEFL、JLPT、DELF / DALF など）
 
-### Upstream-aligned, adapted to Japan (232)
+### Upstream-aligned, adapted to Japan (233)
 
 上流 `msitarzewski/agency-agents` の agent inventory に 1:1 対応する agent。`upstream_path:` で元 file への mapping を保持。
 
 現在は `translation_status: adapted` — 上流 prompt の直訳ではなく、role-level intent を保ったまま日本市場向けに書き直し済み（description、役割、想定シーン、必ず確認すること すべて日本実務向け）。
 
 ```bash
-grep -rl '^translation_status: adapted'    . | wc -l   # 232 — 適応済み
+grep -rl '^translation_status: adapted'    . | wc -l   # 233 — 適応済み
 grep -rl '^translation_status: translated' . | wc -l   # 0   — 直訳
 grep -rl '^translation_status: skeleton'   . | wc -l   # 0   — 未着手
 ```
 
 ## Catalog
 
-- [Generated Agent Catalog](/agency-agents-ja/generated-agent-catalog/) — 346 agent 全件、source 別に表示
+- [Generated Agent Catalog](/agency-agents-ja/generated-agent-catalog/) — 347 agent 全件、source 別に表示
 - [Generated Workflow Catalog](/agency-agents-ja/generated-workflows/) — 27 workflow 全件
 
 ## Install Notes
 
-`agency-agents-ja` は Claude Code、GitHub Copilot、Antigravity、Gemini CLI、OpenCode、OpenClaw、Cursor、Aider、Windsurf、Kimi Code、Qwen Code、Codex、Osaurus に対応しています。
+`agency-agents-ja` は Claude Code、GitHub Copilot、Antigravity、Gemini CLI、OpenCode、OpenClaw、Cursor、Aider、Windsurf、Kimi Code、Qwen Code、Codex、Osaurus、Hermes に対応しています。
 
 ```bash
 npx agency-agents-ja install
@@ -63,11 +63,13 @@ npx agency-agents-ja install --tool claude-code
 ./scripts/install.sh --tool openclaw
 ./scripts/install.sh --tool codex
 ./scripts/install.sh --tool osaurus
+./scripts/install.sh --tool hermes
 ```
 
 - **Claude Code / GitHub Copilot**: native `.md` agent を直接 copy します。
 - **Cursor / OpenCode / Aider / Windsurf / Qwen Code**: project-scoped です。導入したい project directory で install script を実行します。
-- **Antigravity / Gemini CLI / OpenClaw / Kimi Code / Codex / Osaurus**: `integrations/` 配下の変換済み file が必要です。先に `./scripts/convert.sh` を実行します。
+- **Antigravity / Gemini CLI / OpenClaw / Kimi Code / Codex / Osaurus / Hermes**: `integrations/` 配下の変換済み file が必要です。先に `./scripts/convert.sh` を実行します。
+- **Hermes**: `agency-agents-router` plugin から必要な specialist だけを lazy load します。
 - **OpenClaw**: `SOUL.md` + `AGENTS.md` + `IDENTITY.md` の multi-agent workspace として使えます。
 - **Qwen Code**: install 後に `/agents manage` を実行するか session を再起動すると、新しい subagent を認識しやすくなります。
 
@@ -86,6 +88,7 @@ npx agency-agents-ja install --tool claude-code
 | Kimi Code | `KIMI_AGENTS_DIR` |
 | Codex | `CODEX_AGENTS_DIR` |
 | Osaurus | `OSAURUS_SKILLS_DIR` |
+| Hermes | `HERMES_PLUGIN_DIR` |
 
 ## Related Tools
 
