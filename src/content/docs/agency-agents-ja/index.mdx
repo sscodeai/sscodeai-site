@@ -1,6 +1,6 @@
 ---
 title: agency-agents-ja Overview
-description: 日本の IT 開発現場向け AI 専門家 agent library。349 agents (114 japan-original + 235 upstream-aligned adapted to Japan) と 27 workflows を収録。
+description: 日本の IT 開発現場向け AI 専門家 agent library。357 agents (114 japan-original + 243 upstream-aligned adapted to Japan) と 27 workflows を収録。
 ---
 
 # agency-agents-ja
@@ -11,15 +11,15 @@ description: 日本の IT 開発現場向け AI 専門家 agent library。349 ag
 - **Latest release**: v0.3.0 (2026-06-06)
 - **npm**: `npx agency-agents-ja install`
 - **License**: MIT
-- **Upstream**: [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents) (synced through `71394d8` as of 2026-07-06)
+- **Upstream**: [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents) (synced through `35548a5` as of 2026-07-08)
 
 ## Stats
 
 | Metric | Count |
 |---|---|
-| Total agents | **349** |
+| Total agents | **357** |
 | ⭐ Japan-market originals (`source: japan-original`) | **114** |
-| Upstream-aligned, adapted to Japan (`source: upstream`, `translation_status: adapted`) | **235** |
+| Upstream-aligned, adapted to Japan (`source: upstream`, `translation_status: adapted`) | **243** |
 | Workflows | **27** |
 | Categories | 20 |
 
@@ -35,21 +35,21 @@ description: 日本の IT 開発現場向け AI 専門家 agent library。349 ag
 - **製造業 DX / 公共 sector / security operations** specialists
 - **資格・語学・留学** の学習計画 agents（TOEIC、英検、IELTS / TOEFL、JLPT、DELF / DALF など）
 
-### Upstream-aligned, adapted to Japan (235)
+### Upstream-aligned, adapted to Japan (243)
 
 上流 `msitarzewski/agency-agents` の agent inventory に 1:1 対応する agent。`upstream_path:` で元 file への mapping を保持。
 
 現在は `translation_status: adapted` — 上流 prompt の直訳ではなく、role-level intent を保ったまま日本市場向けに書き直し済み（description、役割、想定シーン、必ず確認すること すべて日本実務向け）。
 
 ```bash
-grep -rl '^translation_status: adapted'    . | wc -l   # 235 — 適応済み
+grep -rl '^translation_status: adapted'    . | wc -l   # 243 — 適応済み
 grep -rl '^translation_status: translated' . | wc -l   # 0   — 直訳
 grep -rl '^translation_status: skeleton'   . | wc -l   # 0   — 未着手
 ```
 
 ## Catalog
 
-- [Generated Agent Catalog](/agency-agents-ja/generated-agent-catalog/) — 349 agent 全件、source 別に表示
+- [Generated Agent Catalog](/agency-agents-ja/generated-agent-catalog/) — 357 agent 全件、source 別に表示
 - [Generated Workflow Catalog](/agency-agents-ja/generated-workflows/) — 27 workflow 全件
 
 ## Install Notes
