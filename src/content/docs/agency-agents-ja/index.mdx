@@ -1,6 +1,6 @@
 ---
 title: agency-agents-ja Overview
-description: 日本の IT 開発現場向け AI 専門家 agent library。368 agents (114 japan-original + 254 upstream-aligned adapted to Japan) と 27 workflows を収録。
+description: 日本の IT 開発現場向け AI 専門家 agent library。374 agents (114 japan-original + 260 upstream-aligned adapted to Japan) と 27 workflows を収録。
 ---
 
 # agency-agents-ja
@@ -17,9 +17,9 @@ description: 日本の IT 開発現場向け AI 専門家 agent library。368 ag
 
 | Metric | Count |
 |---|---|
-| Total agents | **368** |
+| Total agents | **374** |
 | ⭐ Japan-market originals (`source: japan-original`) | **114** |
-| Upstream-aligned, adapted to Japan (`source: upstream`, `translation_status: adapted`) | **254** |
+| Upstream-aligned, adapted to Japan (`source: upstream`, `translation_status: adapted`) | **260** |
 | Workflows | **27** |
 | Categories | 20 |
 
@@ -35,26 +35,26 @@ description: 日本の IT 開発現場向け AI 専門家 agent library。368 ag
 - **製造業 DX / 公共 sector / security operations** specialists
 - **資格・語学・留学** の学習計画 agents（TOEIC、英検、IELTS / TOEFL、JLPT、DELF / DALF など）
 
-### Upstream-aligned, adapted to Japan (254)
+### Upstream-aligned, adapted to Japan (260)
 
 上流 `msitarzewski/agency-agents` の agent inventory に 1:1 対応する agent。`upstream_path:` で元 file への mapping を保持。
 
 現在は `translation_status: adapted` — 上流 prompt の直訳ではなく、role-level intent を保ったまま日本市場向けに書き直し済み（description、役割、想定シーン、必ず確認すること すべて日本実務向け）。
 
 ```bash
-grep -rl '^translation_status: adapted'    . | wc -l   # 254 — 適応済み
+grep -rl '^translation_status: adapted'    . | wc -l   # 260 — 適応済み
 grep -rl '^translation_status: translated' . | wc -l   # 0   — 直訳
 grep -rl '^translation_status: skeleton'   . | wc -l   # 0   — 未着手
 ```
 
 ## Catalog
 
-- [Generated Agent Catalog](/agency-agents-ja/generated-agent-catalog/) — 368 agent 全件、source 別に表示
+- [Generated Agent Catalog](/agency-agents-ja/generated-agent-catalog/) — 374 agent 全件、source 別に表示
 - [Generated Workflow Catalog](/agency-agents-ja/generated-workflows/) — 27 workflow 全件
 
 ## Install Notes
 
-`agency-agents-ja` は Claude Code、GitHub Copilot、Antigravity、Gemini CLI、OpenCode、OpenClaw、Cursor、Aider、Windsurf、Kimi Code、Qwen Code、Codex、Osaurus、Hermes、Mistral Vibe に対応しています。
+`agency-agents-ja` は Claude Code、GitHub Copilot、Antigravity、Gemini CLI、OpenCode、OpenClaw、Cursor、Aider、Windsurf、Qwen Code、ZCode、Kimi Code、Codex、Osaurus、Hermes、Mistral Vibe に対応しています。
 
 ```bash
 npx agency-agents-ja install
@@ -69,10 +69,11 @@ npx agency-agents-ja install --tool claude-code
 
 - **Claude Code / GitHub Copilot**: native `.md` agent を直接 copy します。
 - **Cursor / OpenCode / Aider / Windsurf / Qwen Code**: project-scoped です。導入したい project directory で install script を実行します。
-- **Antigravity / Gemini CLI / OpenClaw / Kimi Code / Codex / Osaurus / Hermes / Mistral Vibe**: `integrations/` 配下の変換済み file が必要です。先に `./scripts/convert.sh` を実行します。
+- **Antigravity / Gemini CLI / OpenClaw / ZCode / Kimi Code / Codex / Osaurus / Hermes / Mistral Vibe**: `integrations/` 配下の変換済み file が必要です。先に `./scripts/convert.sh` を実行します。
 - **Hermes**: `agency-agents-router` plugin から必要な specialist だけを lazy load します。
 - **OpenClaw**: `SOUL.md` + `AGENTS.md` + `IDENTITY.md` の multi-agent workspace として使えます。
 - **Qwen Code**: install 後に `/agents manage` を実行するか session を再起動すると、新しい subagent を認識しやすくなります。
+- **ZCode**: user-wide install が既定です。project-scoped にする場合は `ZCODE_AGENTS_DIR=.zcode/agents` を指定します。
 
 標準の install 先を変えたい場合は、環境変数で path を上書きできます。代表例:
 
@@ -86,6 +87,7 @@ npx agency-agents-ja install --tool claude-code
 | OpenClaw | `OPENCLAW_DIR` |
 | Cursor | `CURSOR_RULES_DIR` |
 | Qwen Code | `QWEN_AGENTS_DIR` |
+| ZCode | `ZCODE_AGENTS_DIR` |
 | Kimi Code | `KIMI_AGENTS_DIR` |
 | Codex | `CODEX_AGENTS_DIR` |
 | Osaurus | `OSAURUS_SKILLS_DIR` |
