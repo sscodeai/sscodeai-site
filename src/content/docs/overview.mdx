@@ -32,6 +32,15 @@ AI coding agent に計画、TDD、systematic debugging、code review、完了前
 - `npx agency-agents-ja install` で Claude Code / GitHub Copilot / Antigravity / Gemini CLI / OpenCode / OpenClaw / Cursor / Aider / Windsurf / Qwen Code / ZCode / Kimi Code / Codex / Osaurus / Hermes / Mistral Vibe に導入可能
 - `superpowers-ja` の `workflow-runner` と組み合わせて複数 role workflow を実行
 
+### img2threejs
+
+参照画像に写ったオブジェクトを、メッシュ抽出や外部アートパックではなく、TypeScript と Three.js の手続き型コードとして再構築する skill です。
+
+- 1 枚の画像から `ObjectSculptSpec` を作成し、段階的な build pass で `THREE.Group` factory を生成
+- blockout、構造、形状、マテリアル、表面ディテール、ライティング、インタラクション、最適化の順に品質ゲートを通過
+- レンダーと参照画像を比較し、視覚レビューで次のパスに進むか自己修正するかを判断
+- Sony WF-1000XM3、Gerber knife、Doraemon house などの [demo gallery](/img2threejs/demos/) を掲載
+
 ## Site Architecture
 
 この site は Astro + Starlight で構成します。
@@ -45,4 +54,5 @@ AI coding agent に計画、TDD、systematic debugging、code review、完了前
 
 - 初めて使う: [superpowers-ja Quickstart](/superpowers-ja/quickstart/)
 - agent catalog を見る: [agency-agents-ja Overview](/agency-agents-ja/)
+- image-to-3D skill を見る: [img2threejs Manual](/img2threejs/)
 - Cloudflare に deploy する: [Cloudflare Deploy](/deploy/cloudflare/)

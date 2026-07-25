@@ -44,6 +44,10 @@ export default defineConfig({
           autogenerate: { directory: 'agency-agents-ja' },
         },
         {
+          label: 'img2threejs',
+          autogenerate: { directory: 'img2threejs' },
+        },
+        {
           label: 'Tutorials',
           autogenerate: { directory: 'tutorials' },
         },
