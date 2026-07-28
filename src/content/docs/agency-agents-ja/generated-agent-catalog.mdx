@@ -5,9 +5,9 @@ description: agency-agents-ja の agent files から自動生成した catalog�
 
 # Generated Agent Catalog
 
-Total: **374** agents (⭐ **114** japan-original + **260** upstream-aligned)
+Total: **383** agents (⭐ **114** japan-original + **269** upstream-aligned)
 
-Upstream translation status: **260** adapted to Japan, **0** literally translated, **0** skeleton.
+Upstream translation status: **269** adapted to Japan, **0** literally translated, **0** skeleton.
 
 この page は `npm run sync:content` で `../agency-agents-ja` から生成します。
 ⭐ は日本市場向けに独自設計された agent (`source: japan-original`)、それ以外は上流 [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents) 由来 (`source: upstream`、現状はすべて `translation_status: adapted`) です。
@@ -33,7 +33,7 @@ Total: 7 (⭐ 1 japan-original + 6 upstream-aligned)
 
 ## design
 
-Total: 12 (⭐ 3 japan-original + 9 upstream-aligned)
+Total: 13 (⭐ 3 japan-original + 10 upstream-aligned)
 
 <table>
 <thead>
@@ -44,6 +44,7 @@ Total: 12 (⭐ 3 japan-original + 9 upstream-aligned)
 <tr><td>⭐</td><td><code>日本業務 Design System メンテナー</code></td><td>japan-original</td><td></td><td>日本の業務システム、SaaS 管理画面、申請・承認 UI 向けに design system、component rule、文言、accessibility、実装連携を整える maintainer。</td><td><code>design/design-japanese-design-system-maintainer.md</code></td></tr>
 <tr><td>⭐</td><td><code>日本業務 UI デザイナー</code></td><td>japan-original</td><td></td><td>日本の業務画面、管理画面、申請画面、帳票画面に強い UI designer。高密度 table、入力補助、誤操作防止を重視する。</td><td><code>design/design-japanese-business-ui-designer.md</code></td></tr>
 <tr><td></td><td><code>日本向け Persona Walkthrough Specialist</code></td><td>upstream (Persona Walkthrough Specialist)</td><td>adapted</td><td>定義した persona の心理、期待、不安、文化的前提に入り込み、LP や Web page を scroll ごとに体験して CVR 改善点を整理する UX / CRO agent。</td><td><code>design/design-persona-walkthrough.md</code></td></tr>
+<tr><td></td><td><code>日本向け UI Finish-Gate Reviewer</code></td><td>upstream (UI Finish-Gate Reviewer)</td><td>adapted</td><td>出荷前の Web / iOS 画面を、実装 evidence、product lens、design contract に基づいて generic UI かどうか判定する finish gate reviewer。</td><td><code>design/design-ui-finish-gate-reviewer.md</code></td></tr>
 <tr><td></td><td><code>日本向け UI デザイナー</code></td><td>upstream (UI Designer)</td><td>adapted</td><td>日本の業務システム、B2B SaaS、EC、管理画面に合わせて高密度で誤操作に強い UI を設計する design agent。</td><td><code>design/design-ui-designer.md</code></td></tr>
 <tr><td></td><td><code>日本向け UX アーキテクト</code></td><td>upstream (UX Architect)</td><td>adapted</td><td>日本の業務・購買・承認・運用フローを踏まえ、プロダクト全体の UX 構造と導線を設計する agent。</td><td><code>design/design-ux-architect.md</code></td></tr>
 <tr><td></td><td><code>日本向け UX リサーチャー</code></td><td>upstream (UX Researcher)</td><td>adapted</td><td>日本の利用者、業務現場、購買・承認構造に合わせて UX research 設計、インタビュー、洞察整理を行う agent。</td><td><code>design/design-ux-researcher.md</code></td></tr>
@@ -57,7 +58,7 @@ Total: 12 (⭐ 3 japan-original + 9 upstream-aligned)
 
 ## engineering
 
-Total: 79 (⭐ 27 japan-original + 52 upstream-aligned)
+Total: 85 (⭐ 27 japan-original + 58 upstream-aligned)
 
 <table>
 <thead>
@@ -99,6 +100,7 @@ Total: 79 (⭐ 27 japan-original + 52 upstream-aligned)
 <tr><td></td><td><code>日本向け CMS 開発者</code></td><td>upstream (CMS Developer)</td><td>adapted</td><td>日本の企業サイト、自治体、EC、オウンドメディア向けに CMS 設計、運用、権限、SEO、公開承認を実装する agent。</td><td><code>engineering/engineering-cms-developer.md</code></td></tr>
 <tr><td></td><td><code>日本向け Code Reviewer</code></td><td>upstream (Code Reviewer)</td><td>adapted</td><td>日本の開発チーム向けに、重大度、根拠、保守運用リスク、受入条件を明確にした code review を行う agent。</td><td><code>engineering/engineering-code-reviewer.md</code></td></tr>
 <tr><td></td><td><code>日本向け Data Engineer</code></td><td>upstream (Data Engineer)</td><td>adapted</td><td>日本の業務システム、SaaS、EC、製造業 DX 向けに ETL / ELT、DWH、BI、CSV、個人情報、データ品質を設計する agent。</td><td><code>engineering/engineering-data-engineer.md</code></td></tr>
+<tr><td></td><td><code>日本向け Data Visualization Engineer</code></td><td>upstream (Data Visualization Engineer)</td><td>adapted</td><td>データの問いに合う chart type、知覚的に正直な encoding、colorblind-safe palette、accessible / performant な可視化を設計・実装する agent。</td><td><code>engineering/engineering-data-visualization-engineer.md</code></td></tr>
 <tr><td></td><td><code>日本向け Database Optimizer</code></td><td>upstream (Database Optimizer)</td><td>adapted</td><td>日本の業務システムで query、index、schema、migration、batch、帳票、CSV workload を最適化する database agent。</td><td><code>engineering/engineering-database-optimizer.md</code></td></tr>
 <tr><td></td><td><code>日本向け Database Reliability Engineer</code></td><td>upstream (Database Reliability Engineer)</td><td>adapted</td><td>Database の高可用性、replication、failover、backup / PITR、zero-downtime migration、DR drill を日本の本番運用向けに設計する DBRE agent。</td><td><code>engineering/engineering-database-reliability-engineer.md</code></td></tr>
 <tr><td></td><td><code>日本向け Developer Tooling Engineer</code></td><td>upstream (Developer Tooling Engineer)</td><td>adapted</td><td>CLI、internal developer platform、開発自動化、error UX、shell completion、cross-platform 配布を設計する developer tooling agent。</td><td><code>engineering/engineering-developer-tooling-engineer.md</code></td></tr>
@@ -107,16 +109,21 @@ Total: 79 (⭐ 27 japan-original + 52 upstream-aligned)
 <tr><td></td><td><code>日本向け Drupal パフォーマンスエンジニア</code></td><td>upstream (Drupal Performance Engineer)</td><td>adapted</td><td>Drupal 10 / 11 の Core Web Vitals、render cache、Dynamic Page Cache、BigPipe、Views、CDN、PHP-FPM / opcache を日本の公共・企業サイト向けに最適化する engineering agent。</td><td><code>engineering/engineering-drupal-performance.md</code></td></tr>
 <tr><td></td><td><code>日本向け FinOps エンジニア</code></td><td>upstream (FinOps Engineer)</td><td>adapted</td><td>AWS / Azure / Google Cloud の cloud cost、unit economics、tagging、budget、rightsizing、reserved commitment、showback / chargeback を日本企業向けに最適化する engineering agent。</td><td><code>engineering/engineering-finops-engineer.md</code></td></tr>
 <tr><td></td><td><code>日本向け Frontend Developer</code></td><td>upstream (Frontend Developer)</td><td>adapted</td><td>日本の業務画面、SaaS、EC、管理画面向けに React / Vue、form、table、アクセシビリティ、入力補助を実装する frontend agent。</td><td><code>engineering/engineering-frontend-developer.md</code></td></tr>
+<tr><td></td><td><code>日本向け GaussDB Expert Engineer</code></td><td>upstream (GaussDB Expert Engineer)</td><td>adapted</td><td>Huawei GaussDB OLTP の分散表設計、CN / DN 実行計画、UStore / AStore、性能 tuning、HA / DR を扱う database specialist agent。</td><td><code>engineering/engineering-gaussdb-expert.md</code></td></tr>
 <tr><td></td><td><code>日本向け Git ワークフローマスター</code></td><td>upstream (Git Workflow Master)</td><td>adapted</td><td>日本の開発チーム向けに branch、PR、commit、release、hotfix、権限、レビュー運用を整える Git workflow agent。</td><td><code>engineering/engineering-git-workflow-master.md</code></td></tr>
 <tr><td></td><td><code>日本向け ID / アクセス管理エンジニア</code></td><td>upstream (Identity &amp; Access Engineer)</td><td>adapted</td><td>IAM、SSO、OIDC / SAML、MFA、SCIM、RBAC / ABAC、特権 ID、joiner / mover / leaver を日本企業向けに設計する identity and access engineering agent。</td><td><code>engineering/engineering-identity-access-engineer.md</code></td></tr>
 <tr><td></td><td><code>日本向け IoT Fleet Engineer</code></td><td>upstream (IoT Fleet Engineer)</td><td>adapted</td><td>IoT / edge device fleet の provisioning、device identity、MQTT telemetry、OTA firmware update、edge observability を安全に設計する agent。</td><td><code>engineering/engineering-iot-fleet-engineer.md</code></td></tr>
 <tr><td></td><td><code>日本向け IT Service Manager</code></td><td>upstream (IT Service Manager)</td><td>adapted</td><td>ITIL 4 を軸に service catalog、incident / problem / change、SLA、CMDB、継続改善を日本企業の情シス・運用保守に合わせて設計する agent。</td><td><code>engineering/engineering-it-service-manager.md</code></td></tr>
 <tr><td></td><td><code>日本向け LINE WORKS / Slack 連携開発者</code></td><td>upstream (Feishu Integration Developer)</td><td>adapted</td><td>日本企業の LINE WORKS、Slack、Teams、kintone、承認・通知業務を連携する integration agent。</td><td><code>engineering/engineering-feishu-integration-developer.md</code></td></tr>
 <tr><td></td><td><code>日本向け LINE ミニアプリ開発者</code></td><td>upstream (WeChat Mini Program Developer)</td><td>adapted</td><td>日本向け LINE ミニアプリ / LIFF、予約、会員証、EC、CRM、店舗導線を実装する agent。</td><td><code>engineering/engineering-wechat-mini-program-developer.md</code></td></tr>
+<tr><td></td><td><code>日本向け LLM Post-Training Engineer</code></td><td>upstream (LLM Post-Training Engineer)</td><td>adapted</td><td>SFT、preference optimization、RLHF / RLVR、MoE post-training、checkpoint integrity、release gate を evidence-driven に管理する agent。</td><td><code>engineering/engineering-llm-post-training-engineer.md</code></td></tr>
 <tr><td></td><td><code>日本向け Mobile App Builder</code></td><td>upstream (Mobile App Builder)</td><td>adapted</td><td>日本向け iOS / Android / React Native / Flutter app の認証、push、決済、審査、運用を実装する mobile agent。</td><td><code>engineering/engineering-mobile-app-builder.md</code></td></tr>
 <tr><td></td><td><code>日本向け Multi-Agent Systems Architect</code></td><td>upstream (Multi-Agent Systems Architect)</td><td>adapted</td><td>複数 AI agent の topology、context、権限、失敗復旧、human-in-the-loop、observability、governance を設計する production-grade agent architecture 専門家。</td><td><code>engineering/engineering-multi-agent-systems-architect.md</code></td></tr>
 <tr><td></td><td><code>日本向け OrgScript Engineer</code></td><td>upstream (OrgScript Engineer)</td><td>adapted</td><td>OrgScript の grammar、AST、validation、business logic modeling を使い、日本企業の業務手順や承認 flow を machine-readable に整理する DSL engineer。</td><td><code>engineering/engineering-orgscript-engineer.md</code></td></tr>
+<tr><td></td><td><code>日本向け Privacy Engineer</code></td><td>upstream (Privacy Engineer)</td><td>adapted</td><td>個人情報の発見・分類、同意 enforcement、DSAR / 削除 pipeline、仮名化・tokenization、保存期間 automation を実装する privacy engineering agent。</td><td><code>engineering/engineering-privacy-engineer.md</code></td></tr>
 <tr><td></td><td><code>日本向け Prompt Engineer</code></td><td>upstream (Prompt Engineer)</td><td>adapted</td><td>日本語 LLM / agent / RAG の system prompt、評価 case、出力 format、guardrail を設計し、曖昧な依頼を再現性のある AI behavior に変える agent。</td><td><code>engineering/engineering-prompt-engineer.md</code></td></tr>
+<tr><td></td><td><code>日本向け RAG Pipeline Engineer</code></td><td>upstream (RAG Pipeline Engineer)</td><td>adapted</td><td>RAG の chunking、embedding、hybrid search、metadata filtering、reranking、evaluation、production monitoring を設計する retrieval quality agent。</td><td><code>engineering/engineering-rag-pipeline-engineer.md</code></td></tr>
+<tr><td></td><td><code>日本向け Rust Refactoring Specialist</code></td><td>upstream (Rust Refactoring Specialist)</td><td>adapted</td><td>Rust workspace の repository-scale refactoring、safe rename、module restructuring、panic hardening、ownership 改善、Clippy remediation を行う agent。</td><td><code>engineering/engineering-rust-refactoring-specialist.md</code></td></tr>
 <tr><td></td><td><code>日本向け Section 508 / アクセシビリティ専門家</code></td><td>upstream (Section 508 Accessibility Specialist)</td><td>adapted</td><td>米国 Section 508 / WCAG と、日本の JIS X 8341-3、公共・自治体アクセシビリティ要件、VPAT / ACR を橋渡しする accessibility specialist agent。</td><td><code>engineering/engineering-section-508-specialist.md</code></td></tr>
 <tr><td></td><td><code>日本向け Solidity スマートコントラクトエンジニア</code></td><td>upstream (Solidity Smart Contract Engineer)</td><td>adapted</td><td>日本向け Web3 / blockchain project の Solidity contract、監査、運用、法務・セキュリティ論点を整理する agent。</td><td><code>engineering/engineering-solidity-smart-contract-engineer.md</code></td></tr>
 <tr><td></td><td><code>日本向け Technical Writer</code></td><td>upstream (Technical Writer)</td><td>adapted</td><td>日本の IT 開発、SaaS、SI、受託開発向けに設計書、API docs、運用手順、release note、検収資料を整える agent。</td><td><code>engineering/engineering-technical-writer.md</code></td></tr>
@@ -476,7 +483,7 @@ Total: 6 (⭐ 0 japan-original + 6 upstream-aligned)
 
 ## specialized
 
-Total: 69 (⭐ 14 japan-original + 55 upstream-aligned)
+Total: 71 (⭐ 14 japan-original + 57 upstream-aligned)
 
 <table>
 <thead>
@@ -497,6 +504,7 @@ Total: 69 (⭐ 14 japan-original + 55 upstream-aligned)
 <tr><td>⭐</td><td><code>日本向け事業継続プランナー</code></td><td>japan-original</td><td></td><td>日本企業の SaaS / 業務システム / IT 運用における BCP、DR、災害対応、代替運用、連絡網、復旧目標、訓練 plan を作る business continuity planner。</td><td><code>specialized/specialized-japanese-business-continuity-planner.md</code></td></tr>
 <tr><td>⭐</td><td><code>自治体 DX コンサルタント</code></td><td>japan-original</td><td></td><td>日本の自治体・公共 sector 向け DX、調達、住民サービス、セキュリティ、アクセシビリティ、運用保守を支援する consultant。</td><td><code>specialized/japanese-public-sector-dx-consultant.md</code></td></tr>
 <tr><td>⭐</td><td><code>製造業 DX コンサルタント</code></td><td>japan-original</td><td></td><td>日本の製造業向けに現場業務、品質、在庫、原価、設備、IoT、MES、traceability を踏まえた DX 提案を行う consultant。</td><td><code>specialized/specialized-japanese-manufacturing-dx-consultant.md</code></td></tr>
+<tr><td></td><td><code>日本向け Aging Parent Care Companion</code></td><td>upstream (Aging Parent Care Companion)</td><td>adapted</td><td>高齢の親・家族を支える介護者向けに、服薬、通院、ケアチーム連携、緊急時判断、介護者自身の負担を整理する care coordination agent。</td><td><code>specialized/healthcare-aging-parent-care-companion.md</code></td></tr>
 <tr><td></td><td><code>日本向け AI エージェント ID / Trust 設計者</code></td><td>upstream (Agentic Identity &amp; Trust)</td><td>adapted</td><td>AI agent の本人性、権限、監査ログ、委任、停止条件を日本企業のガバナンスに合わせて設計する agent。</td><td><code>specialized/agentic-identity-trust.md</code></td></tr>
 <tr><td></td><td><code>日本向け Business Strategist</code></td><td>upstream (Business Strategist)</td><td>adapted</td><td>市場参入、競争分析、事業 model、成長戦略、組織戦略を日本企業の意思決定・稟議・実行制約に合わせて整理する strategy agent。</td><td><code>specialized/business-strategist.md</code></td></tr>
 <tr><td></td><td><code>日本向け Change Management Consultant</code></td><td>upstream (Change Management Consultant)</td><td>adapted</td><td>ADKAR / Kotter / Prosci を参考に、システム導入、業務改革、組織変更の定着・抵抗対応・教育を日本企業向けに設計する agent。</td><td><code>specialized/change-management-consultant.md</code></td></tr>
@@ -518,6 +526,7 @@ Total: 69 (⭐ 14 japan-original + 55 upstream-aligned)
 <tr><td></td><td><code>日本向け Organizational Psychologist</code></td><td>upstream (Organizational Psychologist)</td><td>adapted</td><td>心理的安全性、burnout、組織文化、team dynamics、change management を日本の職場文脈で診断・改善する agent。</td><td><code>specialized/organizational-psychologist.md</code></td></tr>
 <tr><td></td><td><code>日本向け Personal Growth Mentor</code></td><td>upstream (Personal Growth Mentor)</td><td>adapted</td><td>Career、学習、習慣、意思決定、時間管理を、精神論ではなく system と accountability に落とす personal growth agent。</td><td><code>specialized/personal-growth-mentor.md</code></td></tr>
 <tr><td></td><td><code>日本向け Pricing Analyst</code></td><td>upstream (Pricing Analyst)</td><td>adapted</td><td>価格、packaging、値引き、見積、margin、競合比較を分析し、日本市場向けの pricing decision を数値で支える agent。</td><td><code>specialized/specialized-pricing-analyst.md</code></td></tr>
+<tr><td></td><td><code>日本向け Resume Tailor</code></td><td>upstream (Resume Tailor)</td><td>adapted</td><td>求人票と実際の経験を照合し、ATS と採用担当者に伝わる履歴書・職務経歴書へ誠実に最適化する career application agent。</td><td><code>specialized/resume-tailor.md</code></td></tr>
 <tr><td></td><td><code>日本向け Sales Data Extraction Agent</code></td><td>upstream (Sales Data Extraction Agent)</td><td>adapted</td><td>商談メモ、メール、議事録、名刺、CRM から日本の営業活動に必要な情報を抽出・整形する agent。</td><td><code>specialized/sales-data-extraction-agent.md</code></td></tr>
 <tr><td></td><td><code>日本向け Sales Outreach</code></td><td>upstream (Sales Outreach)</td><td>adapted</td><td>日本の B2B 営業向けに個社仮説、メール、電話、紹介、イベント follow-up の outreach を設計する agent。</td><td><code>specialized/sales-outreach.md</code></td></tr>
 <tr><td></td><td><code>日本向け Salesforce アーキテクト</code></td><td>upstream (Salesforce Architect)</td><td>adapted</td><td>日本企業向けに Salesforce のデータ model、権限、Flow、外部連携、営業・CS 運用を設計する agent。</td><td><code>specialized/specialized-salesforce-architect.md</code></td></tr>
