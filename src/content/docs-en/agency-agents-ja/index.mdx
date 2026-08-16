@@ -1,0 +1,55 @@
+---
+title: agency-agents-ja Overview
+description: An AI specialist agent library for Japanese IT delivery — 385 agents (115 japan-original + 270 upstream-aligned) and 27 workflows.
+---
+
+# agency-agents-ja
+
+`agency-agents-ja` is an AI specialist agent library for Japanese IT development, SIer, custom development, in-house services, SaaS, EC, manufacturing DX, GIS / spatial data, healthcare, and public sector.
+
+- **Repository**: [sscodeai/agency-agents-ja](https://github.com/sscodeai/agency-agents-ja)
+- **Latest release**: v0.3.0 (2026-06-06)
+- **Install**: `npx agency-agents-ja install`
+- **License**: MIT
+- **Upstream**: [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents)
+
+## Stats
+
+| Metric | Count |
+|---|---|
+| Total agents | **385** |
+| ⭐ Japan-market originals (`source: japan-original`) | **115** |
+| Upstream-aligned, adapted to Japan (`source: upstream`, `translation_status: adapted`) | **270** |
+| Workflows | **27** |
+| Categories | 20 |
+
+## Two kinds of agents
+
+### ⭐ Japan-market originals (115)
+
+Agents designed independently for the Japanese market — production-ready and not present in the upstream English library.
+
+- **SIer / custom development / multi-tier subcontracting** workflow agents
+- **kintone / LINE WORKS / Sansan / freee** integration specialists
+- **Personal-information protection / invoicing / electronic bookkeeping / timely disclosure / TDnet** compliance agents
+- **Manufacturing DX / public sector / security operations** specialists
+- **Learning-plan** agents for certifications and languages (TOEIC, Eiken, IELTS / TOEFL, JLPT, DELF / DALF, etc.)
+
+### Upstream-aligned, adapted to Japan (270)
+
+Agents mapping 1:1 to the upstream `msitarzewski/agency-agents` inventory, keeping an `upstream_path:` link to the original file.
+
+Currently `translation_status: adapted` — not a literal translation, but rewritten for the Japanese market while preserving role-level intent (description, role, expected scenarios, and required checks are all adapted to Japanese practice).
+
+## Catalogs
+
+- [Generated Agent Catalog](/agency-agents-ja/generated-agent-catalog/) — all 385 agents, grouped by source
+- [Generated Workflow Catalog](/agency-agents-ja/generated-workflows/) — all 27 workflows
+
+## Install
+
+`agency-agents-ja` works with Claude Code, GitHub Copilot, Antigravity, Gemini CLI, OpenCode, OpenClaw, Cursor, Aider, Windsurf, Qwen Code, ZCode, Kimi Code, Codex, Osaurus, Hermes, and Mistral Vibe.
+
+```bash
+npx agency-agents-ja install
+```

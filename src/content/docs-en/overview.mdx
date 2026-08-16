@@ -1,0 +1,55 @@
+---
+title: Overview
+description: SSCodeAI organizes AI coding workflows and agent libraries for Japanese IT delivery, centered on superpowers-ja and agency-agents-ja.
+---
+
+# SSCodeAI
+
+SSCodeAI organizes AI coding workflows and agent libraries for Japanese IT development, SIer / custom development, in-house services, SaaS, EC, and manufacturing DX.
+
+## Projects
+
+### superpowers-ja
+
+Adds planning, TDD, systematic debugging, code review, pre-completion verification, and Japanese development workflows to AI coding agents.
+
+- Supports Claude Code / Cursor / Codex CLI / Gemini CLI / OpenCode and more
+- Strengthens Japanese code review, incident reporting, acceptance-test specs, and Git operations
+- Install into a project with `npx superpowers-ja`
+- Differences from upstream / the Chinese edition are documented in [version differences](/superpowers-ja/version-differences/)
+
+### agency-agents-ja
+
+A library of AI specialist agents and workflows for Japanese delivery.
+
+- **385 agents** (⭐ 115 japan-original + 270 upstream-aligned adapted to Japan) + **27 workflows**
+- Covers requirements, design, QA, incident response, PM, GIS / spatial data, healthcare, public sector, accessibility, payments, i18n, API platform, FinOps, search relevance, sales, support, legal, finance, and more
+- Assumes Backlog / Redmine / Jira, GitHub / GitLab / Bitbucket, kintone, LINE WORKS, Sansan, freee
+- Considers compliance for Japan (personal-information protection, invoicing, electronic bookkeeping, timely disclosure / TDnet)
+- Forked from [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents) (MIT), with 115 Japan-market originals + 270 upstream-aligned agents adapted to Japan
+- Install with `npx agency-agents-ja install`
+
+### img2threejs
+
+A skill that reconstructs the object in a reference image as procedural TypeScript + Three.js code (rather than mesh extraction or downloaded art packs).
+
+- Creates an `ObjectSculptSpec` from a single image and generates a `THREE.Group` factory through staged build passes
+- Quality gates for blockout, structure, shape, materials, surface detail, lighting, interaction, and optimization
+- Compares renders against the reference image to decide whether to proceed or self-correct
+- See the [demo gallery](/img2threejs/demos/)
+
+## Site Architecture
+
+This site is built with Astro + Nimbus.
+
+- Documentation: Nimbus (agent-native — every page has a markdown twin and `llms.txt`)
+- Blog and tutorials: MDX content
+- Deployment: Cloudflare Pages
+- Content sync: `scripts/sync-content.js`
+
+## Recommended Reader Paths
+
+- First time: [superpowers-ja Quickstart](/superpowers-ja/quickstart/)
+- Agent catalog: [agency-agents-ja Overview](/agency-agents-ja/)
+- Image-to-3D skill: [img2threejs Manual](/img2threejs/)
+- Deploy to Cloudflare: [Cloudflare Deploy](/deploy/cloudflare/)

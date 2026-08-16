@@ -1,0 +1,73 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import { config } from "virtual:nimbus/config";
+---
+
+<BaseLayout title={`${config.title} — AI agents for Japanese IT`} description="AI coding workflows and agent libraries for Japanese IT delivery.">
+  <div class="flex flex-col min-h-screen">
+    <Header />
+    <main class="flex-1 mx-auto w-full max-w-4xl px-6 py-20">
+      <section class="text-center">
+        <img src="/logo.svg" alt="SSCodeAI" class="mx-auto mb-8 h-20 w-20 shadow-sm" />
+        <h1
+          class="text-foreground leading-tight"
+          style="font-size: var(--nb-h1-size); font-weight: var(--nb-h1-weight); letter-spacing: var(--nb-h1-tracking);"
+        >
+          {config.title}
+        </h1>
+        <p class="mx-auto mt-4 max-w-2xl text-xl font-medium text-foreground leading-relaxed">
+          AI agent libraries for Japanese IT delivery
+        </p>
+        <p class="mx-auto mt-3 max-w-xl text-muted-foreground leading-relaxed">
+          From requirements through design, implementation, testing, and incident response — deliverables and checklists aligned with Japanese development culture.
+        </p>
+
+        <div class="mt-10 flex flex-wrap justify-center gap-x-12 gap-y-6 text-center">
+          <div>
+            <div class="text-3xl font-semibold text-foreground">385</div>
+            <div class="mt-1 text-sm text-muted-foreground">specialist agents</div>
+          </div>
+          <div>
+            <div class="text-3xl font-semibold text-foreground">27</div>
+            <div class="mt-1 text-sm text-muted-foreground">workflows</div>
+          </div>
+          <div>
+            <div class="text-3xl font-semibold text-foreground">115</div>
+            <div class="mt-1 text-sm text-muted-foreground">Japan-market originals</div>
+          </div>
+          <div>
+            <div class="text-3xl font-semibold text-foreground">5</div>
+            <div class="mt-1 text-sm text-muted-foreground">supported tools</div>
+          </div>
+        </div>
+
+        <div class="mt-10 flex flex-wrap justify-center gap-3">
+          <a href="/en/superpowers-ja" class="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground no-underline shadow-sm transition-colors hover:bg-primary-hover">
+            Get started
+          </a>
+          <a href="/en/agency-agents-ja" class="inline-flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground no-underline transition-colors hover:border-border-strong">
+            View agent catalog
+          </a>
+          <a href="/en/img2threejs" class="inline-flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground no-underline transition-colors hover:border-border-strong">
+            img2threejs
+          </a>
+        </div>
+      </section>
+
+      <section class="mt-24 rounded-xl border border-border bg-card p-6 md:p-8">
+        <h2 class="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+          About SSCodeAI
+        </h2>
+        <p class="mt-4 leading-relaxed text-foreground">
+          SSCodeAI (SS) develops and publishes AI coding agents and development frameworks for Japanese enterprise IT.
+          From requirements through design, implementation, testing, incident response, and handover — deliverables and checklists are adapted to Japanese development culture (acceptance, audit trails, incident reporting).
+        </p>
+        <div class="mt-5 flex flex-wrap gap-3">
+          <a href="/en/profile" class="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-foreground no-underline transition-colors hover:border-border-strong">Profile</a>
+          <a href="/en/projects" class="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-foreground no-underline transition-colors hover:border-border-strong">Projects</a>
+        </div>
+      </section>
+    </main>
+  </div>
+</BaseLayout>
