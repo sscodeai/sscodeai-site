@@ -1,0 +1,151 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/Header.astro";
+import { config } from "virtual:nimbus/config";
+---
+
+<BaseLayout title={config.title} description={config.description}>
+  <div class="flex flex-col min-h-screen">
+    <Header />
+    <main class="flex-1 mx-auto w-full max-w-4xl px-6 py-20">
+      <!-- Hero -->
+      <section class="text-center">
+        <img
+          src="/logo.svg"
+          alt="SSCodeAI"
+          class="mx-auto mb-8 h-20 w-20 shadow-sm"
+        />
+        <h1
+          class="text-foreground leading-tight"
+          style="font-size: var(--nb-h1-size); font-weight: var(--nb-h1-weight); letter-spacing: var(--nb-h1-tracking);"
+        >
+          {config.title}
+        </h1>
+        <p class="mx-auto mt-4 max-w-2xl text-xl font-medium text-foreground leading-relaxed">
+          日本の IT 開発現場のための AI エージェントライブラリ
+        </p>
+        <p class="mx-auto mt-3 max-w-xl text-muted-foreground leading-relaxed">
+          要件定義から設計・実装・テスト・障害対応まで、成果物と確認観点を日本の開発文化に合わせて整えます。
+        </p>
+
+        <!-- Key numbers -->
+        <div class="mt-10 flex flex-wrap justify-center gap-x-12 gap-y-6 text-center">
+          <div>
+            <div class="text-3xl font-semibold text-foreground">385</div>
+            <div class="mt-1 text-sm text-muted-foreground">AI 専門エージェント</div>
+          </div>
+          <div>
+            <div class="text-3xl font-semibold text-foreground">27</div>
+            <div class="mt-1 text-sm text-muted-foreground">ワークフロー</div>
+          </div>
+          <div>
+            <div class="text-3xl font-semibold text-foreground">115</div>
+            <div class="mt-1 text-sm text-muted-foreground">日本向けオリジナル</div>
+          </div>
+          <div>
+            <div class="text-3xl font-semibold text-foreground">5</div>
+            <div class="mt-1 text-sm text-muted-foreground">対応ツール</div>
+          </div>
+        </div>
+
+        <!-- CTAs -->
+        <div class="mt-10 flex flex-wrap justify-center gap-3">
+          <a
+            href="/superpowers-ja/quickstart"
+            class="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground no-underline shadow-sm transition-colors hover:bg-primary-hover"
+          >
+            superpowers-ja を始める
+          </a>
+          <a
+            href="/agency-agents-ja/generated-agent-catalog"
+            class="inline-flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground no-underline transition-colors hover:border-border-strong"
+          >
+            Agent catalog を見る
+          </a>
+          <a
+            href="/img2threejs"
+            class="inline-flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground no-underline transition-colors hover:border-border-strong"
+          >
+            img2threejs を見る
+          </a>
+        </div>
+      </section>
+
+      <!-- Projects -->
+      <section class="mt-24">
+        <h2 class="text-center text-xs font-medium uppercase tracking-widest text-muted-foreground">
+          Projects
+        </h2>
+        <div class="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div class="flex flex-col rounded-lg border border-border p-5 transition-colors hover:border-border-strong">
+            <div class="font-semibold text-foreground">superpowers-ja</div>
+            <p class="mt-2 flex-1 text-sm text-muted-foreground leading-relaxed">
+              AI coding agent に計画・TDD・レビュー・検証のワークフローを追加するスキルパック。
+            </p>
+            <div class="mt-4 flex flex-wrap gap-1.5 text-xs">
+              <span class="rounded border border-border px-2 py-0.5 text-muted-foreground">Claude Code</span>
+              <span class="rounded border border-border px-2 py-0.5 text-muted-foreground">Cursor</span>
+              <span class="rounded border border-border px-2 py-0.5 text-muted-foreground">Codex CLI</span>
+            </div>
+            <a href="/superpowers-ja/quickstart" class="mt-4 text-sm font-medium text-primary no-underline hover:underline">
+              はじめる →
+            </a>
+          </div>
+
+          <div class="flex flex-col rounded-lg border border-border p-5 transition-colors hover:border-border-strong">
+            <div class="font-semibold text-foreground">agency-agents-ja</div>
+            <p class="mt-2 flex-1 text-sm text-muted-foreground leading-relaxed">
+              SIer・受託開発・SaaS・製造 DX 向けの AI 専門家エージェントライブラリ。
+            </p>
+            <div class="mt-4 flex flex-wrap gap-1.5 text-xs">
+              <span class="rounded border border-border px-2 py-0.5 text-muted-foreground">385 agents</span>
+              <span class="rounded border border-border px-2 py-0.5 text-muted-foreground">27 workflows</span>
+            </div>
+            <a href="/agency-agents-ja" class="mt-4 text-sm font-medium text-primary no-underline hover:underline">
+              カタログを見る →
+            </a>
+          </div>
+
+          <div class="flex flex-col rounded-lg border border-border p-5 transition-colors hover:border-border-strong">
+            <div class="font-semibold text-foreground">img2threejs</div>
+            <p class="mt-2 flex-1 text-sm text-muted-foreground leading-relaxed">
+              参照画像から手続き型の Three.js モデルをコード生成するツール。
+            </p>
+            <div class="mt-4 flex flex-wrap gap-1.5 text-xs">
+              <span class="rounded border border-border px-2 py-0.5 text-muted-foreground">Three.js</span>
+              <span class="rounded border border-border px-2 py-0.5 text-muted-foreground">demo gallery</span>
+            </div>
+            <a href="/img2threejs/demos" class="mt-4 text-sm font-medium text-primary no-underline hover:underline">
+              デモを見る →
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- About -->
+      <section class="mt-24 rounded-xl border border-border bg-card p-6 md:p-8">
+        <h2 class="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+          SSCodeAI について
+        </h2>
+        <p class="mt-4 leading-relaxed text-foreground">
+          SSCodeAI（SS）は、日本の企業 IT 向けに AI コーディングエージェントと開発フレームワークを開発・公開しています。
+          要件定義から設計・実装・テスト・障害対応・運用引き継ぎまで、成果物と確認観点を日本の開発文化（検収・証跡・障害報告）に合わせて整えることをテーマにしています。
+        </p>
+        <div class="mt-5 flex flex-wrap gap-3">
+          <a
+            href="/profile"
+            class="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-foreground no-underline transition-colors hover:border-border-strong"
+          >
+            プロフィール
+          </a>
+          <a
+            href="/projects"
+            class="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-foreground no-underline transition-colors hover:border-border-strong"
+          >
+            プロジェクト一覧
+          </a>
+        </div>
+      </section>
+    </main>
+  </div>
+</BaseLayout>
