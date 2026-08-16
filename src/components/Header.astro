@@ -82,10 +82,34 @@ const enHref = isEn ? currentPath : "/en" + (currentPath === "/" ? "" : currentP
           <Icon name="ph:github-logo" class="w-4 h-4" />
         </LinkButton>
       )}
-      {/* Language switcher */}
-      <div class="flex items-center gap-1 text-[0.8125rem] font-medium" aria-label="Language">
-        <a href={jaHref} class:list={["rounded px-1.5 py-0.5 no-underline transition-colors", !isEn ? "bg-accent text-foreground" : "text-muted-foreground hover:text-foreground"]}>日本語</a>
-        <a href={enHref} class:list={["rounded px-1.5 py-0.5 no-underline transition-colors", isEn ? "bg-accent text-foreground" : "text-muted-foreground hover:text-foreground"]}>English</a>
+      {/* Language toggle — single unified control, click to switch */}
+      <div
+        class="inline-flex items-center gap-0.5 rounded-full border border-border bg-muted/50 p-0.5 text-xs font-medium"
+        role="group"
+        aria-label="Switch language"
+      >
+        <a
+          href={jaHref}
+          class:list={[
+            "rounded-full px-2.5 py-1 no-underline transition-all duration-200",
+            !isEn
+              ? "bg-background text-foreground shadow-sm ring-1 ring-border/60"
+              : "text-muted-foreground hover:text-foreground",
+          ]}
+        >
+          日本語
+        </a>
+        <a
+          href={enHref}
+          class:list={[
+            "rounded-full px-2.5 py-1 no-underline transition-all duration-200",
+            isEn
+              ? "bg-background text-foreground shadow-sm ring-1 ring-border/60"
+              : "text-muted-foreground hover:text-foreground",
+          ]}
+        >
+          English
+        </a>
       </div>
       <ThemeToggle />
       {showSidebar && (
