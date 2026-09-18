@@ -1,0 +1,161 @@
+---
+title: keysmith
+description: AI エージェント向けの安全なシークレット管理を提供する MCP サーバー兼 CLI。
+---
+
+# keysmith
+
+`keysmith` は、AI エージェントに安全なシークレット管理を提供する MCP サーバー兼 CLI です。シークレットを保存時に暗号化し、エージェントにはマスク済みビューやハンドルだけを渡すことで、平文がコンテキスト、ログ、セッション履歴に入ることを避けます。
+
+Go 製の単一静的バイナリで、ランタイム依存はありません。
+
+## Links
+
+- Repository: [`sscodeai/keysmith`](https://github.com/sscodeai/keysmith)
+- Architecture: [keysmith Architecture](/keysmith/architecture/)
+- Skill instructions: [`skill/SKILL.md`](https://github.com/sscodeai/keysmith/blob/main/skill/SKILL.md)
+- License: Apache-2.0
+
+## 何を守るか
+
+AI エージェントは、API key、token、DB URL、password などを必要とすることがあります。ただし `.env` や secret file を直接読むと、平文が agent context、tool transcript、ログ、履歴に残ります。
+
+`keysmith` は、シークレット操作を専用サーバーに集約し、エージェントには安全な形だけを返します。
+
+| レイヤー | 仕組み | 防ぐもの |
+|---|---|---|
+| 暗号化された保存 | 保存時に age (X25519) で暗号化 | ディスク上の平文 |
+| マスク済みビュー | tools/resources が `sk******ij` 形式で返す | 認証情報が agent context に入ること |
+| ハンドル渡し | `put` は transcript ではなく一時ファイル引数から値を読む | tool call transcript 内の平文 |
+| 自己修復ローテーション | `scan --rotate` が漏えいを検出してローテーション | 古い漏えい済み credential が使われ続けること |
+| 短 TTL (Vault) | 動的 DB credential が期限切れになる | 漏えい credential の長期利用 |
+
+## インストール
+
+```sh
+go install github.com/sscodeai/keysmith/cmd/keysmith@latest
+```
+
+ソースからビルドする場合:
+
+```sh
+git clone https://github.com/sscodeai/keysmith.git
+cd keysmith
+go build -o bin/keysmith ./cmd/keysmith
+```
+
+## MCP サーバーとして使う
+
+stdio transport で起動します。これは標準的な MCP server mode です。
+
+```sh
+keysmith -store ~/.keysmith
+```
+
+環境変数でも store path を指定できます。
+
+```sh
+KEYSMITH_STORE=/path/to/store keysmith
+```
+
+Claude Code、Cursor などの MCP client では次のように設定します。
+
+```json
+{
+  "mcpServers": {
+    "keysmith": {
+      "command": "keysmith",
+      "args": ["-store", "~/.keysmith"]
+    }
+  }
+}
+```
+
+初回実行時に store directory が作成され、次のファイルを保持します。
+
+- `key.txt`: age 秘密鍵。共有せず、`0600` を維持します
+- `secrets.enc`: armor 形式の age 暗号化済み secret blob
+
+## HTTP transport
+
+リモートエージェント向けに HTTP/SSE で提供できます。
+
+```sh
+keysmith -store ~/.keysmith -http :8080
+# endpoint: http://localhost:8080/sse
+```
+
+MCP 2025 Streamable HTTP にも対応します。
+
+```sh
+keysmith -store ~/.keysmith -http :8080 -streamable
+# endpoint: http://localhost:8080/mcp
+```
+
+## CLI
+
+MCP server に加えて、同じ store を使う standalone CLI としても動きます。
+
+```sh
+keysmith list                        # すべてのキーとマスク済み値
+keysmith get API_KEY                 # マスク済み値
+keysmith get API_KEY --unsafe        # 平文。最後の手段
+keysmith set API_KEY < value.txt     # stdin から値を読み、shell history に残さない
+keysmith rotate API_KEY 32           # 強力な新しいシークレットを生成して保存
+keysmith delete API_KEY              # キーを削除
+keysmith scan [--rotate] [repo-dir]  # git 履歴から漏えいしたシークレットをスキャン
+```
+
+## MCP tools と resources
+
+| Tool | 説明 | セキュリティ特性 |
+|---|---|---|
+| `list` | すべてのキーとマスク済み値 | 値は平文にならない |
+| `get` | 1 つのキーのマスク済み値 | 値は平文にならない |
+| `put` | シークレットを保存 | 値は `value_file` 引数から読み、一時ファイルは自動削除 |
+| `rotate` | 強力なランダムシークレットを生成して保存 | マスク済み値のみを返す |
+| `delete` | キーを削除 | - |
+
+| Resource | 説明 |
+|---|---|
+| `secret://secrets` | すべてのシークレットのマスク済みビュー。context に読ませても安全 |
+
+## Vault backend
+
+HashiCorp Vault を backend として使うと、短 TTL の動的 credential を扱えます。
+
+```sh
+export VAULT_TOKEN=<token>
+keysmith -store ~/.keysmith -vault http://127.0.0.1:8200
+```
+
+Vault-backed command:
+
+```sh
+keysmith -vault http://127.0.0.1:8200 vault-kv-set API_KEY < value.txt
+keysmith -vault http://127.0.0.1:8200 vault-kv-get API_KEY
+keysmith -vault http://127.0.0.1:8200 vault-kv-list
+keysmith -vault http://127.0.0.1:8200 vault-db-creds app-role
+```
+
+## セキュリティモデル
+
+- **保存時**: age (X25519) で暗号化し、atomic write と `0600` 権限を使います。
+- **Context 内**: 原則としてマスク済み値だけを返します。
+- **Transcript 内**: `put` は平文を引数に取らず、一時ファイル path から読み取ります。
+- **Masking**: key name、既知 prefix、高 entropy 文字列、URL segment を組み合わせて検出します。
+- **Self-healing**: `keysmith scan --rotate` で git 履歴上の漏えいを検出し、必要に応じてローテーションできます。
+
+## 定期 leak scan
+
+同梱の `scripts/scan-cron.sh` は、1 つ以上の repository に対して `keysmith scan --rotate` を実行します。問題がなければ沈黙し、漏えい検出とローテーション時だけ出力します。
+
+```sh
+0 */6 * * * /path/to/keysmith/scripts/scan-cron.sh ~/.keysmith /repo1 /repo2
+```
+
+## Next
+
+- [Architecture](/keysmith/architecture/) で構成を見る
+- [Repository](https://github.com/sscodeai/keysmith) で `README` と `skill/SKILL.md` を読む
+- [Projects](/projects/) で SSCodeAI の他 project を見る

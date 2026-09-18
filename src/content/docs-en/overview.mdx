@@ -38,6 +38,15 @@ A skill that reconstructs the object in a reference image as procedural TypeScri
 - Compares renders against the reference image to decide whether to proceed or self-correct
 - See the [demo gallery](/img2threejs/demos/)
 
+### keysmith
+
+An MCP server and CLI that lets AI agents work with secrets without putting plaintext values into context.
+
+- Uses an age encrypted store, masked views, and handle-passing to avoid plaintext exposure
+- Helps detect and rotate secrets leaked in git history with `keysmith scan --rotate`
+- Supports stdio, HTTP/SSE, and Streamable HTTP transports
+- See [keysmith](/keysmith/) for install, MCP configuration, CLI usage, and the security model
+
 ## Site Architecture
 
 This site is built with Astro + Nimbus.
@@ -52,4 +61,5 @@ This site is built with Astro + Nimbus.
 - First time: [superpowers-ja Quickstart](/superpowers-ja/quickstart/)
 - Agent catalog: [agency-agents-ja Overview](/agency-agents-ja/)
 - Image-to-3D skill: [img2threejs Manual](/img2threejs/)
+- Agent-safe secret management: [keysmith](/keysmith/)
 - Deploy to Cloudflare: [Cloudflare Deploy](/deploy/cloudflare/)

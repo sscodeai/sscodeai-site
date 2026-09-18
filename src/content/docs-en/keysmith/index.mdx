@@ -1,0 +1,161 @@
+---
+title: keysmith
+description: An MCP server and CLI for AI-agent-safe secret management.
+---
+
+# keysmith
+
+`keysmith` is an MCP server and CLI for AI-agent-safe secret management. It encrypts secrets at rest and gives agents masked views or handles, keeping plaintext out of context, logs, and session history.
+
+It is built in Go as a single static binary with no runtime dependencies.
+
+## Links
+
+- Repository: [`sscodeai/keysmith`](https://github.com/sscodeai/keysmith)
+- Architecture: [keysmith Architecture](/keysmith/architecture/)
+- Skill instructions: [`skill/SKILL.md`](https://github.com/sscodeai/keysmith/blob/main/skill/SKILL.md)
+- License: Apache-2.0
+
+## What it protects
+
+AI agents often need API keys, tokens, DB URLs, passwords, and other credentials. If an agent reads `.env` or secret files directly, plaintext can end up in agent context, tool transcripts, logs, and history.
+
+`keysmith` centralizes secret operations behind a dedicated server and returns only safe representations to the agent.
+
+| Layer | Mechanism | What it prevents |
+|---|---|---|
+| Encrypted residency | age (X25519) encrypted store at rest | Plaintext on disk |
+| Masked views | tools/resources return `sk******ij` form | Credentials entering agent context |
+| Handle-passing | `put` reads values from a temp file arg, not the transcript | Plaintext in tool-call transcripts |
+| Self-healing rotation | `scan --rotate` detects leaks and rotates | Stale leaked credentials keep working |
+| Short TTL (Vault) | dynamic DB credentials expire | Leaked credentials stay useful |
+
+## Install
+
+```sh
+go install github.com/sscodeai/keysmith/cmd/keysmith@latest
+```
+
+Or build from source:
+
+```sh
+git clone https://github.com/sscodeai/keysmith.git
+cd keysmith
+go build -o bin/keysmith ./cmd/keysmith
+```
+
+## MCP server
+
+Start the server on stdio transport, the standard MCP server mode.
+
+```sh
+keysmith -store ~/.keysmith
+```
+
+You can also set the store path with an environment variable.
+
+```sh
+KEYSMITH_STORE=/path/to/store keysmith
+```
+
+Configure it in MCP clients such as Claude Code or Cursor.
+
+```json
+{
+  "mcpServers": {
+    "keysmith": {
+      "command": "keysmith",
+      "args": ["-store", "~/.keysmith"]
+    }
+  }
+}
+```
+
+On first run, the store directory is created with:
+
+- `key.txt`: the age private key. Do not share it; keep `0600`
+- `secrets.enc`: armored age-encrypted secrets blob
+
+## HTTP transport
+
+Serve over HTTP/SSE for remote agents.
+
+```sh
+keysmith -store ~/.keysmith -http :8080
+# endpoint: http://localhost:8080/sse
+```
+
+MCP 2025 Streamable HTTP is also supported.
+
+```sh
+keysmith -store ~/.keysmith -http :8080 -streamable
+# endpoint: http://localhost:8080/mcp
+```
+
+## CLI
+
+Alongside the MCP server, `keysmith` works as a standalone CLI sharing the same store.
+
+```sh
+keysmith list                        # all keys, masked values
+keysmith get API_KEY                 # masked value
+keysmith get API_KEY --unsafe        # plaintext, last resort
+keysmith set API_KEY < value.txt     # value from stdin, no shell-history leak
+keysmith rotate API_KEY 32           # generate and store a new strong secret
+keysmith delete API_KEY              # remove a key
+keysmith scan [--rotate] [repo-dir]  # scan git history for leaked secrets
+```
+
+## MCP tools and resources
+
+| Tool | Description | Security property |
+|---|---|---|
+| `list` | All keys with masked values | Values never plaintext |
+| `get` | Single key, masked value | Values never plaintext |
+| `put` | Store a secret | Value is read from the `value_file` arg; temp file auto-removed |
+| `rotate` | Generate and store a new strong random secret | Returns masked value only |
+| `delete` | Remove a key | - |
+
+| Resource | Description |
+|---|---|
+| `secret://secrets` | Masked view of all secrets, safe to read into context |
+
+## Vault backend
+
+Use HashiCorp Vault as a backend for dynamic short-TTL credentials.
+
+```sh
+export VAULT_TOKEN=<token>
+keysmith -store ~/.keysmith -vault http://127.0.0.1:8200
+```
+
+Vault-backed commands:
+
+```sh
+keysmith -vault http://127.0.0.1:8200 vault-kv-set API_KEY < value.txt
+keysmith -vault http://127.0.0.1:8200 vault-kv-get API_KEY
+keysmith -vault http://127.0.0.1:8200 vault-kv-list
+keysmith -vault http://127.0.0.1:8200 vault-db-creds app-role
+```
+
+## Security model
+
+- **At rest**: age (X25519) encryption, atomic writes, and `0600` permissions.
+- **In context**: return masked values by default.
+- **In transcripts**: `put` does not take plaintext as an argument; it reads from a temporary file path.
+- **Masking**: combines key names, known prefixes, high-entropy strings, and URL segment rules.
+- **Self-healing**: `keysmith scan --rotate` can detect secrets leaked in git history and rotate them.
+
+## Scheduled leak scan
+
+The bundled `scripts/scan-cron.sh` runs `keysmith scan --rotate` on one or more repositories. It stays silent when clean and prints only when leaks are found and rotated.
+
+```sh
+0 */6 * * * /path/to/keysmith/scripts/scan-cron.sh ~/.keysmith /repo1 /repo2
+```
+
+## Next
+
+- See [Architecture](/keysmith/architecture/)
+- Read the `README` and `skill/SKILL.md` in the [repository](https://github.com/sscodeai/keysmith)
+- Browse other SSCodeAI projects in [Projects](/projects/)

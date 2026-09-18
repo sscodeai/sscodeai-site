@@ -43,6 +43,16 @@ This website. Astro + Starlight based documentation, blog, tutorial, and video h
 - Tooling: Python 3.10+ standard library scripts
 - Output: `ObjectSculptSpec` JSON + `THREE.Group` factory + review comparison sheets
 
+## keysmith
+
+AI エージェント向けに、平文 secret を context に入れずに扱うための MCP サーバー兼 CLI です。
+
+- Repository: [`sscodeai/keysmith`](https://github.com/sscodeai/keysmith)
+- Docs: [keysmith](/keysmith/)
+- Architecture: [keysmith Architecture](/keysmith/architecture/)
+- Runtime: Go single static binary
+- Security model: age encrypted store、masked views、handle-passing、self-healing rotation、Vault short-TTL credentials
+
 ## local-agent-toolkit
 
 Agent の memory、skill 管理、実行 trace を local-first に扱う toolkit です。`agency-agents-ja` のような agent library や `superpowers-ja` のような skill pack を、必要な単位で配布・導入する周辺 tooling として追跡します。

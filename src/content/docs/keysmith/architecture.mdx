@@ -1,0 +1,96 @@
+---
+title: keysmith Architecture
+description: keysmith の agent layer、MCP layer、storage layer、masking layer の構成。
+---
+
+# keysmith Architecture
+
+`keysmith` は、agent が secret value を直接読む代わりに、MCP tools と resources 経由でマスク済み値や handle を扱う構成です。
+
+```mermaid
+flowchart TB
+    subgraph Agent["AI Agent (Claude Code / Cursor / ...)"]
+        A[LLM]
+        SK[Built-in SKILL.md<br/>rules: never cat .env<br/>values via value_file]
+    end
+
+    subgraph MCP["keysmith (Go, single binary)"]
+        T[tools<br/>list/get/put/rotate/delete]
+        R[resources<br/>secret://secrets masked view]
+        M["internal/mcp<br/>MCP Server"]
+    end
+
+    subgraph Store["internal/store (age encrypted)"]
+        K[key.txt<br/>0600 private key]
+        E[secrets.enc<br/>armor ciphertext]
+    end
+
+    subgraph Mask["internal/mask"]
+        MR[masking rules<br/>prefix/entropy/URL segmentation]
+    end
+
+    A -->|"pass handles, not plaintext"| SK
+    SK -->|"MCP protocol calls"| M
+    M --> T
+    M --> R
+    T -->|"set/get/rotate"| Store
+    R -->|"list masked view"| Store
+    Store -->|"decrypt in memory"| Mask
+    Mask -->|"masked output"| T
+    Mask -->|"masked output"| R
+```
+
+## レイヤー
+
+| レイヤー | コンポーネント | 責務 |
+|---|---|---|
+| Agent layer | LLM + `SKILL.md` | `.env` などの raw read を避け、secret operation を MCP 経由にする |
+| MCP layer | `internal/mcp` | tools と resources を提供する protocol server |
+| Storage layer | `internal/store` | age 暗号化、atomic write、`0600` permission |
+| Masking layer | `internal/mask` | prefix、entropy、URL segment 単位の masking rules |
+| Automation layer | `scripts/scan-cron.sh` | `scan --rotate` を定期実行し、漏えい検出時に自己修復する |
+| Optional backend | HashiCorp Vault | 短 TTL の動的 credential を提供する |
+
+## Capability map
+
+```mermaid
+flowchart TB
+    subgraph Core["Core primitives"]
+        STORE[age encrypted store<br/>internal/store]
+        MASK[masking rules<br/>internal/mask]
+        SCAN[leak scan + self-healing<br/>keysmith scan --rotate]
+        VAULT[Vault short-TTL creds<br/>internal/vault]
+    end
+
+    subgraph Auto["Automation"]
+        CRON[scheduled leak scan<br/>scripts/scan-cron.sh]
+    end
+
+    subgraph Access["Access"]
+        STDIO[stdio]
+        SSE[SSE -http]
+        STREAM[Streamable -streamable]
+    end
+
+    SCAN -->|scheduled| CRON
+    STORE --> SCAN
+    MASK --> STORE
+    VAULT -.->|optional backend| STORE
+    STDIO -.-> SSE
+    SSE -.-> STREAM
+```
+
+中核プリミティブが secret を守り、自動化が漏えい検出と rotation を継続実行し、transport が agent の接続方法を決めます。
+
+## Transport
+
+| Transport | 用途 |
+|---|---|
+| stdio | local MCP client から起動する標準モード |
+| HTTP/SSE | remote agent scenario |
+| Streamable HTTP | MCP 2025 style の single POST endpoint |
+
+## Next
+
+- [keysmith](/keysmith/) に戻る
+- [Repository](https://github.com/sscodeai/keysmith) で実装を見る

@@ -1,0 +1,96 @@
+---
+title: keysmith Architecture
+description: The agent, MCP, storage, and masking layers in keysmith.
+---
+
+# keysmith Architecture
+
+`keysmith` lets agents work through MCP tools and resources instead of reading secret values directly. The agent receives masked values or handles, while storage and decryption stay inside the server boundary.
+
+```mermaid
+flowchart TB
+    subgraph Agent["AI Agent (Claude Code / Cursor / ...)"]
+        A[LLM]
+        SK[Built-in SKILL.md<br/>rules: never cat .env<br/>values via value_file]
+    end
+
+    subgraph MCP["keysmith (Go, single binary)"]
+        T[tools<br/>list/get/put/rotate/delete]
+        R[resources<br/>secret://secrets masked view]
+        M["internal/mcp<br/>MCP Server"]
+    end
+
+    subgraph Store["internal/store (age encrypted)"]
+        K[key.txt<br/>0600 private key]
+        E[secrets.enc<br/>armor ciphertext]
+    end
+
+    subgraph Mask["internal/mask"]
+        MR[masking rules<br/>prefix/entropy/URL segmentation]
+    end
+
+    A -->|"pass handles, not plaintext"| SK
+    SK -->|"MCP protocol calls"| M
+    M --> T
+    M --> R
+    T -->|"set/get/rotate"| Store
+    R -->|"list masked view"| Store
+    Store -->|"decrypt in memory"| Mask
+    Mask -->|"masked output"| T
+    Mask -->|"masked output"| R
+```
+
+## Layers
+
+| Layer | Component | Responsibility |
+|---|---|---|
+| Agent layer | LLM + `SKILL.md` | Avoid raw reads like `.env`; route secret operations through MCP |
+| MCP layer | `internal/mcp` | Protocol server exposing tools and resources |
+| Storage layer | `internal/store` | age encryption, atomic writes, `0600` permissions |
+| Masking layer | `internal/mask` | Prefix, entropy, and URL-segment masking rules |
+| Automation layer | `scripts/scan-cron.sh` | Run `scan --rotate` on a schedule for leak detection and self-healing |
+| Optional backend | HashiCorp Vault | Provide dynamic short-TTL credentials |
+
+## Capability map
+
+```mermaid
+flowchart TB
+    subgraph Core["Core primitives"]
+        STORE[age encrypted store<br/>internal/store]
+        MASK[masking rules<br/>internal/mask]
+        SCAN[leak scan + self-healing<br/>keysmith scan --rotate]
+        VAULT[Vault short-TTL creds<br/>internal/vault]
+    end
+
+    subgraph Auto["Automation"]
+        CRON[scheduled leak scan<br/>scripts/scan-cron.sh]
+    end
+
+    subgraph Access["Access"]
+        STDIO[stdio]
+        SSE[SSE -http]
+        STREAM[Streamable -streamable]
+    end
+
+    SCAN -->|scheduled| CRON
+    STORE --> SCAN
+    MASK --> STORE
+    VAULT -.->|optional backend| STORE
+    STDIO -.-> SSE
+    SSE -.-> STREAM
+```
+
+Core primitives protect secrets, automation keeps leak detection and rotation running, and transports define how agents connect.
+
+## Transport
+
+| Transport | Use case |
+|---|---|
+| stdio | Standard local MCP client mode |
+| HTTP/SSE | Remote agent scenarios |
+| Streamable HTTP | MCP 2025-style single POST endpoint |
+
+## Next
+
+- Return to [keysmith](/keysmith/)
+- Inspect the implementation in the [repository](https://github.com/sscodeai/keysmith)
