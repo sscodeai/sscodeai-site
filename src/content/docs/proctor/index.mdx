@@ -1,0 +1,152 @@
+---
+title: Proctor
+description: AI agent の trajectory を採点し、失敗箇所と root cause を説明する Agent Eval / LLMOps tool。
+---
+
+# Proctor
+
+`Proctor` は、AI agent の実行 trajectory を評価する Agent Eval / LLMOps tool です。tool call の正しさ、loop、task completion、plan quality、plan adherence を採点し、失敗した場合は「どの step で」「なぜ」agent が逸脱したかを evidence chain と root-cause classification 付きで説明します。
+
+<p>
+  <img src="/proctor/demo.gif" alt="Proctor demo: agent evaluation report and trajectory diagnostics" />
+</p>
+
+## Links
+
+- Repository: [`sscodeai/proctor`](https://github.com/sscodeai/proctor)
+- Architecture: [Proctor Architecture](/proctor/architecture/)
+- License: MIT
+
+## 何を解くか
+
+多くの eval tool は「pass / fail」や score を返します。`Proctor` はそこから一歩進み、agent team が debugging と regression prevention に使える診断情報を返します。
+
+| 問い | Proctor の答え |
+|---|---|
+| agent は正しいことをしたか | 8 metrics で trajectory を採点 |
+| どこで失敗したか | earliest-deviation backtracking で failing step を特定 |
+| なぜ失敗したか | evidence chain と 7 category の root cause で説明 |
+
+## Features
+
+### Metrics
+
+| Metric | Type | 説明 |
+|---|---|---|
+| `tool_correctness` | deterministic | expected tool set との overlap、missing / extra tool を検出 |
+| `agent_loop_detection` | deterministic | tool repetition、reasoning stall、call-graph cycle を検出 |
+| `argument_correctness` | LLM judge | tool call argument の妥当性を step 単位で確認 |
+| `task_completion` | LLM judge | agent が task を完了したかを判定 |
+| `step_efficiency` | LLM judge + deterministic | 最小 step と redundant work を確認 |
+| `plan_quality` | LLM judge | plan が sound / complete かを評価 |
+| `plan_adherence` | LLM judge + weighted LCS | plan からの最初の逸脱を特定 |
+| `tool_use` | LLM judge | multi-turn の tool selection と argument correctness を評価 |
+
+### Causal attribution
+
+- key failing step を step index 付きで特定
+- failure ごとに source、assertion、detail を evidence として保持
+- `wrong_tool`、`bad_arguments`、`plan_deviation`、`missing_step`、`redundant_loop`、`insufficient_info`、`unknown` の root cause に分類
+- deterministic-first に動き、LLM judge は fallback / 補助として扱う
+
+### Judge integrity
+
+LLM-as-a-Judge を使う場合でも、単一 model の bias に寄りすぎないように multi-model jury と majority voting を使えます。human gold label がある dataset では、`align` で Pearson、Cohen's kappa、accuracy、bias を見て judge-human alignment を確認できます。
+
+### Engineering loop
+
+- OpenAI chat format と LangGraph export を trajectory sample に変換
+- JSON (`proctor-report/v1`) と Markdown report を出力
+- version diff で regressed / fixed / unchanged と root-cause change を比較
+- CI gate で threshold を満たさない場合に exit code `1` を返す
+- embedded web dashboard で report を可視化
+- model x dataset matrix で複数 model / dataset を比較
+
+## Quick Start
+
+```sh
+go build ./cmd/proctor
+```
+
+deterministic evaluation:
+
+```sh
+./proctor eval --dataset examples/golden.json --format markdown
+```
+
+OpenAI-compatible endpoint を使った LLM-as-a-Judge:
+
+```sh
+export LLM_BASE_URL=https://api.deepseek.com/v1
+export LLM_API_KEY=sk-...
+export LLM_MODEL=deepseek-chat
+
+./proctor eval --dataset examples/golden.json --format json --out report.json --judge --commit v1 \
+  --parallel 4 --cache .cache --rps 10
+```
+
+report visualization:
+
+```sh
+./proctor serve --report report.json --addr 127.0.0.1:8787
+```
+
+version compare と CI gate:
+
+```sh
+./proctor diff --base v1.json --current v2.json
+./proctor gate --current v2.json --config gate.yaml
+```
+
+judge-human alignment:
+
+```sh
+./proctor align --dataset golden_labels.json --report report.json
+```
+
+model x dataset comparison:
+
+```sh
+./proctor compare \
+  --report model=deepseek-flash,dataset=cs:report_a.json \
+  --report model=deepseek-pro,dataset=cs:report_b.json
+```
+
+## Dataset format
+
+dataset は JSON / JSONL を受け付けます。JSONL では `#` comments も許容します。OpenAI chat-completions message list と LangGraph node / edge graph は自動検出して sample に変換できます。
+
+```json
+{
+  "samples": [
+    {
+      "name": "order_lookup_ok",
+      "input": "Find all orders for user 42",
+      "expected_tools": ["get_user", "search_orders"],
+      "steps": [
+        {"index": 0, "kind": "reasoning", "text": "I need the user record first"},
+        {"index": 1, "kind": "tool_call", "tool_call": {"name": "get_user", "args": {"user_id": 42}}},
+        {"index": 2, "kind": "observation", "text": "user found: Alice"}
+      ]
+    }
+  ]
+}
+```
+
+## Research grounding
+
+`Proctor` は、LLM-as-a-Judge、agent metric、trajectory debugging の既存研究と open-source eval system を実装向けに統合します。
+
+| Source | Proctor で使う考え方 |
+|---|---|
+| G-Eval | rubric-grounded な LLM-as-a-Judge |
+| MT-Bench / judge bias research | single judge bias を避けるための multi-model jury |
+| RAGAS | quality を分解して metric として扱う設計 |
+| DeepEval | agent metric semantics |
+| AgentRx / TrajDebug | constraint checking、earliest deviation、evidence chain |
+
+## Next
+
+- [Architecture](/proctor/architecture/) で内部構成を見る
+- [Repository](https://github.com/sscodeai/proctor) で README と examples を読む
+- [Projects](/projects/) で SSCodeAI の他 project を見る

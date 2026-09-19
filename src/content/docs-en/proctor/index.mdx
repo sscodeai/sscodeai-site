@@ -1,0 +1,152 @@
+---
+title: Proctor
+description: An Agent Eval / LLMOps tool that scores AI-agent trajectories and explains failures with step-level attribution.
+---
+
+# Proctor
+
+`Proctor` is an Agent Eval / LLMOps tool for evaluating recorded AI-agent trajectories. It scores tool-call correctness, loop behavior, task completion, plan quality, and plan adherence. When an agent fails, Proctor locates the step where it went wrong and explains why with an evidence chain and root-cause classification.
+
+<p>
+  <img src="/proctor/demo.gif" alt="Proctor demo: agent evaluation report and trajectory diagnostics" />
+</p>
+
+## Links
+
+- Repository: [`sscodeai/proctor`](https://github.com/sscodeai/proctor)
+- Architecture: [Proctor Architecture](/proctor/architecture/)
+- License: MIT
+
+## What it answers
+
+Many eval tools stop at pass / fail or aggregate scores. `Proctor` is built for the debugging and regression-prevention loop.
+
+| Question | How Proctor answers |
+|---|---|
+| Did the agent do the right thing? | Scores trajectories with 8 metrics |
+| Where did it fail? | Locates the failing step with earliest-deviation backtracking |
+| Why did it fail? | Provides an evidence chain and 7-category root cause |
+
+## Features
+
+### Metrics
+
+| Metric | Type | Description |
+|---|---|---|
+| `tool_correctness` | deterministic | Checks overlap with expected tool set and reports missing / extra tools |
+| `agent_loop_detection` | deterministic | Detects tool repetition, reasoning stalls, and call-graph cycles |
+| `argument_correctness` | LLM judge | Checks tool-call arguments at step level |
+| `task_completion` | LLM judge | Judges whether the agent completed the task |
+| `step_efficiency` | LLM judge + deterministic | Checks minimal steps and redundant work |
+| `plan_quality` | LLM judge | Evaluates whether the plan is sound and complete |
+| `plan_adherence` | LLM judge + weighted LCS | Locates the first execution deviation from the plan |
+| `tool_use` | LLM judge | Evaluates multi-turn tool selection and argument correctness |
+
+### Causal attribution
+
+- Locates key failing steps with step indices
+- Attaches source, assertion, and detail as evidence for each failure
+- Classifies root cause as `wrong_tool`, `bad_arguments`, `plan_deviation`, `missing_step`, `redundant_loop`, `insufficient_info`, or `unknown`
+- Works deterministic-first, with LLM judge as an optional fallback / supplement
+
+### Judge integrity
+
+When using LLM-as-a-Judge, Proctor can use a multi-model jury with majority voting to reduce single-model bias. With human gold labels in the dataset, `align` reports Pearson correlation, Cohen's kappa, accuracy, and bias for judge-human alignment.
+
+### Engineering loop
+
+- Converts OpenAI chat format and LangGraph exports into trajectory samples
+- Emits JSON (`proctor-report/v1`) and Markdown reports
+- Compares versions as regressed / fixed / unchanged, including root-cause changes
+- Provides CI gates with exit code `1` when thresholds fail
+- Serves an embedded web dashboard for report visualization
+- Compares model x dataset matrices for multi-model evaluation
+
+## Quick Start
+
+```sh
+go build ./cmd/proctor
+```
+
+Deterministic evaluation:
+
+```sh
+./proctor eval --dataset examples/golden.json --format markdown
+```
+
+LLM-as-a-Judge through an OpenAI-compatible endpoint:
+
+```sh
+export LLM_BASE_URL=https://api.deepseek.com/v1
+export LLM_API_KEY=sk-...
+export LLM_MODEL=deepseek-chat
+
+./proctor eval --dataset examples/golden.json --format json --out report.json --judge --commit v1 \
+  --parallel 4 --cache .cache --rps 10
+```
+
+Report visualization:
+
+```sh
+./proctor serve --report report.json --addr 127.0.0.1:8787
+```
+
+Version compare and CI gate:
+
+```sh
+./proctor diff --base v1.json --current v2.json
+./proctor gate --current v2.json --config gate.yaml
+```
+
+Judge-human alignment:
+
+```sh
+./proctor align --dataset golden_labels.json --report report.json
+```
+
+Model x dataset comparison:
+
+```sh
+./proctor compare \
+  --report model=deepseek-flash,dataset=cs:report_a.json \
+  --report model=deepseek-pro,dataset=cs:report_b.json
+```
+
+## Dataset format
+
+Datasets can be JSON or JSONL. JSONL accepts `#` comments. Proctor also auto-detects OpenAI chat-completions message lists and LangGraph node / edge graphs, then converts them into samples.
+
+```json
+{
+  "samples": [
+    {
+      "name": "order_lookup_ok",
+      "input": "Find all orders for user 42",
+      "expected_tools": ["get_user", "search_orders"],
+      "steps": [
+        {"index": 0, "kind": "reasoning", "text": "I need the user record first"},
+        {"index": 1, "kind": "tool_call", "tool_call": {"name": "get_user", "args": {"user_id": 42}}},
+        {"index": 2, "kind": "observation", "text": "user found: Alice"}
+      ]
+    }
+  ]
+}
+```
+
+## Research grounding
+
+`Proctor` brings together ideas from LLM-as-a-Judge, agent metrics, and trajectory debugging research in an engineering-focused Go implementation.
+
+| Source | What Proctor uses |
+|---|---|
+| G-Eval | Rubric-grounded LLM-as-a-Judge |
+| MT-Bench / judge-bias research | Multi-model jury to reduce single-judge bias |
+| RAGAS | Decomposing quality into computable metrics |
+| DeepEval | Agent metric semantics |
+| AgentRx / TrajDebug | Constraint checking, earliest deviation, evidence chains |
+
+## Next
+
+- See [Architecture](/proctor/architecture/)
+- Read the README and examples in the [repository](https://github.com/sscodeai/proctor)
+- Browse other SSCodeAI projects in [Projects](/projects/)
