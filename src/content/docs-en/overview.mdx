@@ -47,6 +47,15 @@ An MCP server and CLI that lets AI agents work with secrets without putting plai
 - Supports stdio, HTTP/SSE, and Streamable HTTP transports
 - See [keysmith](/keysmith/) for install, MCP configuration, CLI usage, and the security model
 
+### Proctor
+
+An Agent Eval / LLMOps tool that scores recorded AI-agent trajectories and explains the failing step and root cause.
+
+- Evaluates tool correctness, loop detection, task completion, plan quality, and plan adherence
+- Locates failing steps with earliest-deviation backtracking
+- Explains agent failures with evidence chains and root-cause classification
+- See [Proctor](/proctor/) for quick start, dataset format, CI gates, and architecture
+
 ## Site Architecture
 
 This site is built with Astro + Nimbus.
@@ -62,4 +71,5 @@ This site is built with Astro + Nimbus.
 - Agent catalog: [agency-agents-ja Overview](/agency-agents-ja/)
 - Image-to-3D skill: [img2threejs Manual](/img2threejs/)
 - Agent-safe secret management: [keysmith](/keysmith/)
+- Agent evaluation: [Proctor](/proctor/)
 - Deploy to Cloudflare: [Cloudflare Deploy](/deploy/cloudflare/)

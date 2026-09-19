@@ -32,6 +32,7 @@ const nimbusConfig = defineNimbusConfig({
       { label: "agency-agents-ja", autogenerate: { directory: "agency-agents-ja" } },
       { label: "img2threejs", autogenerate: { directory: "img2threejs" } },
       { label: "keysmith", autogenerate: { directory: "keysmith" } },
+      { label: "proctor", autogenerate: { directory: "proctor" } },
       { label: "Tutorials", autogenerate: { directory: "tutorials" } },
       { label: "Videos", autogenerate: { directory: "videos" } },
     ],

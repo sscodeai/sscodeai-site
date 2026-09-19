@@ -51,6 +51,16 @@ An MCP server and CLI for AI-agent-safe secret management, designed to keep plai
 - Runtime: Go single static binary
 - Security model: age encrypted store, masked views, handle-passing, self-healing rotation, Vault short-TTL credentials
 
+## Proctor
+
+An Agent Eval / LLMOps tool that evaluates recorded AI-agent trajectories and explains the failing step and root cause.
+
+- Repository: [`sscodeai/proctor`](https://github.com/sscodeai/proctor)
+- Docs: [Proctor](/proctor/)
+- Architecture: [Proctor Architecture](/proctor/architecture/)
+- Runtime: Go single binary
+- Evaluation model: deterministic metrics, LLM-as-a-Judge, causal attribution, CI gates, embedded report UI
+
 ## local-agent-toolkit
 
 A local-first toolkit for agent memory, skill management, and run tracing.

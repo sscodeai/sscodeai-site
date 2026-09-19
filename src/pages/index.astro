@@ -74,6 +74,12 @@ import { config } from "virtual:nimbus/config";
           >
             keysmith を見る
           </a>
+          <a
+            href="/proctor"
+            class="inline-flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground no-underline transition-colors hover:border-border-strong"
+          >
+            Proctor を見る
+          </a>
         </div>
       </section>
 
@@ -82,7 +88,7 @@ import { config } from "virtual:nimbus/config";
         <h2 class="text-center text-xs font-medium uppercase tracking-widest text-muted-foreground">
           Projects
         </h2>
-        <div class="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div class="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-5">
           <div class="flex flex-col rounded-lg border border-border p-5 transition-colors hover:border-border-strong">
             <div class="font-semibold text-foreground">superpowers-ja</div>
             <p class="mt-2 flex-1 text-sm text-muted-foreground leading-relaxed">
@@ -136,6 +142,20 @@ import { config } from "virtual:nimbus/config";
               <span class="rounded border border-border px-2 py-0.5 text-muted-foreground">Go</span>
             </div>
             <a href="/keysmith" class="mt-4 text-sm font-medium text-primary no-underline hover:underline">
+              ドキュメントを見る →
+            </a>
+          </div>
+
+          <div class="flex flex-col rounded-lg border border-border p-5 transition-colors hover:border-border-strong">
+            <div class="font-semibold text-foreground">Proctor</div>
+            <p class="mt-2 flex-1 text-sm text-muted-foreground leading-relaxed">
+              AI agent の実行 trajectory を採点し、失敗 step と原因を説明する Agent Eval tool。
+            </p>
+            <div class="mt-4 flex flex-wrap gap-1.5 text-xs">
+              <span class="rounded border border-border px-2 py-0.5 text-muted-foreground">Agent Eval</span>
+              <span class="rounded border border-border px-2 py-0.5 text-muted-foreground">Go</span>
+            </div>
+            <a href="/proctor" class="mt-4 text-sm font-medium text-primary no-underline hover:underline">
               ドキュメントを見る →
             </a>
           </div>

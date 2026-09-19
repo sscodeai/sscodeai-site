@@ -53,6 +53,16 @@ AI エージェント向けに、平文 secret を context に入れずに扱う
 - Runtime: Go single static binary
 - Security model: age encrypted store、masked views、handle-passing、self-healing rotation、Vault short-TTL credentials
 
+## Proctor
+
+AI agent の recorded trajectory を評価し、失敗した step と root cause を説明する Agent Eval / LLMOps tool です。
+
+- Repository: [`sscodeai/proctor`](https://github.com/sscodeai/proctor)
+- Docs: [Proctor](/proctor/)
+- Architecture: [Proctor Architecture](/proctor/architecture/)
+- Runtime: Go single binary
+- Evaluation model: deterministic metrics、LLM-as-a-Judge、causal attribution、CI gate、embedded report UI
+
 ## local-agent-toolkit
 
 Agent の memory、skill 管理、実行 trace を local-first に扱う toolkit です。`agency-agents-ja` のような agent library や `superpowers-ja` のような skill pack を、必要な単位で配布・導入する周辺 tooling として追跡します。

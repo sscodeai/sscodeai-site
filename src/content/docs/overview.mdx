@@ -50,6 +50,15 @@ AI agent が secret value を直接 context に入れずに扱えるようにす
 - stdio、HTTP/SSE、Streamable HTTP transport に対応
 - [keysmith](/keysmith/) に install、MCP 設定、CLI、security model を整理
 
+### Proctor
+
+AI agent の recorded trajectory を採点し、失敗した step と root cause を説明する Agent Eval / LLMOps tool です。
+
+- tool correctness、loop detection、task completion、plan quality / adherence などを評価
+- earliest-deviation backtracking で failing step を特定
+- evidence chain と root-cause classification で agent failure を説明
+- [Proctor](/proctor/) に quick start、dataset format、CI gate、architecture を整理
+
 ## Site Architecture
 
 この site は Astro + Starlight で構成します。
@@ -65,4 +74,5 @@ AI agent が secret value を直接 context に入れずに扱えるようにす
 - agent catalog を見る: [agency-agents-ja Overview](/agency-agents-ja/)
 - image-to-3D skill を見る: [img2threejs Manual](/img2threejs/)
 - agent-safe secret 管理を見る: [keysmith](/keysmith/)
+- agent evaluation を見る: [Proctor](/proctor/)
 - Cloudflare に deploy する: [Cloudflare Deploy](/deploy/cloudflare/)
