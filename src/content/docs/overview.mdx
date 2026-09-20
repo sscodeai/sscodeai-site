@@ -41,6 +41,15 @@ AI coding agent に計画、TDD、systematic debugging、code review、完了前
 - レンダーと参照画像を比較し、視覚レビューで次のパスに進むか自己修正するかを判断
 - Sony WF-1000XM3、Gerber knife、Doraemon house などの [demo gallery](/img2threejs/demos/) を掲載
 
+### keysmith
+
+AI agent が secret value を直接 context に入れずに扱えるようにする MCP server + CLI です。
+
+- age encrypted store、masked views、handle-passing で secret の平文露出を避ける
+- `keysmith scan --rotate` で git 履歴上の漏えい検出と rotation を補助
+- stdio、HTTP/SSE、Streamable HTTP transport に対応
+- [keysmith](/keysmith/) に install、MCP 設定、CLI、security model を整理
+
 ## Site Architecture
 
 この site は Astro + Starlight で構成します。
@@ -55,4 +64,5 @@ AI coding agent に計画、TDD、systematic debugging、code review、完了前
 - 初めて使う: [superpowers-ja Quickstart](/superpowers-ja/quickstart/)
 - agent catalog を見る: [agency-agents-ja Overview](/agency-agents-ja/)
 - image-to-3D skill を見る: [img2threejs Manual](/img2threejs/)
+- agent-safe secret 管理を見る: [keysmith](/keysmith/)
 - Cloudflare に deploy する: [Cloudflare Deploy](/deploy/cloudflare/)
