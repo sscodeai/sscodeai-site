@@ -1,0 +1,166 @@
+---
+title: takumi
+description: 検証可能な agentic software delivery のための model-agnostic orchestration platform。
+---
+
+# takumi
+
+`takumi` は、AI software delivery のための open-source orchestration layer です。単一の coding agent、Pi wrapper、DeepSeek fork ではなく、複数の agent runtime を明示的な workflow、quality gate、artifact、traceability、independent verification で統合します。
+
+> Agents propose. Takumi verifies.
+
+Developer Preview として公開されています。
+
+## Links
+
+- Repository: [`sscodeai/takumi`](https://github.com/sscodeai/takumi)
+- License: MIT
+- Runtime: TypeScript / Node 20+
+
+## 何を解くか
+
+AI agent は code を生成できますが、delivery trail、検証 evidence、review 可能性、再開可能性が抜け落ちやすくなります。`takumi` は、agent output を「納品可能な変更」に近づけるために、workflow と evidence を platform 側で扱います。
+
+| Problem | takumi の approach |
+|---|---|
+| code は生成されるが delivery trail が残らない | requirements、design、tests、evidence、review を traceability matrix で接続 |
+| 特定 model / harness に lock-in される | fake、Pi、DeepSeek、CLI bridge などの runtime adapter API |
+| tests と evidence が後付けになる | unit / integration test deliverables のための evidence-native pipeline |
+| agent が早すぎる完了宣言をする | quality gates、held-out verifier tests、independent verification |
+| long-horizon task が context window を跨ぐ | persistent task state を持つ Manage-Execute-Audit loop |
+| 日本 SI / V-model delivery を encode しにくい | Japanese SI workflow を first-party example として同梱 |
+
+## Quick Start
+
+ソースから install します。npm package publishing は roadmap 上です。
+
+```sh
+git clone https://github.com/sscodeai/takumi.git
+cd takumi
+
+pnpm install
+pnpm build
+```
+
+API key なしで deterministic local task を実行できます。
+
+```sh
+pnpm exec takumi init
+pnpm exec takumi run "Implement user login API"
+```
+
+real runtime で workflow を実行する例です。
+
+```sh
+export COMMANDCODE_API_KEY=...
+pnpm exec takumi run requirements.md --workflow jp-si-standard --runtime deepseek
+```
+
+Manage-Execute-Audit loop を実行します。
+
+```sh
+pnpm exec takumi loop "Fix the sumEven bug and add tests" --runtime deepseek --max-rounds 5
+```
+
+## Architecture
+
+```text
+                          Takumi
+                            |
+                    Orchestration Core
+                            |
+        +-------------------+-------------------+
+        |                   |                   |
+      Skills              Tools             Workflows
+        |                   |                   |
+        +-------------------+-------------------+
+                            |
+                       Runtime API
+                            |
+          +-----------------+-----------------+
+          |                 |                 |
+         Pi              DeepSeek           CLI
+          |                                   |
+   More runtimes                       Any harness
+```
+
+```text
+takumi/
+├── apps/cli/              # takumi CLI: init, run, loop, runtime list, extension list
+├── apps/console/          # SSE live logs を備えた lightweight web console
+├── packages/core/         # workflow engine, runtime API, artifacts, traceability, MEA loop, sandbox
+├── runtimes/              # fake, pi, deepseek, cli adapters
+├── extensions/            # skills, tools, workflows
+├── eval/                  # agent reliability evaluation tasks
+├── bench/                 # system benchmark baselines
+├── examples/              # Japanese SI を含む end-to-end delivery examples
+└── docs/                  # ADRs and evaluation notes
+```
+
+## Core Ideas
+
+- **Small Core**: orchestration、task/event/artifact models、runtime abstraction、extension loading、approval、audit に集中します。
+- **Four extension kinds**: Skill、Tool Plugin、Workflow Plugin、Runtime Adapter。
+- **Harness agnostic**: `runTask`、`cancel`、`getStatus`、`getUsage`、`getArtifacts` を unified event stream で扱います。
+- **Traceability by default**: `REQ-001 -> DESIGN-001 -> UT-001 -> EVIDENCE-001` のように成果物をつなぎます。
+- **Human in the loop**: workflow は approval gate を宣言できます。
+- **Independent verification**: agent の完了主張だけでは完了と見なしません。
+
+## Features
+
+| Capability | Status |
+|---|---|
+| Pluggable runtimes: fake / Pi / DeepSeek / CLI bridge | Done |
+| Declarative workflows, including Japanese SI / V-model | Done |
+| Requirements、basic design、detailed design、tests、evidence、review の skills | Done |
+| Traceability matrix generation | Done |
+| Approval gates | Done |
+| Durable resume from audit records | Done |
+| Parallel workflow step execution | Done |
+| Sandbox abstraction with unshare support | Done |
+| Web console with live logs | Done |
+| Agent Eval with held-out verifier tests and repair loop | Done |
+| MEA loop: Manage, Execute, Audit | Done |
+
+## Agent Eval
+
+`takumi` は `eval/` に Agent Eval framework を含みます。easy、hard、trap、no-self-test、complex、implicit constraint の task groups を持ち、agent prompt context から除外された machine-verifiable verifier tests で agent reliability を確認します。
+
+```sh
+TAKUMI_EVAL_HARNESS=deepseek TAKUMI_EVAL_MODEL=deepseek/deepseek-v4-flash node eval/scripts/run-eval.mjs
+TAKUMI_EVAL_HARNESS=deepseek TAKUMI_EVAL_MODEL=deepseek/deepseek-v4-pro node eval/scripts/run-eval.mjs --tasks=ts-complex
+TAKUMI_EVAL_HARNESS=pi node eval/scripts/run-eval.mjs
+```
+
+| Model | First-pass | False completion | Repair triggered |
+|---|---:|---:|---:|
+| deepseek v4-flash | 23/23 | 0% | 0 |
+| deepseek v4-pro, complex | 4/5 | 0% | 1 natural repair |
+| Pi, opencode-zen | 6/6 | 0% | 0 |
+
+## MEA Loop
+
+Manage-Execute-Audit loop は long-horizon agent work を分解し、独立検証を通して完了判定します。
+
+1. **Manager** が persistent task state を保持し、次の subtask を決定する。
+2. **Executor** が fresh context で作業し、environment を変更する。
+3. **Auditor** が結果の状態を独立検証する。
+4. clean audit evidence だけが task record を completed にできる。
+
+## Roadmap
+
+- [x] Core types、runtime abstraction、extension discovery
+- [x] Workflow engine with DAG、approval gates、retry、capability validation
+- [x] Fake、Pi、DeepSeek、CLI runtime adapters
+- [x] Japanese SI skills and V-model workflow
+- [x] Agent Eval and system benchmarks
+- [x] Durable resume、parallel execution、web console、sandbox、MEA loop
+- [ ] Claude runtime adapter
+- [ ] Excel、Word、Jira、GitHub、Playwright tool plugins
+- [ ] npm package publishing
+- [ ] Real-repo-scale evals
+
+## Next
+
+- [Repository](https://github.com/sscodeai/takumi) で README と examples を読む
+- [Projects](/projects/) で SSCodeAI の他 project を見る

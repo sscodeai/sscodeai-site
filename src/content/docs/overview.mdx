@@ -59,6 +59,15 @@ AI agent の recorded trajectory を採点し、失敗した step と root cause
 - evidence chain と root-cause classification で agent failure を説明
 - [Proctor](/proctor/) に quick start、dataset format、CI gate、architecture を整理
 
+### takumi
+
+検証可能な agentic software delivery のための model-agnostic orchestration platform です。
+
+- 単一の coding agent ではなく、runtime、workflow、quality gate、artifact、traceability、independent verification を統合
+- fake / Pi / DeepSeek / CLI bridge runtime adapter、Japanese SI / V-model workflow、MEA loop を提供
+- held-out verifier tests を持つ Agent Eval framework で false completion を検出
+- [takumi](/takumi/) に quick start、architecture、core ideas、roadmap を整理
+
 ## Site Architecture
 
 この site は Astro + Starlight で構成します。
@@ -75,4 +84,5 @@ AI agent の recorded trajectory を採点し、失敗した step と root cause
 - image-to-3D skill を見る: [img2threejs Manual](/img2threejs/)
 - agent-safe secret 管理を見る: [keysmith](/keysmith/)
 - agent evaluation を見る: [Proctor](/proctor/)
+- verifiable agentic delivery を見る: [takumi](/takumi/)
 - Cloudflare に deploy する: [Cloudflare Deploy](/deploy/cloudflare/)

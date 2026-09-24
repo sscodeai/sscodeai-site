@@ -1,0 +1,166 @@
+---
+title: takumi
+description: A model-agnostic orchestration platform for verifiable agentic software delivery.
+---
+
+# takumi
+
+`takumi` is an open-source orchestration layer for AI software delivery. It is not a single coding agent, a Pi wrapper, or a DeepSeek fork. Takumi coordinates pluggable agent runtimes through explicit workflows, quality gates, artifacts, traceability, and independent verification.
+
+> Agents propose. Takumi verifies.
+
+It is currently published as a Developer Preview.
+
+## Links
+
+- Repository: [`sscodeai/takumi`](https://github.com/sscodeai/takumi)
+- License: MIT
+- Runtime: TypeScript / Node 20+
+
+## What it solves
+
+AI agents can generate code, but the delivery trail, evidence, reviewability, and resumability are often fragile. `takumi` treats workflows and evidence as platform concerns so agent output can become deliverable software change.
+
+| Problem | Takumi approach |
+|---|---|
+| AI tools generate code but lose the delivery trail | Traceability matrix across requirements, design, tests, evidence, and review |
+| Products lock users into one model or harness | Runtime adapter API for fake, Pi, DeepSeek, CLI bridge, and future runtimes |
+| Tests and evidence are treated as afterthoughts | Evidence-native pipeline for unit and integration test deliverables |
+| Agents can claim "done" too early | Quality gates, held-out verifier tests, and independent verification |
+| Long tasks lose state across context windows | Manage-Execute-Audit loop with persistent task state |
+| Domain delivery processes are hard to encode | Japanese SI workflow as a first-party example |
+
+## Quick Start
+
+Install from source. npm package publishing is on the roadmap.
+
+```sh
+git clone https://github.com/sscodeai/takumi.git
+cd takumi
+
+pnpm install
+pnpm build
+```
+
+Run a deterministic local task with no API key.
+
+```sh
+pnpm exec takumi init
+pnpm exec takumi run "Implement user login API"
+```
+
+Run a workflow with a real runtime.
+
+```sh
+export COMMANDCODE_API_KEY=...
+pnpm exec takumi run requirements.md --workflow jp-si-standard --runtime deepseek
+```
+
+Run the Manage-Execute-Audit loop.
+
+```sh
+pnpm exec takumi loop "Fix the sumEven bug and add tests" --runtime deepseek --max-rounds 5
+```
+
+## Architecture
+
+```text
+                          Takumi
+                            |
+                    Orchestration Core
+                            |
+        +-------------------+-------------------+
+        |                   |                   |
+      Skills              Tools             Workflows
+        |                   |                   |
+        +-------------------+-------------------+
+                            |
+                       Runtime API
+                            |
+          +-----------------+-----------------+
+          |                 |                 |
+         Pi              DeepSeek           CLI
+          |                                   |
+   More runtimes                       Any harness
+```
+
+```text
+takumi/
+├── apps/cli/              # takumi CLI: init, run, loop, runtime list, extension list
+├── apps/console/          # lightweight web console with SSE live logs
+├── packages/core/         # workflow engine, runtime API, artifacts, traceability, MEA loop, sandbox
+├── runtimes/              # fake, pi, deepseek, cli adapters
+├── extensions/            # skills, tools, workflows
+├── eval/                  # agent reliability evaluation tasks
+├── bench/                 # system benchmark baselines
+├── examples/              # end-to-end delivery examples, including Japanese SI
+└── docs/                  # ADRs and evaluation notes
+```
+
+## Core Ideas
+
+- **Small Core**: orchestration, task/event/artifact models, runtime abstraction, extension loading, approval, and audit.
+- **Four extension kinds**: Skill, Tool Plugin, Workflow Plugin, Runtime Adapter.
+- **Harness agnostic**: `runTask`, `cancel`, `getStatus`, `getUsage`, `getArtifacts` over a unified event stream.
+- **Traceability by default**: connects artifacts with IDs such as `REQ-001 -> DESIGN-001 -> UT-001 -> EVIDENCE-001`.
+- **Human in the loop**: workflows can declare approval gates.
+- **Independent verification**: agent claims are not trusted as completion evidence.
+
+## Features
+
+| Capability | Status |
+|---|---|
+| Pluggable runtimes: fake / Pi / DeepSeek / CLI bridge | Done |
+| Declarative workflows, including Japanese SI / V-model | Done |
+| Skills for requirements, basic design, detailed design, tests, evidence, review | Done |
+| Traceability matrix generation | Done |
+| Approval gates | Done |
+| Durable resume from audit records | Done |
+| Parallel workflow step execution | Done |
+| Sandbox abstraction with unshare support | Done |
+| Web console with live logs | Done |
+| Agent Eval with held-out verifier tests and repair loop | Done |
+| MEA loop: Manage, Execute, Audit | Done |
+
+## Agent Eval
+
+`takumi` ships an Agent Eval framework under `eval/`. It covers easy, hard, trap, no-self-test, complex, and implicit-constraint task groups. Each task has machine-verifiable verifier tests that are excluded from the agent prompt context.
+
+```sh
+TAKUMI_EVAL_HARNESS=deepseek TAKUMI_EVAL_MODEL=deepseek/deepseek-v4-flash node eval/scripts/run-eval.mjs
+TAKUMI_EVAL_HARNESS=deepseek TAKUMI_EVAL_MODEL=deepseek/deepseek-v4-pro node eval/scripts/run-eval.mjs --tasks=ts-complex
+TAKUMI_EVAL_HARNESS=pi node eval/scripts/run-eval.mjs
+```
+
+| Model | First-pass | False completion | Repair triggered |
+|---|---:|---:|---:|
+| deepseek v4-flash | 23/23 | 0% | 0 |
+| deepseek v4-pro, complex | 4/5 | 0% | 1 natural repair |
+| Pi, opencode-zen | 6/6 | 0% | 0 |
+
+## MEA Loop
+
+The Manage-Execute-Audit loop breaks down long-horizon agent work and requires independent verification before completion.
+
+1. **Manager** owns persistent task state and decides the next subtask.
+2. **Executor** works in a fresh context and may modify the environment.
+3. **Auditor** independently verifies the resulting state.
+4. Only clean audit evidence can mark a task record complete.
+
+## Roadmap
+
+- [x] Core types, runtime abstraction, and extension discovery
+- [x] Workflow engine with DAG, approval gates, retry, and capability validation
+- [x] Fake, Pi, DeepSeek, and CLI runtime adapters
+- [x] Japanese SI skills and V-model workflow
+- [x] Agent Eval and system benchmarks
+- [x] Durable resume, parallel execution, web console, sandbox, and MEA loop
+- [ ] Claude runtime adapter
+- [ ] Excel, Word, Jira, GitHub, and Playwright tool plugins
+- [ ] npm package publishing
+- [ ] Real-repo-scale evals
+
+## Next
+
+- Read the README and examples in the [repository](https://github.com/sscodeai/takumi)
+- Browse other SSCodeAI projects in [Projects](/projects/)

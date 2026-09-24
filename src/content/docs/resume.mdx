@@ -18,6 +18,7 @@ SSCodeAI は、日本の IT 開発現場で使える AI coding workflow と agen
 | `superpowers-ja` | Japanese workflow adaptation and maintenance | skill catalog、tool install docs、audit scripts、eval transcripts、release notes |
 | `agency-agents-ja` | Japanese agent library adaptation and expansion | 394 agents、27 workflows、GIS / healthcare / gov-tech / platform engineering / research / document generation / China network coverage、economy design / UI finish-gate / data visualization / LLM post-training / Rust refactoring agents、適時開示 / TDnet compliance reviewer、ZCode / Hermes / Mistral Vibe integration、OpenClaw header compatibility、translation progress、upstream coverage、SSCodeAI article links |
 | `sscodeai-site` | Documentation and publication site | docs、tutorials、blog、generated project catalogs、Cloudflare deploy docs |
+| `takumi` | Verifiable agentic software delivery platform | workflow engine、runtime adapters、traceability、evidence-native testing、Agent Eval、MEA loop、Japanese SI / V-model workflow |
 
 ## Technical Focus
 
@@ -48,6 +49,12 @@ SSCodeAI は、日本の IT 開発現場で使える AI coding workflow と agen
 - `superpowers-ja` と `agency-agents-ja` から docs を自動生成
 - agent catalog、workflow catalog、translation progress、upstream coverage を公開
 - Cloudflare Pages 向けの static build と sitemap を整備
+
+### takumi
+
+- model-agnostic runtime adapter で fake / Pi / DeepSeek / CLI bridge を切り替え可能
+- requirements、design、tests、evidence、review を traceability matrix で接続
+- held-out verifier tests を持つ Agent Eval と、Manage-Execute-Audit loop で完了前検証を強化
 
 ## Public Signals
 

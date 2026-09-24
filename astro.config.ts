@@ -33,6 +33,7 @@ const nimbusConfig = defineNimbusConfig({
       { label: "img2threejs", autogenerate: { directory: "img2threejs" } },
       { label: "keysmith", autogenerate: { directory: "keysmith" } },
       { label: "proctor", autogenerate: { directory: "proctor" } },
+      { label: "takumi", autogenerate: { directory: "takumi" } },
       { label: "Tutorials", autogenerate: { directory: "tutorials" } },
       { label: "Videos", autogenerate: { directory: "videos" } },
     ],
