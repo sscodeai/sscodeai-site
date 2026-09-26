@@ -1,0 +1,73 @@
+---
+title: decision-space-expansion
+description: A three-stage decision methodology that widens the option space with heterogeneous models, structures the divergence, folds constraints back in, and leaves the decision to a human.
+---
+
+# decision-space-expansion
+
+`decision-space-expansion` is a **decision methodology** distilled from the `decision-workbench` project. Before an important decision, it uses a **heterogeneous multi-model committee** to widen the option space, structures the divergence, folds real constraints back in — and lets a **human make the final call**.
+
+> Expand the option space before you decide.
+
+The methodology ships in the **Agent Skills** format (a single Markdown file with YAML frontmatter). It works with any tool that can consume instruction files — no code, no dependencies.
+
+## Links
+
+- Repository: [`sscodeai/decision-space-expansion`](https://github.com/sscodeai/decision-space-expansion)
+- Files: `README.md` (English) / `README.ja.md` (Japanese) / `SKILL.md` (full skill definition)
+- License: MIT
+
+## Why
+
+- **Decision power = size of the option space**, not the ability to pick. Your cognitive surface *is* your decision ceiling.
+- A single model (or one model in many roles) only re-samples its own training distribution. **True divergence requires different model families** (Anthropic / OpenAI / DeepSeek / Google / local OSS), isolated from each other to prevent anchoring.
+- Model disagreement is often post-hoc rationalization plus ecosystem bias — but ecosystem blind spots are exactly the highest-value divergence.
+
+## The loop (3 stages)
+
+| Stage | What happens |
+|---|---|
+| 1. **Diverge** | Feed the same brief to models from different families, isolated from each other. Assign stances per model: architecture / cost / security / product |
+| 2. **Structure** | Sort the result into a consensus zone (adopt directly), a true divergence zone (worth human arbitration), and a pseudo-divergence zone (noise, discard) |
+| 3. **Converge** | Fold back real constraints — budget, team skills, timeline, market, compliance. Optionally use `pyDecision` (AHP/TOPSIS/PROMETHEUS) to turn options into comparable score tables |
+
+### Mandatory question patterns
+
+- *"Why didn't you choose X?"* — forces out excluded options and reasons (highest information density)
+- *"Give one non-mainstream option with a real justification."* — kicks the model off its training distribution
+- *"Where is this plan most vulnerable?"* — cross-examination a single model never performs on itself
+
+## Core beliefs
+
+> *"AI shouldn't make important decisions for you. It should make the decision space harder for you to misunderstand."*
+
+The committee expands your *known unknowns*; it cannot reach *unknown unknowns*. And being forced to understand the divergence while converging **is the cognitive growth**. The best posture is to ask AI when you **don't know what you don't know**, not when you already know what you want.
+
+## Pitfalls
+
+- Don't treat the committee as an "auto-optimal-answer" machine — open tools (MoA / LLM-Blender) fuse answers by default and **delete the human arbitration step**, which is the opposite direction.
+- Pseudo-divergence wastes time: models will fabricate complete rationales for any assigned stance.
+- When requirements don't constrain the choice, models output their own familiar default — not an optimum.
+- Models silently assume hidden constraints (concurrency, budget, team); humans must backfill the real ones.
+
+## Install into AI tools
+
+| Tool | Where to put it |
+|---|---|
+| **Claude Code** | `~/.claude/skills/decision-space-expansion/SKILL.md` (global) or `.claude/skills/decision-space-expansion/SKILL.md` (per-project) |
+| **Cursor / Windsurf** | `.cursor/skills/decision-space-expansion/SKILL.md`, or `.cursor/rules/` |
+| **OpenAI Codex** | Put the core method into `AGENTS.md`, or point Codex at the file as reference docs |
+| **Gemini CLI** | `~/.gemini/skills/` (agent skills are supported) |
+| **Any agent / chat** | Paste the `SKILL.md` content into the conversation, or `cat SKILL.md` and follow it |
+
+`SKILL.md` is tool-agnostic. Swap "different model families" for whatever pool your environment can reach (an aggregator, multi-CLI, local Ollama/vLLM) and the method stays the same.
+
+## Reference implementation
+
+The reference implementation lives in the `decision-workbench` repository (FastAPI + React, mock mode with zero API keys). Its README reports the hidden-gold eval as single-model 26% → naive multi-agent 78% → decision-workbench 100% (12 of 12).
+
+## Next
+
+- See the implementation in [decision-workbench](/en/decision-workbench/)
+- Read `SKILL.md` in the [repository](https://github.com/sscodeai/decision-space-expansion)
+- Browse other SSCodeAI projects in [Projects](/projects/)

@@ -1,0 +1,73 @@
+---
+title: decision-space-expansion
+description: 決める前に異種モデル committee で選択肢空間を広げ、発散を構造化し、制約を戻して人間が決める 3 段階の decision methodology。
+---
+
+# decision-space-expansion
+
+`decision-space-expansion` は、`decision-workbench` から抽出した **decision methodology** です。重要な決定を下す前に、**heterogeneous な multi-model committee** で選択肢空間を広げ、発散を構造化し、現実の制約を戻したうえで、**最後は人間が決めます**。
+
+> Expand the option space before you decide.
+
+methodology は **Agent Skills 形式**（YAML frontmatter 付きの単一 Markdown ファイル）で配布されます。コードも依存も不要で、instruction file を読める tool なら何でも使えます。
+
+## Links
+
+- Repository: [`sscodeai/decision-space-expansion`](https://github.com/sscodeai/decision-space-expansion)
+- Files: `README.md`（English）/ `README.ja.md`（日本語）/ `SKILL.md`（完全な skill 定義）
+- License: MIT
+
+## なぜ必要か
+
+- **Decision power = option space の広さ** であり、選ぶ能力ではありません。認知の surface が decision ceiling になります。
+- 単一 model（あるいは 1 model を多数の役割に割り当てる方法）は、自分の training distribution を再サンプリングするだけです。**真の発散には異なる model family**（Anthropic / OpenAI / DeepSeek / Google / local OSS）が必要で、anchoring を避けるため互いに隔離します。
+- model 間の不一致は post-hoc な合理化と ecosystem bias であることが多い一方、ecosystem の盲点こそ最も価値の高い発散です。
+
+## 3 段階の loop
+
+| Stage | やること |
+|---|---|
+| 1. **Diverge** | 同じ brief を異なる family の model に、互いに見えない形で渡す。model ごとに architecture / cost / security / product の stance を割り当てる |
+| 2. **Structure** | consensus zone（そのまま採用）、true divergence zone（人間の裁定に値する）、pseudo-divergence zone（noise として破棄）に分類する |
+| 3. **Converge** | budget、team skills、timeline、market、compliance を戻して決める。必要なら `pyDecision`（AHP/TOPSIS/PROMETHEUS）で比較可能な score table にする |
+
+### 必須の質問パターン
+
+- *"Why didn't you choose X?"* — 除外された選択肢と理由を引き出す（情報密度が最も高い）
+- *"Give one non-mainstream option with a real justification."* — model を training distribution から押し出す
+- *"Where is this plan most vulnerable?"* — 単一 model が自分に対して行わない cross-examination
+
+## Core beliefs
+
+> *"AI shouldn't make important decisions for you. It should make the decision space harder for you to misunderstand."*
+
+committee が広げられるのは *known unknowns* までです。*unknown unknowns* には届きません。そして、収束させながら発散を理解させられること自体が認知の成長になります。AI に聞くべきは、**自分が何を知らないか分からないとき** であり、何が欲しいか既に分かっているときではありません。
+
+## Pitfalls
+
+- committee を「自動最適解マシン」として扱わない。MoA / LLM-Blender のような open tool は既定で回答を融合し、**人間の裁定 step を削除** します。これは逆方向です。
+- pseudo-divergence は時間の無駄です。model はどの stance に対しても完全な rationale を fabricate します。
+- 要件が選択を制約しない場合、model は最適解ではなく自分の慣れた既定値を出力します。
+- model は hidden constraint（並行性、予算、チーム）を暗黙に仮定します。人間が実際の制約を埋め戻す必要があります。
+
+## AI tool への install
+
+| Tool | 置き場所 |
+|---|---|
+| **Claude Code** | `~/.claude/skills/decision-space-expansion/SKILL.md`（global）または `.claude/skills/decision-space-expansion/SKILL.md`（per-project） |
+| **Cursor / Windsurf** | `.cursor/skills/decision-space-expansion/SKILL.md`、または `.cursor/rules/` |
+| **OpenAI Codex** | 中核 method を `AGENTS.md` に書く、または reference docs として file を指す |
+| **Gemini CLI** | `~/.gemini/skills/`（agent skills に対応） |
+| **任意の agent / chat** | `SKILL.md` の内容を会話に貼る、または `cat SKILL.md` して従う |
+
+`SKILL.md` は tool-agnostic です。「different model families」の部分は、自分の環境から到達できる pool（aggregator、multi-CLI、local Ollama/vLLM）に置き換えても method は同じです。
+
+## 参考実装
+
+reference implementation は `decision-workbench` repository（FastAPI + React、mock で key 不要）にあります。decision-workbench の README では、hidden-gold eval の結果が single-model 26% → naive multi-agent 78% → decision-workbench 100%（12 問中 12 問）として報告されています。
+
+## Next
+
+- 実装まで見たい場合は [decision-workbench](/decision-workbench/) を参照
+- [Repository](https://github.com/sscodeai/decision-space-expansion) で `SKILL.md` を読む
+- [Projects](/projects/) で SSCodeAI の他の project を見る
