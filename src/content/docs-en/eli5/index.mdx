@@ -1,0 +1,63 @@
+---
+title: eli5
+description: A picture-first explainer generator that teaches a total beginner with large SVG diagrams and minimal text.
+---
+
+# eli5
+
+`eli5` is a skill that turns any topic into a **picture-first, five-minute read**. Large hand-drawn-style SVG diagrams carry the explanation; prose stays in a supporting role. The output is a single HTML file with zero external requests, so it works offline, on an intranet, or when double-clicked from disk.
+
+It is model-agnostic by design. Any LLM that can write HTML — Claude, GPT, DeepSeek, Gemini, a local model — can reproduce the same output quality by following the `SKILL.md` spec. No artifacts, no proprietary tools.
+
+## Links
+
+- Repository: [`sscodeai/eli5`](https://github.com/sscodeai/eli5)
+- Repository document: `README.md` (English) / `README.ja.md` (Japanese)
+- Spec: `SKILL.md` — procedure, language rules, HTML hard rules, pitfalls, verification checklist
+- License: MIT
+
+## What ships in the repo
+
+| File | Role |
+|---|---|
+| `SKILL.md` | The complete methodology spec. Usable as a system prompt with any LLM |
+| `templates/eli5-template.html` | The canonical output skeleton: interactive glossary, quiz, step animation, responsive layout, light/dark theme |
+| `scripts/export.sh` | One-command HTML → PDF/PNG export (auto-detects Chromium) |
+| `examples/` | Real generated explainers. *What is an API?* in en / ja / zh |
+
+## Features
+
+| Feature | Detail |
+|---|---|
+| 🖼️ Picture-first | Each step = one large inline SVG plus a one-line caption; text is supplementary |
+| 🌍 Multi-language | Auto-detects zh / en / ja / ko, and can emit all four from the same SVG |
+| 🧩 Interactive glossary | Hovering a term shows a plain-language definition, reviewable at the end |
+| ✅ Quiz recap | Three or four multiple-choice questions with instant feedback and a "back to step N" link |
+| 📦 Zero-dependency output | A single HTML file. No CDN, no fonts, no external JS. Offline-safe |
+| ♻️ Model-agnostic | The spec alone lets any LLM reproduce the same format |
+
+## Getting started
+
+1. **Ask an AI assistant** — load `SKILL.md` into an agent (as a skill or system prompt) and say `eli5 <topic>` or "explain X like I'm five".
+2. **Hand-author from the template** — copy `templates/eli5-template.html`, put your own SVG and caption in each step, and keep the text minimal.
+3. **Read an example** — open `examples/what-is-api-en.html` in a browser to see the target quality bar.
+
+## Exporting to PDF / PNG (optional)
+
+```bash
+./scripts/export.sh examples/what-is-api-en.html pdf
+./scripts/export.sh examples/what-is-api-en.html png
+```
+
+The script auto-detects `chromium`, `google-chrome`, or a Playwright cache. If the server has no browser, open the HTML and use Ctrl+P → "Save as PDF" with headers and footers disabled.
+
+## Design philosophy
+
+> *"If you can't explain it simply, you don't understand it well enough."*
+
+`eli5` comes from the idea that the best way to verify understanding is to explain it visually to a beginner. The output aims to be **readable in under five minutes**, **understandable with no prior knowledge**, and **good-looking enough to share**.
+
+## Next
+
+- Read `SKILL.md` and `examples/` in the [repository](https://github.com/sscodeai/eli5)
+- Browse other SSCodeAI projects in [Projects](/projects/)

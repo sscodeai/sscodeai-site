@@ -1,0 +1,63 @@
+---
+title: eli5
+description: 何も知らない相手に、大きな SVG 図と最小限のテキストで説明する picture-first explainer generator。
+---
+
+# eli5
+
+`eli5` は、任意のトピックを **picture-first な 5 分の読み物** に変換する skill です。大きな手描き風 SVG 図が説明の主役になり、文章は脇役に留まります。出力は外部リクエストがゼロの単一 HTML ファイルなので、オフラインでも、イントラネット上でも、ディスクからダブルクリックしても動作します。
+
+model-agnostic に設計されています。HTML を書ける LLM であれば（Claude、GPT、DeepSeek、Gemini、local model）、`SKILL.md` の仕様に従って同じ品質の出力を生成できます。Artifacts も proprietary tool も不要です。
+
+## Links
+
+- Repository: [`sscodeai/eli5`](https://github.com/sscodeai/eli5)
+- Repository document: `README.md` (English) / `README.ja.md` (日本語)
+- Spec: `SKILL.md` — 手順、言語ルール、HTML hard rules、pitfalls、検証 checklist
+- License: MIT
+
+## 同梱物
+
+| ファイル | 役割 |
+|---|---|
+| `SKILL.md` | 方法論の完全な仕様。system prompt として任意の LLM に渡せる |
+| `templates/eli5-template.html` | 正規の出力 skeleton。interactive glossary、quiz、step animation、responsive layout、light/dark theme |
+| `scripts/export.sh` | HTML → PDF/PNG の 1 コマンド export（Chromium を自動検出） |
+| `examples/` | 実際に生成した explainer。*What is an API?* を en / ja / zh の 3 言語で収録 |
+
+## 特徴
+
+| 特徴 | 内容 |
+|---|---|
+| 🖼️ Picture-first | 各 step = 大きな inline SVG + 1 行 caption。テキストは補助 |
+| 🌍 Multi-language | zh / en / ja / ko を自動判定。同じ SVG から 4 言語を一括生成することも可能 |
+| 🧩 Interactive glossary | 用語に hover すると平易な説明が表示され、末尾の glossary で復習できる |
+| ✅ Quiz recap | 3〜4 問の選択式 quiz。即時の正誤 feedback と「step N に戻る」導線 |
+| 📦 Zero-dependency output | 単一 HTML。CDN も font も外部 JS もなし。offline-safe |
+| ♻️ Model-agnostic | 仕様だけで任意の LLM が同じ形式を再現できる |
+
+## はじめ方
+
+1. **AI assistant に依頼する** — `SKILL.md` を agent に読み込ませ（skill または system prompt）、`eli5 <topic>` あるいは「X を 5 歳児に説明するように教えて」と指示します。
+2. **template から手書きする** — `templates/eli5-template.html` を複製し、各 step に自分の SVG と caption を入れ、テキストは最小限に保ちます。
+3. **example を読む** — `examples/what-is-api-en.html` をブラウザで開くと、目標とする品質水準が確認できます。
+
+## PDF / PNG への export（任意）
+
+```bash
+./scripts/export.sh examples/what-is-api-en.html pdf
+./scripts/export.sh examples/what-is-api-en.html png
+```
+
+script は `chromium` / `google-chrome` / Playwright cache を自動検出します。server にブラウザがない場合は、HTML を開いて Ctrl+P →「PDF に保存」とし、印刷設定で header / footer を無効にします。
+
+## 設計思想
+
+> *"If you can't explain it simply, you don't understand it well enough."*
+
+`eli5` は、理解を検証する最良の方法が「初学者に図で説明すること」だという考えから生まれました。出力は **5 分以内で読め**、**予備知識なしで理解でき**、**共有したくなる見た目**であることを目標にしています。
+
+## Next
+
+- [Repository](https://github.com/sscodeai/eli5) で `SKILL.md` と `examples/` を読む
+- [Projects](/projects/) で SSCodeAI の他の project を見る
