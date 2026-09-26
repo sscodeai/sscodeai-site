@@ -1,0 +1,108 @@
+---
+title: decision-workbench
+description: 意思決定者の認知を「決める前」に広げる、6 段階の decision-space expansion tool。
+---
+
+# decision-workbench
+
+`decision-workbench` は、**決断の前に意思決定者の認知を広げる**ための tool です。意思決定力は「選ぶ能力」ではなく **選択肢空間の広さ** だという前提に立ち、選択肢を発散させ、盲点を可視化し、判断材料を構造化したうえで、決定を人間に返します。**winner は選びません。**
+
+> *"AI shouldn't make important decisions for you. It should make the decision space harder for you to misunderstand."*
+
+> 「私は Java Spring しか知りません」——open-source の CRM base、SaaS、no-code builder を見たことがない engineer が必ず言う言葉です。
+
+## Links
+
+- Repository: [`sscodeai/decision-workbench`](https://github.com/sscodeai/decision-workbench)
+- Runtime: Python (FastAPI) + React
+- License: MIT
+
+## 6 段階パイプライン
+
+すでに知っていることを含めて、これから下す決定を入力すると、次の pipeline が走ります。
+
+| Stage | 内容 |
+|---|---|
+| 1. Bias flag | 「私は Java Spring しか知りません」→ `anchored_stack` として検出 |
+| 2. Divergence | 5 つの stance が独立並列に議論: architect · cost · security · product · red team |
+| 3. Cross-exam | 3 つの probing question で空間を強制的に開く — 「なぜ X を検討しなかったのか」「非主流の選択肢を 1 つ理由付きで」「本命の弱点は」 |
+| 4. Option map | consensus / true divergence / false divergence に分類し、各項目を「おそらく知らなかった」/「すでに知っていた」で tag 付け |
+| 5. Constraints | budget / team / deadline / compliance を選択すると weighted re-score（それでも winner は出さない） |
+| 6. Human decision | 決定はあなたのもの。system は最後まで選ばない |
+
+## llm-council との違い
+
+| | llm-council (Karpathy) | decision-workbench |
+|---|---|---|
+| 目的 | 複数 model を **より良い単一回答** へ収束させる | 人間が決める前に **option space を広げる** |
+| 終状態 | 1 つの synthesized answer | 地図 + trade-off + 人間の決定 |
+| 発散 | 手段（より良い consensus のため） | **成果物そのもの** |
+| 決める人 | chairman model | **人間**（常に明示的） |
+| 失敗 mode | 人工的な consensus（全 model が収束） | anchoring bias（意思決定者が固定される） |
+
+学術的背景として、multi-agent の LLM committee は同一 model を共有すると **representational collapse**（arXiv 2604.03809）を、同一 architecture を共有すると **artificial consensus**（arXiv 2604.26561）を起こすことが知られています。本 tool はその逆 —— **heterogeneous な stance + 人間による hard gate** を中心に設計された *diverger* であり、*converger* ではありません。
+
+## はじめ方（mock mode — API key 不要）
+
+```bash
+# Backend (port 8002)
+uv sync
+uv run python -m backend.main
+
+# Frontend (port 5173, /api → 8002 に proxy)
+cd frontend
+npm install
+npm run dev
+```
+
+http://localhost:5173 を開き、決定事項を入力して **"Expand my option space"** を押します。mock provider には 3 つの demo scenario（tech stack / business / hiring）の回答が pre-baked されており、live API に依存せず demo できます。
+
+### 実 model を使う（OpenRouter）
+
+```bash
+export OPENROUTER_API_KEY=sk-or-v1-...
+export PROVIDER=openrouter
+uv run python -m backend.main
+```
+
+### Demo scenarios
+
+| Scenario | 入力 | 明らかになる盲点 |
+|---|---|---|
+| A. Tech stack | 「CRM を作りたい。Java Spring しか知らない」 | open-source CRM base、buy-vs-build、no-code、spreadsheet + automation |
+| B. Business | 「レポート購読を販売したい。Stripe しか考えていない」 | merchant-of-record（Lemon Squeezy / Paddle）、membership platform、crypto |
+| C. Hiring | 「full-stack engineer を 1 名採用したい」 | remote-first、AI を前提にした少人数 team、agency への outsourcing |
+
+## API
+
+| Endpoint | 役割 |
+|---|---|
+| `POST /api/decide` | pipeline 全体を実行 → bias flag、stance divergence、probing、option-space map |
+| `POST /api/decide/constraints` | 選択した constraint で weighted re-score（winner は出さない） |
+| `POST /api/decide/human-decision` | 人間の最終決定を記録 |
+
+## Eval
+
+README は「`decision-workbench` は、単一 model や naive な multi-agent chat より、意思決定に関係する選択肢（特に baseline が見落とす選択肢）を多く surface する」という反証可能な主張をしています。手作業で作成し、テスト対象には一切開示しない hidden gold option set に対する結果は次のとおりです。
+
+| Method | Gold hit (12 問中) | Avg coverage |
+|---|---|---|
+| Single model direct answer | 3/12 | 26% |
+| Naive multi-agent (stances only) | 9/12 | 78% |
+| **Decision Workbench** | **12/12** | **100%** |
+
+harness は `uv run python -m backend.eval_harness` で実行できます。
+
+## テスト
+
+```bash
+uv run pytest
+# 25 tests: bias detection, stance prompts, probing, zone classification,
+# novelty tagging, constraint weighting, mock provider, engine golden path
+```
+
+## Next
+
+- 方法論だけを skill として使いたい場合は [decision-space-expansion](/decision-space-expansion/) を参照
+- [Repository](https://github.com/sscodeai/decision-workbench) で README と eval を読む
+- [Projects](/projects/) で SSCodeAI の他の project を見る
