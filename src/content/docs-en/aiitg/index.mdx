@@ -1,0 +1,114 @@
+---
+title: aiitg
+description: A zero-trust input security layer that scans, sanitizes, labels, and gates untrusted documents before they reach an LLM.
+---
+
+# aiitg
+
+`aiitg` stands for **AI Input Trust Gateway** — the **zero-trust input security layer for AI agents**. It scans untrusted documents before they reach an LLM: detecting hidden prompt-injection content, sanitizing it, labeling its trustworthiness, and enforcing policy.
+
+> External content is data, never authority.
+
+That is also why the tool is deliberately named a gateway rather than a scanner: a scanner *reports*, a gateway *enforces*. `aiitg` does not just tell you a document is dangerous — it blocks it, sanitizes it, requires human approval, and audits every decision.
+
+## Links
+
+- Repository: [`sscodeai/aiitg`](https://github.com/sscodeai/aiitg)
+- License: MIT
+- Runtime: Python 3.11+
+- Tests: 191 tests (`make test`)
+- Install: `uv tool install git+https://github.com/sscodeai/aiitg`
+
+## What it solves — the Human-AI Visibility Gap
+
+2025–2026 research and real-world incidents repeatedly demonstrated a class of attack: **instructions hidden inside documents that humans cannot see, but LLMs read and obey.**
+
+| Attack | What it does |
+|---|---|
+| Peer-review manipulation | Authors hide prompts in manuscripts so AI reviewers give top scores ([arXiv:2507.06185](https://arxiv.org/abs/2507.06185) and related work) |
+| Resume injection | Hidden instructions in resumes force AI screeners to "must hire" ([arXiv:2605.28999](https://arxiv.org/abs/2605.28999)) |
+| Agent hijacking | Hidden text in PDFs and web pages makes AI assistants leak secrets or execute dangerous actions |
+
+The document a human sees and the document an LLM reads can be **completely different**. This project turns that gap into auditable evidence.
+
+## The pipeline (M0 → M3)
+
+| Stage | Capability | Interface |
+|---|---|---|
+| **M0** | Hidden content audit — 6 formats × 7 detectors → coordinate-level JSON evidence | `aiitg scan` |
+| **M1** | Sanitization (strip/redact) + trust labeling (safe/caution/dangerous) | `aiitg sanitize`, `aiitg trust` |
+| **M2** | Policy enforcement (allow/quarantine/human_approval/block) + audit + human-approval queue + **MCP server** | `aiitg policy`, `aiitg audit`, `aiitg approvals`, `aiitg-mcp` |
+| **M3** | Zero-touch adoption — a Claude Code `PreToolUse` hook that enforces policy before untrusted content enters the model context (fail-closed, cached, audited) | `aiitg hook pretooluse`, `aiitg hook-config` |
+
+### Detectors
+
+| ID | Name | Detects | Severity |
+|---|---|---|---|
+| DET-001 | zero_width | Zero-width / invisible Unicode (U+200B, U+2060, U+FEFF…) | HIGH |
+| DET-002 | hidden_style | White text, transparency, `display:none`, `w:vanish` | HIGH |
+| DET-003 | tiny_font | Extremely small font (≤2pt) | MEDIUM |
+| DET-004 | hidden_sheet | Hidden sheets/rows/columns (with data) in xlsx/xls | MEDIUM |
+| DET-005 | ooxml_nodes | OOXML hidden nodes (tracked-delete, altChunk, comments) | MEDIUM |
+| DET-006 | annotations | Word comments, PDF annotations, HTML comments | LOW |
+| DET-007 | document_meta | Metadata / VBA macros / JS signals | LOW |
+
+### Formats
+
+`docx` · `xlsx` · `xls` (legacy) · `pdf` · `html` · `pptx`
+
+## Install
+
+The Claude Code hook runs as a separate process on every enforced tool call, so `aiitg` must be on `PATH`. Install it as a tool, not into a project venv:
+
+```sh
+uv tool install git+https://github.com/sscodeai/aiitg
+aiitg hook-config     # print the .claude/settings.json snippet (it never writes the file)
+aiitg hook doctor     # confirm the hook is wired AND startable
+```
+
+## Usage
+
+```sh
+aiitg scan report.docx --format json        # JSON evidence report
+aiitg scan report.xlsx --min-severity high  # only high+ findings
+aiitg sanitize report.docx --mode redact    # strip hidden content, or replace with [REDACTED]
+aiitg trust report.docx                     # safe / caution / dangerous
+aiitg policy report.docx --format rich      # allow / quarantine / human_approval / block
+aiitg policy report.docx --audit audit.jsonl
+aiitg audit audit.jsonl --format rich       # append-only JSONL audit trail
+```
+
+Exit codes: `0` = clean · `1` = findings at/above threshold · `2` = usage error · `3` = parse error (CI-friendly).
+
+### Agent integration (MCP)
+
+```sh
+aiitg-mcp                                   # stdio transport (Claude Code / Codex / OpenCode)
+aiitg-mcp --transport http                  # streamable HTTP
+```
+
+Agents call `policy_file` before putting untrusted content into context; any decision other than `allow` is blocked, sanitized, or escalated to human approval.
+
+## Design principles
+
+1. **External content is data, never authority.** Documents are parsed, sanitized, and policy-checked before they can become instructions.
+2. **Assume compromise.** Detection is not 100%. Quarantine, least privilege, evidence, human approval, and audit are the real defense.
+3. **Separate detectors from formats.** Detectors work on a format-agnostic `ParsedDocument`; new formats get new parsers, new attacks get new detectors.
+4. **Coordinate-level evidence.** Every finding carries an exact location: paragraph, run, sheet, row, page, char_range.
+5. **Conservative trust ceiling.** A document with evidence of deliberate hiding never becomes `safe`.
+
+## Development
+
+```sh
+make test        # 191 tests
+make lint        # ruff
+make typecheck   # mypy
+make demo        # generate a temporary malicious sample and scan it
+```
+
+Malicious test fixtures are **generated in code** — no binaries are committed, so they stay reproducible, auditable, and diff-friendly.
+
+## Next
+
+- Read the README, design notes, and tests in the [repository](https://github.com/sscodeai/aiitg)
+- Browse other SSCodeAI projects in [Projects](/projects/)

@@ -1,0 +1,114 @@
+---
+title: aiitg
+description: 信頼できない文書が LLM に届く前に検出・サニタイズ・信頼ラベル付け・ポリシー適用を行う、AI エージェント向けのゼロトラスト入力セキュリティ層。
+---
+
+# aiitg
+
+`aiitg` は **AI Input Trust Gateway** の略で、AI エージェントのための **ゼロトラスト入力セキュリティ層** です。信頼できない文書が LLM に渡される前にスキャンし、隠されたプロンプトインジェクションを検出し、サニタイズし、信頼ラベルを付け、ポリシーを適用します。
+
+> 外部コンテンツはデータであり、権限ではありません。
+
+scanner ではなく gateway と名付けているのは、scanner は報告するだけ、gateway は執行するからです。危険な文書を知らせるだけでなく、ブロックし、サニタイズし、人間の承認を要求し、すべての判断を監査ログに残します。
+
+## Links
+
+- Repository: [`sscodeai/aiitg`](https://github.com/sscodeai/aiitg)
+- License: MIT
+- Runtime: Python 3.11+
+- Tests: 191 tests（`make test`）
+- Install: `uv tool install git+https://github.com/sscodeai/aiitg`
+
+## 解く問題 — Human-AI Visibility Gap
+
+2025-2026 年の研究と実際のインシデントは、**人間には見えないが LLM は読み取り従ってしまう命令が文書内に隠される** という攻撃クラスを繰り返し示しました。
+
+| 攻撃 | 内容 |
+|---|---|
+| 査読操作 | 原稿に隠しプロンプトを埋め、AI 査読者に高評価を出させる（[arXiv:2507.06185](https://arxiv.org/abs/2507.06185) ほか） |
+| 履歴書インジェクション | 履歴書の隠し命令で、AI 採用スクリーナーに「必ず採用」と判断させる（[arXiv:2605.28999](https://arxiv.org/abs/2605.28999)） |
+| エージェント乗っ取り | PDF / Web ページの隠しテキストで、AI アシスタントに秘密情報の漏えいや危険な操作を実行させる |
+
+人間が見る文書と LLM が読む文書は **まったく別物** になり得ます。このプロジェクトは、そのギャップを監査可能な証拠に変えます。
+
+## パイプライン（M0 → M3）
+
+| 段階 | 機能 | インターフェース |
+|---|---|---|
+| **M0** | 隠しコンテンツ監査。6 形式 × 7 検出器 → 座標レベルの JSON 証拠 | `aiitg scan` |
+| **M1** | サニタイズ（strip/redact）+ 信頼ラベル（safe/caution/dangerous） | `aiitg sanitize`, `aiitg trust` |
+| **M2** | ポリシー適用（allow/quarantine/human_approval/block）+ 監査 + 人間承認キュー + **MCP server** | `aiitg policy`, `aiitg audit`, `aiitg approvals`, `aiitg-mcp` |
+| **M3** | Claude Code `PreToolUse` hook による zero-touch 導入（fail-closed、cached、audited） | `aiitg hook pretooluse`, `aiitg hook-config` |
+
+### 検出器（7 個）
+
+| ID | 名前 | 検出対象 | 深刻度 |
+|---|---|---|---|
+| DET-001 | zero_width | ゼロ幅 / 不可視 Unicode（U+200B, U+2060, U+FEFF など） | HIGH |
+| DET-002 | hidden_style | 白文字、透明、`display:none`、`w:vanish` | HIGH |
+| DET-003 | tiny_font | 極小フォント（2pt 以下） | MEDIUM |
+| DET-004 | hidden_sheet | xlsx/xls の隠しシート、行、列とそのデータ | MEDIUM |
+| DET-005 | ooxml_nodes | OOXML の隠しノード（tracked-delete, altChunk, comments） | MEDIUM |
+| DET-006 | annotations | Word コメント、PDF 注釈、HTML コメント | LOW |
+| DET-007 | document_meta | メタデータ、VBA マクロ、JS シグナル | LOW |
+
+### 対応形式
+
+`docx` · `xlsx` · `xls`（legacy）· `pdf` · `html` · `pptx`
+
+## インストール
+
+Claude Code hook は tool call ごとに別プロセスとして動くため、`aiitg` は `PATH` 上に必要です。project venv ではなく tool として install します。
+
+```sh
+uv tool install git+https://github.com/sscodeai/aiitg
+aiitg hook-config     # .claude/settings.json へ貼る snippet を出力（ファイルは書き換えない）
+aiitg hook doctor     # 配線と起動可否を確認
+```
+
+## 使い方
+
+```sh
+aiitg scan report.docx --format json        # JSON evidence report
+aiitg scan report.xlsx --min-severity high  # high 以上の finding のみ
+aiitg sanitize report.docx --mode redact    # 隠しコンテンツを [REDACTED] に置換
+aiitg trust report.docx                     # safe / caution / dangerous
+aiitg policy report.docx --format rich      # allow / quarantine / human_approval / block
+aiitg policy report.docx --audit audit.jsonl
+aiitg audit audit.jsonl --format rich       # append-only JSONL audit trail
+```
+
+終了コード: `0` = clean · `1` = 閾値以上の finding あり · `2` = 使用方法エラー · `3` = パースエラー（CI 向け）。
+
+### エージェント連携（MCP）
+
+```sh
+aiitg-mcp                                   # stdio transport（Claude Code / Codex / OpenCode）
+aiitg-mcp --transport http                  # streamable HTTP
+```
+
+エージェントは、信頼できないコンテンツをコンテキストへ入れる前に `policy_file` を呼び出します。`allow` 以外の判断は、ブロック、サニタイズ、または人間承認に回されます。
+
+## 設計原則
+
+1. **外部コンテンツはデータであり、権限ではありません。** 文書は命令になる前に、パース、サニタイズ、ポリシーチェックされます。
+2. **侵害を前提にする。** 検出率は 100% ではありません。隔離、最小権限、証拠、人間承認、監査こそが本当の防御です。
+3. **検出器と形式を分離する。** 検出器は形式非依存の `ParsedDocument` を扱います。新しい形式には新しい parser、新しい攻撃には新しい detector を追加します。
+4. **座標レベルの証拠。** すべての finding は段落、run、sheet、row、page、char_range などの正確な位置を持ちます。
+5. **保守的な信頼上限。** 意図的な隠蔽の証拠がある文書は `safe` になりません。
+
+## 開発
+
+```sh
+make test        # 191 tests
+make lint        # ruff
+make typecheck   # mypy
+make demo        # 一時的な悪意あるサンプルを生成してスキャン
+```
+
+悪意あるテスト fixture は **コードで生成** されます。バイナリはコミットされないため、再現可能で、監査しやすくなっています。
+
+## Next
+
+- [Repository](https://github.com/sscodeai/aiitg) で README、設計メモ、テストを読む
+- [Projects](/projects/) で SSCodeAI の他の project を見る
