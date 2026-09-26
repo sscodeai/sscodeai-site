@@ -19,6 +19,14 @@ SSCodeAI maintains AI coding workflows and agent libraries for Japanese IT deliv
 | `agency-agents-ja` | Japanese agent library adaptation and expansion | 394 agents, 27 workflows, GIS / healthcare / gov-tech / platform engineering / research / document generation / China networking coverage, timely-disclosure / TDnet compliance reviewer, translation progress, upstream coverage |
 | `sscodeai-site` | Documentation and publication site | docs, tutorials, blog, generated project catalogs, Cloudflare deploy docs |
 | `takumi` | Verifiable agentic software delivery platform | workflow engine, runtime adapters, traceability, evidence-native testing, Agent Eval, MEA loop, Japanese SI / V-model workflow |
+| `aiitg` | Input-side zero-trust security layer | 7 detectors × 6 formats, sanitization, trust labeling, policy enforcement, MCP server, Claude Code hook, 191 tests |
+| `ai-skill-maker` | Reusable AI skill generation meta-skill | renderer / validator scripts, Trust Gate, release gates, 9,000-token file budget, fingerprint lock on protected core principles |
+| `ai-project-skill-maker` | Project maintainer skill generation meta-skill | genesis / repo modes, evidence model, adapters for `AGENTS.md` through Copilot, forward-test prompts |
+| `skills-ja-JP` | Japanese localization and maintenance of Agent Skills | 20 skills (15 engineering + 5 productivity), translation policy, translation / audit scripts, release record |
+| `decision-workbench` | Decision-space expansion tool | six-stage pipeline, FastAPI + React, hidden-gold eval (26% → 78% → 100%), 25 tests |
+| `decision-space-expansion` | Decision methodology as a skill | Agent Skills–format `SKILL.md`, three-stage loop, per-tool install locations, pitfalls |
+| `eli5` | Picture-first explainer generator | `SKILL.md` spec, HTML template, PDF / PNG export script, en / ja / zh examples |
+| `fusion-cache` | LLM API caching layer | L1 / L2 / L3 layers, benchmark (97% hit rate, P95 0.7 ms), gateway, MCP server, Redis store |
 
 ## Technical Focus
 
@@ -55,6 +63,54 @@ SSCodeAI maintains AI coding workflows and agent libraries for Japanese IT deliv
 - Swaps fake / Pi / DeepSeek / CLI bridge runtimes through a model-agnostic adapter API
 - Connects requirements, design, tests, evidence, and review through a traceability matrix
 - Strengthens verify-before-done delivery with Agent Eval, held-out verifier tests, and a Manage-Execute-Audit loop
+
+### aiitg
+
+- A 7-detector × 6-format chain with coordinate-level JSON evidence makes hidden prompt injection auditable
+- Sanitize / trust / policy stages apply strip or redact, safe-to-dangerous labels, and allow-to-block decisions
+- An MCP server and a Claude Code `PreToolUse` hook (fail-closed, cached, audited) give agents zero-touch adoption
+
+### ai-skill-maker
+
+- Renders functional / document / workflow / project maintainer skills and adapter bundles from a config
+- A Trust Gate plus evidence labels separate facts, intent, standards, and assumptions
+- A SHA-256 fingerprint lock on protected core principles and a 9,000-token file budget prevent drift on refresh
+
+### ai-project-skill-maker
+
+- Genesis and repo modes generate maintainer skills while keeping declared intent separate from observed repository facts
+- The evidence model (`observed_fact` / `declared_intent` / `recommended_standard` / `inferred_assumption`) applies across every generated reference
+- Adapters for `AGENTS.md`, `CLAUDE.md`, Cursor, and Copilot render from the same config
+
+### skills-ja-JP
+
+- Initialized the Japanese localization of 20 skills against upstream `sscodeai/skills@272f99b` (local commit `247525d`)
+- Documented a translation policy that preserves directory names, skill names, commands, paths, URLs, and identifiers
+- `check-translation.mjs` and `audit-english.mjs` verify translation consistency and surface untranslated prose
+
+### decision-workbench
+
+- Exposes the six stages — bias flag, independent divergence, cross-exam, option map, constraints, human decision — as an API
+- Measures the improvement from single model 26% to 100% against a hidden gold option set
+- Built as a *diverger* with a mandatory human gate rather than an llm-council-style converger
+
+### decision-space-expansion
+
+- Distills the `decision-workbench` method into a single `SKILL.md` with no code and no dependencies
+- Structures divergence into consensus / true divergence / pseudo-divergence zones
+- Documents install locations for Claude Code, Cursor / Windsurf, Codex, and Gemini CLI
+
+### eli5
+
+- Defines a picture-first explainer format where each step is one large inline SVG plus a one-line caption
+- Achieves zero-external-request output through a single HTML template with a quiz and interactive glossary
+- Ships `examples/what-is-api-{en,ja,zh}.html` as the quality bar
+
+### fusion-cache
+
+- Fuses exact / semantic / prefix accounting into a single middleware
+- Recorded a 97% hit rate and P95 0.7 ms over 20 tasks × 3 reps (60 requests)
+- An OpenAI-compatible gateway and an MCP server make it usable from agents with zero code changes
 
 ## Public Signals
 

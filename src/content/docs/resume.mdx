@@ -19,6 +19,14 @@ SSCodeAI は、日本の IT 開発現場で使える AI coding workflow と agen
 | `agency-agents-ja` | Japanese agent library adaptation and expansion | 394 agents、27 workflows、GIS / healthcare / gov-tech / platform engineering / research / document generation / China network coverage、economy design / UI finish-gate / data visualization / LLM post-training / Rust refactoring agents、適時開示 / TDnet compliance reviewer、ZCode / Hermes / Mistral Vibe integration、OpenClaw header compatibility、translation progress、upstream coverage、SSCodeAI article links |
 | `sscodeai-site` | Documentation and publication site | docs、tutorials、blog、generated project catalogs、Cloudflare deploy docs |
 | `takumi` | Verifiable agentic software delivery platform | workflow engine、runtime adapters、traceability、evidence-native testing、Agent Eval、MEA loop、Japanese SI / V-model workflow |
+| `aiitg` | Input-side zero-trust security layer | 7 detectors × 6 formats の scan、sanitize、trust labeling、policy enforcement、MCP server、Claude Code hook、191 tests |
+| `ai-skill-maker` | Reusable AI skill generation meta-skill | renderer / validator scripts、Trust Gate、release gate、9,000-token file budget、protected core principles の fingerprint lock |
+| `ai-project-skill-maker` | Project maintainer skill generation meta-skill | genesis / repo mode、evidence model、`AGENTS.md`〜Copilot 向け adapter、forward-test prompts |
+| `skills-ja-JP` | Agent Skills の日本語ローカライズと保守 | 20 skills（engineering 15 + productivity 5）、翻訳方針、translation / audit scripts、release 記録 |
+| `decision-workbench` | Decision-space expansion tool | 6 段階 pipeline、FastAPI + React、hidden-gold eval（26% → 78% → 100%）、25 tests |
+| `decision-space-expansion` | Decision methodology の skill 化 | Agent Skills 形式の `SKILL.md`、3 段階 loop、AI tool 別 install 手順、pitfalls |
+| `eli5` | Picture-first explainer generator | `SKILL.md` 仕様、HTML template、PDF / PNG export script、en / ja / zh の example |
+| `fusion-cache` | LLM API caching layer | L1 / L2 / L3 layer、benchmark（97% hit rate、P95 0.7 ms）、gateway、MCP server、Redis store |
 
 ## Technical Focus
 
@@ -55,6 +63,54 @@ SSCodeAI は、日本の IT 開発現場で使える AI coding workflow と agen
 - model-agnostic runtime adapter で fake / Pi / DeepSeek / CLI bridge を切り替え可能
 - requirements、design、tests、evidence、review を traceability matrix で接続
 - held-out verifier tests を持つ Agent Eval と、Manage-Execute-Audit loop で完了前検証を強化
+
+### aiitg
+
+- 6 形式 × 7 detector の検出 chain と座標レベルの証拠 JSON で、隠し prompt injection を監査可能にする
+- sanitize / trust / policy の 3 段階で strip・redact、safe〜dangerous ラベル、allow〜block の判断を適用
+- MCP server と Claude Code `PreToolUse` hook（fail-closed、cached、audited）で agent へ zero-touch 導入
+
+### ai-skill-maker
+
+- functional / document / workflow / project maintainer / adapter bundle を config から render
+- Trust Gate と evidence labels で、事実、意図、標準、仮定を分離して記録
+- protected core principles の SHA-256 fingerprint lock と 9,000-token file budget で refresh 時の劣化を防ぐ
+
+### ai-project-skill-maker
+
+- genesis mode と repo mode で、宣言された意図と観測された repository 事実を分けて maintainer skill を生成
+- evidence model（`observed_fact` / `declared_intent` / `recommended_standard` / `inferred_assumption`）を生成 reference 全体に適用
+- `AGENTS.md`、`CLAUDE.md`、Cursor、Copilot 向け adapter を同じ config から render
+
+### skills-ja-JP
+
+- 上流 `sscodeai/skills@272f99b` を基準に、20 skills の日本語ローカライズを初期化（local commit `247525d`）
+- ディレクトリ名、skill name、コマンド、パス、URL、identifiers を保持する翻訳方針を明文化
+- `check-translation.mjs` と `audit-english.mjs` で翻訳整合と未翻訳箇所を検証
+
+### decision-workbench
+
+- bias flag → 独立 divergence → cross-exam → option map → constraints → human decision の 6 段階を API として提供
+- hidden gold option set に対する eval で、single model 26% から 100% への改善を測定
+- llm-council 型の収束ではなく、人間の決定を前提とした *diverger* として設計
+
+### decision-space-expansion
+
+- `decision-workbench` の method を、コード依存なしの単一 `SKILL.md` として抽出
+- consensus / true divergence / pseudo-divergence の 3 分類で発散結果を構造化
+- Claude Code、Cursor / Windsurf、Codex、Gemini CLI 向けの install 先を整理
+
+### eli5
+
+- 各 step を大きな inline SVG + 1 行 caption に限定した picture-first な explainer 形式を定義
+- quiz と interactive glossary を含む単一 HTML template で、外部リクエストゼロの出力を実現
+- `examples/what-is-api-{en,ja,zh}.html` を品質基準として同梱
+
+### fusion-cache
+
+- exact / semantic / prefix accounting の 3 layer を 1 middleware に統合
+- 20 task × 3 回（60 requests）の実測で 97% hit rate、P95 0.7 ms を記録
+- OpenAI 互換 gateway と MCP server で、agent から code 変更なしに利用可能
 
 ## Public Signals
 
