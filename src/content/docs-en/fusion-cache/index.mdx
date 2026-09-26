@@ -1,0 +1,101 @@
+---
+title: fusion-cache
+description: A framework-agnostic LLM API caching layer that fuses exact, semantic, and prefix-cache accounting into one drop-in middleware.
+---
+
+# fusion-cache
+
+`fusion-cache` is a **framework-agnostic caching layer for LLM APIs**: **exact → semantic → prefix-cache accounting** in one drop-in middleware. Wrap your OpenAI client (or point your gateway at it) and repeated requests stop costing you money.
+
+The README's headline claim is that it cuts LLM API costs by up to **97%** and drops P95 latency from seconds to **0.7 ms**.
+
+| 🎯 97% hit rate | ⚡ 0.7 ms P95 | 💰 ~31× prefix discount | 🚀 16,000× faster hits |
+|---|---|---|---|
+| L1 exact + L2 semantic serve 58 of 60 requests from cache | vs 6.5 s uncached | DeepSeek cache-hit input tokens | P50 3.2 s → 0.1 ms |
+
+## Links
+
+- Repository: [`sscodeai/fusion-cache`](https://github.com/sscodeai/fusion-cache)
+- License: Apache-2.0
+- Runtime: Python ≥ 3.10
+- Install: `pip install fusion-cache`
+
+## Why "fusion"? The three layers
+
+| Layer | Job | Mechanism | Cost of a hit |
+|---|---|---|---|
+| **L1 exact** | byte-identical requests | canonicalized SHA-256 key (normalizes whitespace and param noise) | ~0 ms, in-process |
+| **L2 semantic** | paraphrased requests | embedding + numpy cosine against stored rows, configurable threshold plus structural guardrail | 1 embed call |
+| **L3 prefix** | *never a cache miss* | pass through to DeepSeek's automatic prefix cache, capture `prompt_cache_hit_tokens` / `prompt_cache_miss_tokens`, and account the discount | 0 extra calls |
+
+L3 is the differentiator most caches ignore: DeepSeek already gives a ~31× discount on cache-hit input tokens (off-peak, `deepseek-v4-flash`: `$0.007` vs `$0.22` per 1M). Nobody reports it back to you as money saved — `fusion-cache` does, with a pinned, configurable price model.
+
+## Usage
+
+```python
+from fusion_cache import FusionCache
+from fusion_cache.wrapper.openai import CachedOpenAI
+import openai
+
+cache = FusionCache()
+client = CachedOpenAI(openai.OpenAI(api_key="sk-..."), cache=cache)
+# first call hits upstream; identical calls replay in ~0 ms
+print(cache.stats_dict())
+# {'requests': 2, 'exact_hits': 1, 'semantic_hits': 0, 'prefix_hits': 1,
+#  'misses': 1, 'cost_saved_usd': 0.00001704, 'hit_rate': 1.0, 'metrics': {...}}
+```
+
+L2 needs an OpenAI-compatible `/embeddings` endpoint; without an embedder key the L2 layer is skipped automatically and L1 + L3 keep working. `stream=True` requests are fully buffered by the pipeline, stored, then replayed chunk-by-chunk with the terminal `usage` chunk preserved.
+
+```sh
+pip install -e .            # core (pydantic, httpx, numpy)
+pip install -e ".[test]"    # + pytest, pytest-asyncio, respx
+pip install -e ".[redis]"   # + optional redis.asyncio store
+```
+
+## Benchmark
+
+Real end-to-end results on 20 distinct tasks × 3 reps (60 requests, shared system prompt, `temperature=0.2`, `stream=False`):
+
+| Config | Req | L1 hit | L2 hit | Upstream | Hit rate | P50 (ms) | P95 (ms) |
+|---|---|---|---|---|---|---|---|
+| baseline (no cache) | 60 | 0 | 0 | 60 | 0% | 3214.2 | 6539.2 |
+| fusion (L1+L3) | 60 | 40 | 0 | 20 | 67% | 0.2 | 3450.8 |
+| **fusion+sem (L1+L2+L3)** | 60 | 4 | **54** | **2** | **97%** | **0.1** | **0.7** |
+
+- **67% of requests are served from the L1 exact cache** with just the exact layer (0.2 ms median vs 3.2 s upstream — ~16,000×).
+- Adding the L2 semantic layer lifts the hit rate to **97%**: L1 catches the 4 identical repeats, L2 catches the other 54. Only 2 of 60 calls reach upstream, and **P95 drops to 0.7 ms**.
+- On a paraphrase-only workload, L1+L3 alone scored 0% with a 21,107 ms P50; with L2, 5 of 6 requests were served from cache at **0.4 ms P50**. The run was designed as 8 question groups × 3 paraphrases, but persistent 503s on the free endpoint reduced it to a two-group subset (6 requests).
+
+Run it yourself with `python benchmarks/bench.py` against any OpenAI-compatible endpoint.
+
+## Gateway (v1.1) and agent integration
+
+The FastAPI gateway is an OpenAI-compatible reverse proxy: your app talks to it exactly like it talks to DeepSeek/OpenAI, and the gateway routes every request through the cache before hitting the real upstream.
+
+```sh
+pip install -e ".[gateway,redis]"
+fusion-cache serve --port 8000                      # in-memory store
+fusion-cache serve --port 8000 --redis redis://localhost:6379/0
+fusion-cache stats --url http://localhost:8000
+```
+
+| Endpoint | Purpose |
+|---|---|
+| `POST /v1/chat/completions` | OpenAI-compatible chat completions through the cache (SSE streaming supported) |
+| `GET /v1/models` | model list (passthrough, with fallback) |
+| `GET /metrics` | Prometheus metrics (or JSON with `Accept: application/json`) |
+| `GET /dashboard` | self-contained HTML dashboard (no CDN) |
+| `GET /health` | liveness probe |
+
+Provider support covers `openai` (any OpenAI-compatible endpoint: DeepSeek, OpenAI, OpenRouter, local vLLM/Ollama) and `anthropic`. Anthropic does not expose DeepSeek-style `prompt_cache_hit_tokens`, so L3 prefix accounting reports 0 for that provider. Non-streaming responses carry a `_fusion_cache` metadata block with the layer, hit flags, `cost_saved_usd`, and `latency_ms`.
+
+AI coding agents (pi, Claude Code, opencode, Cursor) can use it two ways:
+
+- **Gateway**: point the agent's `OPENAI_BASE_URL` at the gateway — zero code changes.
+- **MCP server**: `fusion-cache-mcp` exposes `cache_stats`, `cache_invalidate`, `cache_status`, and `cache_config` tools (`pip install "fusion-cache[mcp]"`).
+
+## Next
+
+- Read the README, benchmark, and `open-source-decision.md` in the [repository](https://github.com/sscodeai/fusion-cache)
+- Browse other SSCodeAI projects in [Projects](/projects/)

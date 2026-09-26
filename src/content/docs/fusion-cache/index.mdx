@@ -1,0 +1,101 @@
+---
+title: fusion-cache
+description: exact → semantic → prefix-cache accounting を 1 つの middleware に統合した、framework-agnostic な LLM API caching layer。
+---
+
+# fusion-cache
+
+`fusion-cache` は LLM API のための **framework-agnostic な caching layer** です。**exact → semantic → prefix-cache accounting** の 3 層を 1 つの drop-in middleware にまとめ、OpenAI client を wrap する（あるいは gateway へ向ける）だけで、繰り返しリクエストのコストを削減します。
+
+README では **「LLM API コストを最大 97% 削減し、P95 latency を秒台から 0.7 ms へ下げる」** とうたわれています。
+
+| 🎯 97% hit rate | ⚡ 0.7 ms P95 | 💰 ~31× prefix discount | 🚀 16,000× faster hits |
+|---|---|---|---|
+| L1 exact + L2 semantic が 60 リクエスト中 58 を cache から返す | uncached 6.5 s との比較 | DeepSeek の cache-hit input token | P50 3.2 s → 0.1 ms |
+
+## Links
+
+- Repository: [`sscodeai/fusion-cache`](https://github.com/sscodeai/fusion-cache)
+- License: Apache-2.0
+- Runtime: Python ≥ 3.10
+- Install: `pip install fusion-cache`
+
+## 3 つの layer
+
+| Layer | 役割 | 仕組み | hit のコスト |
+|---|---|---|---|
+| **L1 exact** | バイト単位で同一のリクエスト | canonicalized SHA-256 key（空白や param の noise を正規化） | ~0 ms、in-process |
+| **L2 semantic** | 言い換えられたリクエスト | embedding + numpy cosine による類似判定。閾値と structural guardrail を設定可能 | embed call 1 回 |
+| **L3 prefix** | *cache miss にならない* | DeepSeek の自動 prefix cache へ pass-through し、`prompt_cache_hit_tokens` / `prompt_cache_miss_tokens` を取り込んで discount を計上 | 追加 call 0 回 |
+
+L3 が他との差別化点です。DeepSeek は cache-hit input token に ~31× の discount を与えており（off-peak、`deepseek-v4-flash` で 1M token あたり `$0.007` vs `$0.22`）、これを「節約額」として報告する cache は他にありません。`fusion-cache` は pinned で設定可能な price model でそれを report します。
+
+## 使い方
+
+```python
+from fusion_cache import FusionCache
+from fusion_cache.wrapper.openai import CachedOpenAI
+import openai
+
+cache = FusionCache()
+client = CachedOpenAI(openai.OpenAI(api_key="sk-..."), cache=cache)
+# 最初の呼び出しは upstream、同一の呼び出しは ~0 ms で replay
+print(cache.stats_dict())
+# {'requests': 2, 'exact_hits': 1, 'semantic_hits': 0, 'prefix_hits': 1,
+#  'misses': 1, 'cost_saved_usd': 0.00001704, 'hit_rate': 1.0, 'metrics': {...}}
+```
+
+L2 を使うには OpenAI 互換の `/embeddings` endpoint を設定します。embedder key がなければ L2 は自動的に skip され、L1 と L3 はそのまま動作します。`stream=True` は pipeline が全体をバッファして保存し、chunk 単位で replay します（terminal な `usage` chunk は保持）。
+
+```sh
+pip install -e .            # core（pydantic, httpx, numpy）
+pip install -e ".[test]"    # + pytest, pytest-asyncio, respx
+pip install -e ".[redis]"   # + optional redis.asyncio store
+```
+
+## Benchmark
+
+20 個の異なる task × 3 回（60 リクエスト、shared system prompt、`temperature=0.2`、`stream=False`）を実測した結果です。
+
+| Config | Req | L1 hit | L2 hit | Upstream | Hit rate | P50 (ms) | P95 (ms) |
+|---|---|---|---|---|---|---|---|
+| baseline（cache なし） | 60 | 0 | 0 | 60 | 0% | 3214.2 | 6539.2 |
+| fusion（L1+L3） | 60 | 40 | 0 | 20 | 67% | 0.2 | 3450.8 |
+| **fusion+sem（L1+L2+L3）** | 60 | 4 | **54** | **2** | **97%** | **0.1** | **0.7** |
+
+- L1 exact だけでも **67% のリクエストが cache から返り**、median 0.2 ms 対 upstream 3.2 s（~16,000×）です。
+- L2 semantic を足すと **hit rate が 97% に上がり**、60 件中 upstream に届くのは 2 件、**P95 も 0.7 ms** になります。
+- 言い換えだけの workload では、L1+L3 のみだと hit 0%・P50 21,107 ms でしたが、L2 を足すと 6 リクエスト中 5 件が cache から返り **P50 0.4 ms** になりました。この測定は本来 8 質問グループ × 3 paraphrase の設計ですが、無料 endpoint の 503 が続いたため、実際には 2 グループの subset（6 リクエスト）で実行されています。
+
+benchmark は `python benchmarks/bench.py` で任意の OpenAI 互換 endpoint に対して実行できます。
+
+## Gateway（v1.1）と agent 連携
+
+FastAPI 製 gateway は OpenAI 互換の reverse proxy です。アプリは DeepSeek / OpenAI に向けるのと同じ形で gateway に話しかけ、gateway が全リクエストを cache 経由で upstream へ流します。
+
+```sh
+pip install -e ".[gateway,redis]"
+fusion-cache serve --port 8000                      # in-memory store
+fusion-cache serve --port 8000 --redis redis://localhost:6379/0
+fusion-cache stats --url http://localhost:8000
+```
+
+| Endpoint | 用途 |
+|---|---|
+| `POST /v1/chat/completions` | cache 経由の OpenAI 互換 chat completions（SSE streaming 対応） |
+| `GET /v1/models` | model list（passthrough） |
+| `GET /metrics` | Prometheus metrics（`Accept: application/json` で JSON） |
+| `GET /dashboard` | self-contained な HTML dashboard（CDN 不使用） |
+| `GET /health` | liveness probe |
+
+provider は `openai`（OpenAI 互換 endpoint 全般: DeepSeek、OpenRouter、local vLLM/Ollama など）と `anthropic` に対応します。Anthropic は DeepSeek 形式の `prompt_cache_hit_tokens` を公開しないため、L3 の計上は 0 になります。
+
+AI coding agent（pi、Claude Code、opencode、Cursor）からは 2 つの経路で使えます。
+
+- **Gateway**: agent の `OPENAI_BASE_URL` を gateway に向ける。code 変更は不要。
+- **MCP server**: `fusion-cache-mcp` が `cache_stats`、`cache_invalidate`、`cache_status`、`cache_config` を tool として公開する（`pip install "fusion-cache[mcp]"`）。
+
+## Next
+
+- [Repository](https://github.com/sscodeai/fusion-cache) で README、benchmark、`open-source-decision.md` を読む
+- [Projects](/projects/) で SSCodeAI の他の project を見る
