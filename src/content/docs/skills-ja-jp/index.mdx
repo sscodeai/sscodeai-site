@@ -1,0 +1,62 @@
+---
+title: skills-ja-JP
+description: Matt Pocock Agent Skills（sscodeai/skills）を日本語にローカライズした、Claude Code などの coding agent 向け skill 集。
+---
+
+# skills-ja-JP
+
+`skills-ja-JP` は、[`sscodeai/skills`](https://github.com/sscodeai/skills)（Matt Pocock Agent Skills）の **日本語ローカライズ版** です。日本語を母語とする開発者が skill の意図をそのまま読み取れ、日本語でやり取りする coding agent に自然な instruction を渡せるようにすることを目的としています。
+
+単に読みやすくするためだけのものではありません。日本語で agent と会話する場合、skill instruction も自然な日本語で書かれている方が、意図の取り違えや中途半端な日英混在を減らせます。
+
+## Links
+
+- Repository: [`sscodeai/skills-ja-JP`](https://github.com/sscodeai/skills-ja-JP)
+- Content source of truth: [`sscodeai/skills`](https://github.com/sscodeai/skills)
+- License: MIT（元の `LICENSE` は変更せず、非公式日本語訳 `LICENSE.ja-JP.md` を追加）
+- Install: `npx skills@latest add sscodeai/skills-ja-JP`
+
+## 収録 skills（20）
+
+公開 skill index は `.claude-plugin/plugin.json` と README の公開一覧で整合しています。
+
+| Category | 数 | User-invoked | Model-invoked |
+|---|---:|---|---|
+| Engineering | 15 | `ask-matt`, `grill-with-docs`, `triage`, `improve-codebase-architecture`, `setup-matt-pocock-skills`, `to-issues`, `to-prd`, `implement` | `prototype`, `diagnosing-bugs`, `research`, `tdd`, `domain-modeling`, `codebase-design`, `code-review` |
+| Productivity | 5 | `grill-me`, `handoff`, `teach`, `writing-great-skills` | `grilling` |
+
+**User-invoked** skills は `/grill-me` のようにユーザーが明示的に入力したときだけ使われ、役割は orchestration です。**Model-invoked** skills はユーザーが呼び出すことも、task に合う場合に agent が自動で使うこともでき、再利用可能な discipline を担います。User-invoked skill は model-invoked skills を呼び出せますが、別の user-invoked skill は呼び出しません。
+
+## 30 秒セットアップ
+
+```sh
+npx skills@latest add sscodeai/skills-ja-JP
+```
+
+使いたい skills と、インストール先の coding agents を選びます。初回は必ず `/setup-matt-pocock-skills` を選び、agent の中で実行して issue tracker、labels、docs ディレクトリを設定してください。
+
+## 翻訳方針
+
+方針は **skill-guided content localization** です。上流 `sscodeai/skills` を英語コンテンツの source of truth とし、自然言語の説明だけを日本語化します。
+
+保持するもの:
+
+- ディレクトリ名、skill name、frontmatter key
+- コマンド、コードブロック、パス、URL
+- package / tool / API identifiers、動作に関わる labels
+
+本リポジトリは上流を **コンテンツソースとして** 同期し、上流の Git 履歴や管理状態はそのまま同期しません。メンテナンス規則は [`.skills/translate-skill/SKILL.md`](https://github.com/sscodeai/skills-ja-JP/blob/main/.skills/translate-skill/SKILL.md) を参照してください。ユーザー向けの install 先は `sscodeai/skills-ja-JP` に統一されています。
+
+## 検証
+
+| Check | 内容 |
+|---|---|
+| `node scripts/check-translation.mjs` | 翻訳内容の整合を確認する |
+| `node scripts/audit-english.mjs` | 翻訳前の英文本文を検出する。今後の翻訳レビュー用キューであり、初期化時点では blocking check ではない |
+
+初期化は `sscodeai/skills@272f99b` を基準にしており、公開 skill index、install command、コードブロックや identifiers を保持する翻訳ルールの追加まで検証済みです（リリース記録: 2026-07-05、local commit `247525d`）。
+
+## Next
+
+- [Repository](https://github.com/sscodeai/skills-ja-JP) で skills 一覧と翻訳ルールを読む
+- [Projects](/projects/) で SSCodeAI の他の project を見る

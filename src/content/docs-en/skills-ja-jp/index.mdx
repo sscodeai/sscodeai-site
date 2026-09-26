@@ -1,0 +1,62 @@
+---
+title: skills-ja-JP
+description: A Japanese localization of the Matt Pocock Agent Skills (sscodeai/skills) for coding agents such as Claude Code.
+---
+
+# skills-ja-JP
+
+`skills-ja-JP` is the **Japanese localization** of [`sscodeai/skills`](https://github.com/sscodeai/skills) (Matt Pocock Agent Skills). It exists so that native Japanese developers can read a skill's intent directly, and so that coding agents operating in Japanese receive instructions written in natural Japanese.
+
+It is not just about readability. When you talk to an agent in Japanese, skill instructions written in natural Japanese reduce misread intent and half-translated mixture of English and Japanese.
+
+## Links
+
+- Repository: [`sscodeai/skills-ja-JP`](https://github.com/sscodeai/skills-ja-JP)
+- Content source of truth: [`sscodeai/skills`](https://github.com/sscodeai/skills)
+- License: MIT (the original `LICENSE` is unchanged; an unofficial translation `LICENSE.ja-JP.md` was added)
+- Install: `npx skills@latest add sscodeai/skills-ja-JP`
+
+## Included skills (20)
+
+The public skill index is consistent between `.claude-plugin/plugin.json` and the README list.
+
+| Category | Count | User-invoked | Model-invoked |
+|---|---:|---|---|
+| Engineering | 15 | `ask-matt`, `grill-with-docs`, `triage`, `improve-codebase-architecture`, `setup-matt-pocock-skills`, `to-issues`, `to-prd`, `implement` | `prototype`, `diagnosing-bugs`, `research`, `tdd`, `domain-modeling`, `codebase-design`, `code-review` |
+| Productivity | 5 | `grill-me`, `handoff`, `teach`, `writing-great-skills` | `grilling` |
+
+**User-invoked** skills run only when the user types them explicitly, such as `/grill-me`; their role is orchestration. **Model-invoked** skills can be called by the user or picked up automatically by the agent when a task fits, and they carry reusable discipline. A user-invoked skill may call model-invoked skills, but never another user-invoked skill.
+
+## 30-second setup
+
+```sh
+npx skills@latest add sscodeai/skills-ja-JP
+```
+
+Choose the skills you want and the coding agents to install into. On the first run, always select and execute `/setup-matt-pocock-skills` inside your agent to configure the issue tracker, labels, and docs directory.
+
+## Translation policy
+
+The policy is **skill-guided content localization**. The upstream `sscodeai/skills` remains the source of truth for English content; only natural-language explanations are localized.
+
+Preserved as-is:
+
+- directory names, skill names, frontmatter keys
+- commands, code blocks, paths, URLs
+- package / tool / API identifiers and behavior-relevant labels
+
+The repository syncs upstream as a **content source**, not upstream Git history or management state. Maintenance rules are documented in [`.skills/translate-skill/SKILL.md`](https://github.com/sscodeai/skills-ja-JP/blob/main/.skills/translate-skill/SKILL.md). The user-facing install path is unified on `sscodeai/skills-ja-JP`.
+
+## Validation
+
+| Check | What it does |
+|---|---|
+| `node scripts/check-translation.mjs` | Verifies translation consistency |
+| `node scripts/audit-english.mjs` | Detects untranslated English prose; a review queue for future translation work, not a blocking check at initialization |
+
+The initialization was based on `sscodeai/skills@272f99b`, and the public skill index, install command, and the translation rules that preserve code blocks and identifiers were all verified (release record: 2026-07-05, local commit `247525d`).
+
+## Next
+
+- Read the skill list and translation rules in the [repository](https://github.com/sscodeai/skills-ja-JP)
+- Browse other SSCodeAI projects in [Projects](/projects/)
