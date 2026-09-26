@@ -68,6 +68,78 @@ AI agent の recorded trajectory を採点し、失敗した step と root cause
 - held-out verifier tests を持つ Agent Eval framework で false completion を検出
 - [takumi](/takumi/) に quick start、architecture、core ideas、roadmap を整理
 
+### aiitg
+
+信頼できない文書が LLM に届く前に、隠された prompt injection を検出し、サニタイズし、信頼ラベルを付け、policy を適用する zero-trust input security layer です。
+
+- 6 形式（`docx` / `xlsx` / `xls` / `pdf` / `html` / `pptx`）× 7 detector で座標レベルの証拠を出力
+- `aiitg sanitize` / `aiitg trust` / `aiitg policy` で strip・redact、safe/caution/dangerous ラベル、allow/quarantine/human_approval/block を適用
+- MCP server（`aiitg-mcp`）と Claude Code `PreToolUse` hook で agent からも利用
+- [aiitg](/aiitg/) に pipeline、CLI、設計原則を整理
+
+### ai-skill-maker
+
+ラフな意図、リポジトリの証拠、反復ワークフローから、再利用可能な AI skill と instruction bundle を生成する meta-skill です。
+
+- functional / document / workflow / project maintainer skill と、`AGENTS.md`・`CLAUDE.md`・Cursor・Copilot 向け adapter bundle を生成
+- evidence labels、Trust Gate、release gate、9,000-token ceiling の file budget、protected core principles の fingerprint lock
+- Node.js 18+ の scripts のみで動作
+- [ai-skill-maker](/ai-skill-maker/) に renderer、workflow、安全モデルを整理
+
+### ai-project-skill-maker
+
+AI coding agent 向けに、長く使えるプロジェクト保守用 skill と instruction bundle を生成する meta-skill です。
+
+- genesis mode（新規プロジェクト）と repo mode（既存リポジトリ）の 2 mode
+- `observed_fact` / `declared_intent` / `recommended_standard` / `inferred_assumption` の evidence model
+- refresh 時に保持される `BEGIN USER RULES` ブロック
+- [ai-project-skill-maker](/ai-project-skill-maker/) に生成物、scripts、adapter を整理
+
+### skills-ja-JP
+
+Matt Pocock Agent Skills（`sscodeai/skills`）の日本語ローカライズ版で、日本語で agent と会話する際の意図の取り違えを減らします。
+
+- Engineering 15 + Productivity 5 の **20 skills** を収録
+- `npx skills@latest add sscodeai/skills-ja-JP` で install
+- ディレクトリ名、skill name、コマンド、パス、URL、identifiers を保持する翻訳方針
+- [skills-ja-JP](/skills-ja-jp/) に skill 一覧と翻訳・検証手順を整理
+
+### decision-workbench
+
+意思決定者の認知を「決める前」に広げる 6 段階の tool です。winner は選びません。
+
+- bias flag → 5 stance の独立 divergence → cross-exam → option map → constraints → human decision
+- hidden gold option set に対する eval は single model 26% → naive multi-agent 78% → decision-workbench 100%（12 問中 12 問）
+- mock mode は API key 不要（Python + FastAPI / React）
+- [decision-workbench](/decision-workbench/) に pipeline、API、eval を整理
+
+### decision-space-expansion
+
+`decision-workbench` から抽出した、Agent Skills 形式の 3 段階 decision methodology です。
+
+- Diverge（異種 model committee）→ Structure（consensus / true divergence / pseudo-divergence）→ Converge（制約を戻し、人間が決める）
+- コードも依存も不要な単一 `SKILL.md` で配布
+- Claude Code、Cursor / Windsurf、Codex、Gemini CLI などに導入可能
+- [decision-space-expansion](/decision-space-expansion/) に loop、pitfalls、install 先を整理
+
+### eli5
+
+任意のトピックを、大きな SVG 図と最小限のテキストで説明する picture-first explainer generator です。
+
+- 各 step は大きな inline SVG + 1 行 caption、3〜4 問の quiz、interactive glossary を同梱
+- 出力は外部リクエストゼロの単一 HTML（offline-safe）
+- `scripts/export.sh` で PDF / PNG に export
+- [eli5](/eli5/) に同梱物、使い方、設計思想を整理
+
+### fusion-cache
+
+exact → semantic → prefix-cache accounting を 1 つの middleware に統合した、LLM API 向け caching layer です。
+
+- L1 exact（canonicalized SHA-256 key）、L2 semantic（embedding + cosine）、L3 prefix accounting の 3 layer
+- benchmark は 97% hit rate、P95 0.7 ms、P50 3.2 s → 0.1 ms
+- OpenAI 互換 gateway（`fusion-cache serve`）、MCP server（`fusion-cache-mcp`）、Redis store を同梱
+- [fusion-cache](/fusion-cache/) に layer、benchmark、gateway を整理
+
 ## Site Architecture
 
 この site は Astro + Starlight で構成します。
@@ -85,4 +157,10 @@ AI agent の recorded trajectory を採点し、失敗した step と root cause
 - agent-safe secret 管理を見る: [keysmith](/keysmith/)
 - agent evaluation を見る: [Proctor](/proctor/)
 - verifiable agentic delivery を見る: [takumi](/takumi/)
+- document 入力の安全性を見る: [aiitg](/aiitg/)
+- skill 生成の meta-skill を見る: [ai-skill-maker](/ai-skill-maker/) / [ai-project-skill-maker](/ai-project-skill-maker/)
+- 日本語 skill pack を見る: [skills-ja-JP](/skills-ja-jp/)
+- 意思決定支援を見る: [decision-workbench](/decision-workbench/) / [decision-space-expansion](/decision-space-expansion/)
+- picture-first explainer を見る: [eli5](/eli5/)
+- LLM API caching を見る: [fusion-cache](/fusion-cache/)
 - Cloudflare に deploy する: [Cloudflare Deploy](/deploy/cloudflare/)

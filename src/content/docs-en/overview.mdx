@@ -65,6 +65,78 @@ A model-agnostic orchestration platform for verifiable agentic software delivery
 - Uses an Agent Eval framework with held-out verifier tests to catch false completion
 - See [takumi](/takumi/) for quick start, architecture, core ideas, and roadmap
 
+### aiitg
+
+A zero-trust input security layer that detects hidden prompt injection, sanitizes it, labels trustworthiness, and enforces policy before untrusted documents reach an LLM.
+
+- 6 formats (`docx` / `xlsx` / `xls` / `pdf` / `html` / `pptx`) × 7 detectors produce coordinate-level evidence
+- `aiitg sanitize` / `aiitg trust` / `aiitg policy` apply strip or redact, safe/caution/dangerous labels, and allow/quarantine/human_approval/block
+- Usable from agents through the MCP server (`aiitg-mcp`) and a Claude Code `PreToolUse` hook
+- See [aiitg](/en/aiitg/) for the pipeline, CLI, and design principles
+
+### ai-skill-maker
+
+A meta-skill that turns rough intent, repository evidence, and repeatable workflows into reusable AI skills and instruction bundles.
+
+- Generates functional / document / workflow / project maintainer skills plus adapter bundles for `AGENTS.md`, `CLAUDE.md`, Cursor, and Copilot
+- Evidence labels, a Trust Gate, release gates, a 9,000-token file budget, and a fingerprint lock on protected core principles
+- Runs on Node.js 18+ scripts alone
+- See [ai-skill-maker](/en/ai-skill-maker/) for renderers, workflow, and the safety model
+
+### ai-project-skill-maker
+
+A meta-skill that generates durable project maintainer skills and instruction bundles for AI coding agents.
+
+- Two modes: genesis mode for new projects and repo mode for existing repositories
+- An evidence model of `observed_fact` / `declared_intent` / `recommended_standard` / `inferred_assumption`
+- A `BEGIN USER RULES` block preserved across refreshes
+- See [ai-project-skill-maker](/en/ai-project-skill-maker/) for generated output, scripts, and adapters
+
+### skills-ja-JP
+
+The Japanese localization of the Matt Pocock Agent Skills (`sscodeai/skills`) that reduces misread intent when working with agents in Japanese.
+
+- **20 skills**: 15 engineering + 5 productivity
+- Install with `npx skills@latest add sscodeai/skills-ja-JP`
+- A translation policy that preserves directory names, skill names, commands, paths, URLs, and identifiers
+- See [skills-ja-JP](/en/skills-ja-jp/) for the skill list and translation / validation steps
+
+### decision-workbench
+
+A six-stage tool that expands the decision-maker's cognition before they decide. It never picks a winner.
+
+- Bias flag → independent 5-stance divergence → cross-exam → option map → constraints → human decision
+- Against a hidden gold option set, the eval reports single model 26% → naive multi-agent 78% → decision-workbench 100% (12 of 12)
+- Mock mode needs no API keys (Python + FastAPI / React)
+- See [decision-workbench](/en/decision-workbench/) for the pipeline, API, and eval
+
+### decision-space-expansion
+
+A three-stage decision methodology distilled from `decision-workbench`, shipped in the Agent Skills format.
+
+- Diverge (heterogeneous model committee) → Structure (consensus / true divergence / pseudo-divergence) → Converge (fold constraints back in, let a human decide)
+- Distributed as a single `SKILL.md` with no code and no dependencies
+- Installs into Claude Code, Cursor / Windsurf, Codex, Gemini CLI, and more
+- See [decision-space-expansion](/en/decision-space-expansion/) for the loop, pitfalls, and install locations
+
+### eli5
+
+A picture-first explainer generator that explains any topic with large SVG diagrams and minimal text.
+
+- Each step is one large inline SVG plus a one-line caption, with a 3–4 question quiz and an interactive glossary
+- The output is a single HTML file with zero external requests (offline-safe)
+- Export to PDF / PNG with `scripts/export.sh`
+- See [eli5](/en/eli5/) for repo contents, usage, and design philosophy
+
+### fusion-cache
+
+An LLM API caching layer that fuses exact → semantic → prefix-cache accounting into one middleware.
+
+- Three layers: L1 exact (canonicalized SHA-256 key), L2 semantic (embedding + cosine), L3 prefix accounting
+- Benchmark: 97% hit rate, P95 0.7 ms, P50 3.2 s → 0.1 ms
+- Ships an OpenAI-compatible gateway (`fusion-cache serve`), an MCP server (`fusion-cache-mcp`), and a Redis store
+- See [fusion-cache](/en/fusion-cache/) for the layers, benchmark, and gateway
+
 ## Site Architecture
 
 This site is built with Astro + Nimbus.
@@ -82,4 +154,10 @@ This site is built with Astro + Nimbus.
 - Agent-safe secret management: [keysmith](/keysmith/)
 - Agent evaluation: [Proctor](/proctor/)
 - Verifiable agentic delivery: [takumi](/takumi/)
+- Untrusted-document input security: [aiitg](/en/aiitg/)
+- Skill-generation meta-skills: [ai-skill-maker](/en/ai-skill-maker/) / [ai-project-skill-maker](/en/ai-project-skill-maker/)
+- Japanese skill pack: [skills-ja-JP](/en/skills-ja-jp/)
+- Decision support: [decision-workbench](/en/decision-workbench/) / [decision-space-expansion](/en/decision-space-expansion/)
+- Picture-first explainers: [eli5](/en/eli5/)
+- LLM API caching: [fusion-cache](/en/fusion-cache/)
 - Deploy to Cloudflare: [Cloudflare Deploy](/deploy/cloudflare/)
