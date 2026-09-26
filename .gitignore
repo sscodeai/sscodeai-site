@@ -7,6 +7,8 @@ dist/
 .env.local
 .env.*.local
 .env.production
+.env.pi
+.pi/
 .dev.vars
 .dev.vars.*
 *.log
