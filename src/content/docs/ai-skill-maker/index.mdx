@@ -1,0 +1,105 @@
+---
+title: ai-skill-maker
+description: ラフな意図、リポジトリの証拠、反復ワークフローから、証拠ラベル・検証 script・release gate を備えた再利用可能な AI skill を生成する meta-skill。
+---
+
+# ai-skill-maker
+
+`ai-skill-maker` は、再利用可能な AI skill と assistant instruction bundle を **設計・レンダリング・検証・refresh** するための **meta-skill** です。ラフな意図、反復可能な workflow、または既存の repository から、evidence labels、validation scripts、release gates、refresh-safe な user rule blocks を備えた構造化 skill folder を生成します。
+
+> 目的は長い prompt を作ることではありません。再利用でき、テストでき、refresh でき、信頼できる、小さく鋭い capability を作ることです。
+
+## Links
+
+- Repository: [`sscodeai/ai-skill-maker`](https://github.com/sscodeai/ai-skill-maker)
+- License: Apache-2.0
+- Runtime: Node.js 18+
+- Form: Codex / agent personal skill（runtime payload は `SKILL.md`、`agents/`、`references/`、`assets/`、`scripts/`）
+
+## 存在理由
+
+再利用可能な AI skill は draft するだけなら簡単ですが、信頼できる状態で保ち続けるのは難しいものです。良い skill には、狭く正確な trigger、明確な boundaries、実行できる workflow、検証可能な output、そして future agents が maintainer intent を消さずに refresh できる構造が必要です。`ai-skill-maker` はその構造を提供します。
+
+## 作成できるもの
+
+| Output | 向いている用途 | Primary Renderer |
+|---|---|---|
+| 🛠️ Functional skill | reports、PDF、spreadsheets、API tasks、browser workflows、data processing | `scripts/render-skill.mjs` |
+| 📄 Document/template skill | artifact structure、style、reusable assets、rendered fidelity | `scripts/render-skill.mjs` |
+| 🔁 Workflow automation skill | tools、CLIs、APIs、scripts による反復手順 | `scripts/render-skill.mjs` |
+| 🧭 Project maintainer skill | 特定 repository の長期的な AI maintainer guidance | `scripts/render-project-skill.mjs` |
+| 🔌 Adapter instruction bundle | `AGENTS.md`、`CLAUDE.md`、Cursor rules、Copilot instructions | `scripts/render-adapter.mjs` |
+
+### Design Pillars
+
+| Pillar | 意味 |
+|---|---|
+| 🎯 Root problem first | ユーザーの最初の言い方ではなく、繰り返し発生する本当の問題から設計する |
+| 🧾 Evidence discipline | 主張を `observed_fact`、`declared_intent`、`recommended_standard`、`inferred_assumption` に分ける |
+| 🛡️ Trust Gate | permissions、sensitive data、dependencies、environment、external actions、rollback を明示的に PASS/BLOCK review する |
+| 🧪 Evaluation skeleton | real evidence を記録するための trigger tests、output assertions、BLOCK/ALLOW release gates を同梱する |
+| 🔒 Refresh safety | user-authored rule blocks と protected core blocks を保持する |
+| 📏 File budget | active Markdown instruction files を 9,000-token ceiling に対して自動チェックする |
+
+## クイックスタート
+
+Node.js 18+ が必要です。
+
+```sh
+git clone https://github.com/sscodeai/ai-skill-maker.git
+cd ai-skill-maker
+node scripts/self-check.mjs
+```
+
+functional skill を生成して検証します。
+
+```sh
+node scripts/render-skill.mjs --init-config functional > config.json
+node scripts/validate-skill-config.mjs --input config.json --mode functional --strict
+node scripts/render-skill.mjs --input config.json --output ./generated-skill --mode functional --strict
+node scripts/validate-skill-output.mjs ./generated-skill
+node scripts/file-budget.mjs ./generated-skill
+```
+
+project maintainer skill を生成する場合は `draft-project-config.mjs` → `validate-config.mjs --mode repo` → `render-project-skill.mjs` → `validate-project-skill.mjs` の順に実行します。
+
+### Codex skill として install
+
+```sh
+node scripts/install-local-skill.mjs --dry-run   # 対象と置換挙動を書き込みなしで確認
+node scripts/install-local-skill.mjs             # sync を実行
+```
+
+## ワークフロー
+
+| Step | Gate | Output |
+|---|---|---|
+| 1 | 最小で有用な capability を特定する | One-sentence root problem |
+| 2 | permissions、secrets、dependencies、environment、external actions、rollback を確認する | Trust Gate PASS/BLOCK |
+| 3 | facts、intent、assumptions を分離する | Evidence-labeled config |
+| 4 | mode と adapter を選ぶ | Renderer choice |
+| 5 | render 前に config を検証する | Strict config check |
+| 6 | render または refresh する | Skill folder または instruction bundle |
+| 7 | output を検証する | structure、metadata、evidence labels、user-rule markers、file budget |
+| 8 | recorded evidence がある場合だけ release する | Trigger tests、output assertions、license attribution |
+
+## 検証とリリース
+
+```sh
+node scripts/self-check.mjs
+node scripts/check-core-principles.mjs
+node scripts/file-budget.mjs
+git diff --check
+```
+
+Generated skills には `references/evals/release-gate.md` が含まれ、gate は BLOCK/ALLOW のみです。Validators は required files、YAML metadata、evidence labels、file budget、user-rule preservation markers を確認できますが、skill が絶対に安全、完全、publish-ready であることを証明するものではありません。
+
+## 安全モデル
+
+Generated skills は、destructive operations、credential-sensitive work、remote publishing、force-pushing、visibility changes などの high-risk actions の前に、明示的な user permission を要求するべきです。maker 自身の protected core principles は `references/rules/protected-core-principles.md` にあり、`references/rules/core-principles.lock.json` によって fingerprint lock されています。
+
+## Next
+
+- [Repository](https://github.com/sscodeai/ai-skill-maker) で `SKILL.md` と renderer scripts を読む
+- [ai-project-skill-maker](/ai-project-skill-maker/) でプロジェクト専用 maintainer skill の生成を見る
+- [Projects](/projects/) で SSCodeAI の他の project を見る
