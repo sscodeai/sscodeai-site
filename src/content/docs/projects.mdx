@@ -79,3 +79,94 @@ Agent の memory、skill 管理、実行 trace を local-first に扱う toolkit
 
 - Repository: [`jnMetaCode/local-agent-toolkit`](https://github.com/jnMetaCode/local-agent-toolkit)
 - Components: `engram` (memory), `skillet` (skill manager), `tracelet` (run tracing)
+
+## aiitg
+
+信頼できない文書が LLM に届く前に、隠されたプロンプトインジェクションを検出・サニタイズし、信頼ラベルを付け、ポリシーを適用するゼロトラスト入力セキュリティ層です。
+
+- Repository: [`sscodeai/aiitg`](https://github.com/sscodeai/aiitg)
+- Docs: [aiitg](/aiitg/)
+- Runtime: Python 3.11+
+- Core: 6 形式 × 7 検出器、座標レベルの証拠、safe/caution/dangerous ラベル、allow/quarantine/human_approval/block ポリシー、監査ログと人間承認キュー
+- Interfaces: `aiitg` CLI、MCP server（`aiitg-mcp`）、Claude Code `PreToolUse` hook
+- Tests: 191 tests（`make test`）
+- License: MIT
+
+## ai-skill-maker
+
+ラフな意図、リポジトリの証拠、反復ワークフローから、evidence labels、validation scripts、release gates、refresh-safe な user rule blocks を備えた AI skill を生成する meta-skill です。
+
+- Repository: [`sscodeai/ai-skill-maker`](https://github.com/sscodeai/ai-skill-maker)
+- Docs: [ai-skill-maker](/ai-skill-maker/)
+- Runtime: Node.js 18+
+- Output: functional / document / workflow skill、project maintainer skill、`AGENTS.md`・`CLAUDE.md`・Cursor・Copilot 向け adapter bundle
+- Guardrails: Trust Gate、9,000-token file budget、SHA-256 fingerprint lock 付き protected core principles
+- License: Apache-2.0
+
+## ai-project-skill-maker
+
+AI コーディングエージェント向けに、長く使えるプロジェクト保守用 skill と instruction bundle を生成する meta-skill です。
+
+- Repository: [`sscodeai/ai-project-skill-maker`](https://github.com/sscodeai/ai-project-skill-maker)
+- Docs: [ai-project-skill-maker](/ai-project-skill-maker/)
+- Runtime: Node.js scripts + platform-neutral な Markdown templates
+- Modes: genesis mode（新規プロジェクト）/ repo mode（既存リポジトリ）
+- Evidence model: `observed_fact`、`declared_intent`、`recommended_standard`、`inferred_assumption`
+- License: Apache-2.0
+
+## skills-ja-JP
+
+Matt Pocock Agent Skills（`sscodeai/skills`）の日本語ローカライズ版です。日本語で agent と会話する際の意図の取り違えを減らします。
+
+- Repository: [`sscodeai/skills-ja-JP`](https://github.com/sscodeai/skills-ja-JP)
+- Docs: [skills-ja-JP](/skills-ja-jp/)
+- Content source of truth: [`sscodeai/skills`](https://github.com/sscodeai/skills)
+- Install: `npx skills@latest add sscodeai/skills-ja-JP`
+- Skills: 20（engineering 15 + productivity 5）
+- Policy: skill-guided content localization（ディレクトリ名、skill name、コマンド、パス、URL、identifiers は保持）
+- License: MIT
+
+## decision-workbench
+
+意思決定者の認知を「決める前」に広げる 6 段階の tool です。選択肢を発散させ、盲点を可視化し、判断材料を構造化したうえで決定を人間に返します。winner は選びません。
+
+- Repository: [`sscodeai/decision-workbench`](https://github.com/sscodeai/decision-workbench)
+- Docs: [decision-workbench](/decision-workbench/)
+- Runtime: Python (FastAPI) + React（mock mode は API key 不要）
+- Eval: hidden gold option set に対して single model 26% → naive multi-agent 78% → decision-workbench 100%（12 問中 12 問）
+- Tests: 25 tests（`uv run pytest`）
+- License: MIT
+
+## decision-space-expansion
+
+`decision-workbench` から抽出した、3 段階の decision methodology です。異種モデル committee で option space を広げ、発散を構造化し、制約を戻して人間が決めます。
+
+- Repository: [`sscodeai/decision-space-expansion`](https://github.com/sscodeai/decision-space-expansion)
+- Docs: [decision-space-expansion](/decision-space-expansion/)
+- Form: Agent Skills 形式の `SKILL.md`（コード不要、依存なし）
+- Loop: Diverge → Structure → Converge（human gate は必須）
+- Install: Claude Code、Cursor / Windsurf、Codex、Gemini CLI、任意の agent
+- License: MIT
+
+## eli5
+
+任意のトピックを、大きな SVG 図と最小限のテキストで説明する picture-first explainer generator です。外部リクエストゼロの単一 HTML を出力します。
+
+- Repository: [`sscodeai/eli5`](https://github.com/sscodeai/eli5)
+- Docs: [eli5](/eli5/)
+- Spec: `SKILL.md`（手順、language rules、HTML hard rules、validation checklist）
+- Output: 単一 HTML（interactive glossary、quiz、light/dark theme）+ PDF/PNG export
+- License: MIT
+
+## fusion-cache
+
+exact → semantic → prefix-cache accounting を 1 つの drop-in middleware に統合した、framework-agnostic な LLM API caching layer です。
+
+- Repository: [`sscodeai/fusion-cache`](https://github.com/sscodeai/fusion-cache)
+- Docs: [fusion-cache](/fusion-cache/)
+- Runtime: Python ≥ 3.10
+- Layers: L1 exact（canonicalized SHA-256 key）、L2 semantic（embedding + cosine）、L3 prefix accounting（DeepSeek ~31× discount）
+- Benchmark: 97% hit rate、P95 0.7 ms、P50 3.2 s → 0.1 ms
+- Extra: OpenAI 互換 gateway（`fusion-cache serve`）、MCP server（`fusion-cache-mcp`）、Redis store
+- License: Apache-2.0
+

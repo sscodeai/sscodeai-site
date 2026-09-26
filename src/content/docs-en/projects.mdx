@@ -77,3 +77,94 @@ A local-first toolkit for agent memory, skill management, and run tracing.
 
 - Repository: [`jnMetaCode/local-agent-toolkit`](https://github.com/jnMetaCode/local-agent-toolkit)
 - Components: `engram` (memory), `skillet` (skill manager), `tracelet` (run tracing)
+
+## aiitg
+
+A zero-trust input security layer that detects hidden prompt injection, sanitizes it, labels trustworthiness, and enforces policy before untrusted documents reach an LLM.
+
+- Repository: [`sscodeai/aiitg`](https://github.com/sscodeai/aiitg)
+- Docs: [aiitg](/aiitg/)
+- Runtime: Python 3.11+
+- Core: 6 formats × 7 detectors, coordinate-level evidence, safe/caution/dangerous labels, allow/quarantine/human_approval/block policy, audit log and human-approval queue
+- Interfaces: `aiitg` CLI, MCP server (`aiitg-mcp`), Claude Code `PreToolUse` hook
+- Tests: 191 tests (`make test`)
+- License: MIT
+
+## ai-skill-maker
+
+A meta-skill that turns rough intent, repository evidence, and repeatable workflows into AI skills with evidence labels, validation scripts, release gates, and refresh-safe user rule blocks.
+
+- Repository: [`sscodeai/ai-skill-maker`](https://github.com/sscodeai/ai-skill-maker)
+- Docs: [ai-skill-maker](/ai-skill-maker/)
+- Runtime: Node.js 18+
+- Output: functional / document / workflow skills, project maintainer skills, and adapter bundles for `AGENTS.md`, `CLAUDE.md`, Cursor, and Copilot
+- Guardrails: Trust Gate, 9,000-token file budget, protected core principles locked by SHA-256 fingerprint
+- License: Apache-2.0
+
+## ai-project-skill-maker
+
+A meta-skill that generates durable project maintainer skills and instruction bundles for AI coding agents.
+
+- Repository: [`sscodeai/ai-project-skill-maker`](https://github.com/sscodeai/ai-project-skill-maker)
+- Docs: [ai-project-skill-maker](/ai-project-skill-maker/)
+- Runtime: Node.js scripts plus platform-neutral Markdown templates
+- Modes: genesis mode (new projects) and repo mode (existing repositories)
+- Evidence model: `observed_fact`, `declared_intent`, `recommended_standard`, `inferred_assumption`
+- License: Apache-2.0
+
+## skills-ja-JP
+
+A Japanese localization of the Matt Pocock Agent Skills (`sscodeai/skills`) that reduces misread intent when working with coding agents in Japanese.
+
+- Repository: [`sscodeai/skills-ja-JP`](https://github.com/sscodeai/skills-ja-JP)
+- Docs: [skills-ja-JP](/skills-ja-jp/)
+- Content source of truth: [`sscodeai/skills`](https://github.com/sscodeai/skills)
+- Install: `npx skills@latest add sscodeai/skills-ja-JP`
+- Skills: 20 (15 engineering + 5 productivity)
+- Policy: skill-guided content localization (directory names, skill names, commands, paths, URLs, and identifiers are preserved)
+- License: MIT
+
+## decision-workbench
+
+A six-stage tool that expands the decision-maker's cognition before they decide: it diverges options, reveals blind spots, structures the map, and hands the decision back to a human. It never picks a winner.
+
+- Repository: [`sscodeai/decision-workbench`](https://github.com/sscodeai/decision-workbench)
+- Docs: [decision-workbench](/decision-workbench/)
+- Runtime: Python (FastAPI) + React (mock mode needs no API keys)
+- Eval: against a hidden gold option set, single model 26% → naive multi-agent 78% → decision-workbench 100% (12 of 12)
+- Tests: 25 tests (`uv run pytest`)
+- License: MIT
+
+## decision-space-expansion
+
+A three-stage decision methodology distilled from `decision-workbench`: widen the option space with a heterogeneous model committee, structure the divergence, fold constraints back in, and let a human decide.
+
+- Repository: [`sscodeai/decision-space-expansion`](https://github.com/sscodeai/decision-space-expansion)
+- Docs: [decision-space-expansion](/decision-space-expansion/)
+- Form: a `SKILL.md` in the Agent Skills format (no code, no dependencies)
+- Loop: Diverge → Structure → Converge (with a mandatory human gate)
+- Install: Claude Code, Cursor / Windsurf, Codex, Gemini CLI, or any Markdown-reading agent
+- License: MIT
+
+## eli5
+
+A picture-first explainer generator that explains any topic with large SVG diagrams and minimal text, producing a single self-contained HTML file with zero external requests.
+
+- Repository: [`sscodeai/eli5`](https://github.com/sscodeai/eli5)
+- Docs: [eli5](/eli5/)
+- Spec: `SKILL.md` (procedure, language rules, HTML hard rules, verification checklist)
+- Output: single HTML file (interactive glossary, quiz, light/dark theme) plus PDF/PNG export
+- License: MIT
+
+## fusion-cache
+
+A framework-agnostic LLM API caching layer that fuses exact, semantic, and prefix-cache accounting into one drop-in middleware.
+
+- Repository: [`sscodeai/fusion-cache`](https://github.com/sscodeai/fusion-cache)
+- Docs: [fusion-cache](/fusion-cache/)
+- Runtime: Python ≥ 3.10
+- Layers: L1 exact (canonicalized SHA-256 key), L2 semantic (embedding + cosine), L3 prefix accounting (DeepSeek ~31× discount)
+- Benchmark: 97% hit rate, P95 0.7 ms, P50 3.2 s → 0.1 ms
+- Extra: OpenAI-compatible gateway (`fusion-cache serve`), MCP server (`fusion-cache-mcp`), Redis store
+- License: Apache-2.0
+
