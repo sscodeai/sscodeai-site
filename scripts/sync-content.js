@@ -7,28 +7,16 @@ import { fileURLToPath } from 'url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const workspace = resolve(root, '..');
 const docsDir = resolve(root, 'src/content/docs');
-const agencyAgentDirs = new Set([
-  'academic',
-  'engineering',
-  'project-management',
-  'testing',
-  'product',
-  'marketing',
-  'paid-media',
-  'finance',
-  'game-development',
-  'gis',
-  'healthcare',
-  'hr',
-  'design',
-  'legal',
-  'sales',
-  'security',
-  'spatial-computing',
-  'support',
-  'supply-chain',
-  'specialized',
-]);
+// Division list comes from the source repo so adding a division there cannot
+// silently leave its agents out of the generated catalog.
+function agencyDivisions(repoRoot) {
+  const divisionsFile = resolve(repoRoot, 'divisions.json');
+  if (!existsSync(divisionsFile)) {
+    console.warn(`Skipping agency-agents-ja agent sync: missing ${divisionsFile}`);
+    return null;
+  }
+  return new Set(Object.keys(JSON.parse(readFileSync(divisionsFile, 'utf8')).divisions));
+}
 
 function ensureDir(path) {
   mkdirSync(path, { recursive: true });
@@ -134,6 +122,8 @@ ${table}
 function syncAgencyAgents() {
   const repoRoot = resolve(workspace, 'agency-agents-ja');
   if (!sourceExists(repoRoot, 'agency-agents-ja agent sync')) return;
+  const agencyAgentDirs = agencyDivisions(repoRoot);
+  if (!agencyAgentDirs) return;
   const files = listFiles(repoRoot, (file) => {
     if (!file.endsWith('.md')) return false;
     const rel = relative(repoRoot, file);
