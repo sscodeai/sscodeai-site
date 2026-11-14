@@ -43,8 +43,9 @@ A skill that reconstructs the object in a reference image as procedural TypeScri
 An MCP server and CLI that lets AI agents work with secrets without putting plaintext values into context.
 
 - Uses an age encrypted store, masked views, and handle-passing to avoid plaintext exposure
+- Uses session-bound, fail-closed redemption so an agent can use a credential it never sees
 - Helps detect and rotate secrets leaked in git history with `keysmith scan --rotate`
-- Supports stdio, HTTP/SSE, and Streamable HTTP transports
+- Supports stdio, HTTP/SSE, and Streamable HTTP transports, with optional built-in TLS
 - See [keysmith](/keysmith/) for install, MCP configuration, CLI usage, and the security model
 
 ### Proctor

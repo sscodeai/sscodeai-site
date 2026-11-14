@@ -87,8 +87,12 @@ Core primitives protect secrets, automation keeps leak detection and rotation ru
 | Transport | Use case |
 |---|---|
 | stdio | Standard local MCP client mode |
-| HTTP/SSE | Remote agent scenarios |
-| Streamable HTTP | MCP 2025-style single POST endpoint |
+| HTTP/SSE | Remote agent scenarios; use `-http-tls-cert` / `-http-tls-key` or a TLS reverse proxy off loopback |
+| Streamable HTTP | MCP 2025-style single POST endpoint; same TLS requirement |
+
+Plain `-http` is cleartext, including the bearer token when `-http-token` is
+used. A non-loopback listener must terminate TLS itself or sit behind a TLS
+reverse proxy.
 
 ## Next
 

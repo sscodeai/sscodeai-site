@@ -13,7 +13,7 @@ It is built in Go as a single static binary with no runtime dependencies.
 
 - Repository: [`sscodeai/keysmith`](https://github.com/sscodeai/keysmith)
 - Architecture: [keysmith Architecture](/keysmith/architecture/)
-- Skill instructions: [`skill/SKILL.md`](https://github.com/sscodeai/keysmith/blob/main/skill/SKILL.md)
+- Skill instructions: [`skill/SKILL.md`](https://github.com/sscodeai/keysmith/blob/HEAD/skill/SKILL.md)
 - License: Apache-2.0
 
 ## What it protects
@@ -92,6 +92,16 @@ keysmith -store ~/.keysmith -http :8080 -streamable
 # endpoint: http://localhost:8080/mcp
 ```
 
+Plain `-http` is cleartext. For a non-loopback listener, terminate TLS with
+`-http-tls-cert` / `-http-tls-key`, or put the listener behind a TLS reverse
+proxy:
+
+```sh
+keysmith -store ~/.keysmith -http 0.0.0.0:8080 \
+  -http-token "$(openssl rand -hex 16)" \
+  -http-tls-cert server.crt -http-tls-key server.key
+```
+
 ## CLI
 
 Alongside the MCP server, `keysmith` works as a standalone CLI sharing the same store.
@@ -112,7 +122,7 @@ keysmith scan [--rotate] [repo-dir]  # scan git history for leaked secrets
 |---|---|---|
 | `list` | All keys with masked values | Values never plaintext |
 | `get` | Single key, masked value | Values never plaintext |
-| `put` | Store a secret | Value is read from the `value_file` arg; temp file auto-removed |
+| `put` | Store a non-empty secret (max 1 MiB) | Value is read from the `value_file` arg; temp file auto-removed |
 | `rotate` | Generate and store a new strong random secret | Returns masked value only |
 | `delete` | Remove a key | - |
 
@@ -122,7 +132,8 @@ keysmith scan [--rotate] [repo-dir]  # scan git history for leaked secrets
 
 ## Vault backend
 
-Use HashiCorp Vault as a backend for dynamic short-TTL credentials.
+Use HashiCorp Vault as a backend for dynamic short-TTL credentials. Remote
+Vault addresses must use `https`; plain `http` is accepted only for loopback.
 
 ```sh
 export VAULT_TOKEN=<token>
@@ -140,11 +151,13 @@ keysmith -vault http://127.0.0.1:8200 vault-db-creds app-role
 
 ## Security model
 
-- **At rest**: age (X25519) encryption, atomic writes, and `0600` permissions.
-- **In context**: return masked values by default.
-- **In transcripts**: `put` does not take plaintext as an argument; it reads from a temporary file path.
+- **At rest**: `secrets.enc` is age (X25519) ciphertext with atomic writes and `0600` permissions. `key.txt` is the age private key and must stay `0600`; the `put` inbox is a transient plaintext file deleted after reading.
+- **In context**: return masked values by default; values of four characters or fewer are masked completely. Key names reject control and Unicode format characters.
+- **In transcripts**: `put` does not take plaintext as an argument; it reads a non-empty value from a file path, with a 1 MiB cap.
 - **Masking**: combines key names, known prefixes, high-entropy strings, and URL segment rules.
-- **Self-healing**: `keysmith scan --rotate` can detect secrets leaked in git history and rotate them.
+- **Redemption**: `keysmith run` substitutes session-bound tokens locally into the child environment. It fails closed, refuses tokens from different sessions in one command, and checks `--allow-host` / `--allow-path` / `--allow-header` bindings against `--target`.
+- **Self-healing**: `keysmith scan --rotate` detects secrets leaked in git history and rotates each key at most once per scan.
+- **HTTP transport**: plain `-http` is cleartext; use the TLS flags or a reverse proxy for non-loopback listeners.
 
 ## Scheduled leak scan
 

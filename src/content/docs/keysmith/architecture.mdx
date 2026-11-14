@@ -87,8 +87,10 @@ flowchart TB
 | Transport | 用途 |
 |---|---|
 | stdio | local MCP client から起動する標準モード |
-| HTTP/SSE | remote agent scenario |
-| Streamable HTTP | MCP 2025 style の single POST endpoint |
+| HTTP/SSE | remote agent scenario。非 loopback では `-http-tls-cert` / `-http-tls-key` か TLS リバースプロキシを使用 |
+| Streamable HTTP | MCP 2025 style の single POST endpoint。TLS 要件は同じ |
+
+`-http` 単体は平文で、`-http-token` 使用時の bearer token も暗号化されません。非 loopback の listener は自身で TLS を終端するか、TLS リバースプロキシの背後に置く必要があります。
 
 ## Next
 

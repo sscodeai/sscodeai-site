@@ -13,7 +13,7 @@ Go 製の単一静的バイナリで、ランタイム依存はありません�
 
 - Repository: [`sscodeai/keysmith`](https://github.com/sscodeai/keysmith)
 - Architecture: [keysmith Architecture](/keysmith/architecture/)
-- Skill instructions: [`skill/SKILL.md`](https://github.com/sscodeai/keysmith/blob/main/skill/SKILL.md)
+- Skill instructions: [`skill/SKILL.md`](https://github.com/sscodeai/keysmith/blob/HEAD/skill/SKILL.md)
 - License: Apache-2.0
 
 ## 何を守るか
@@ -92,6 +92,15 @@ keysmith -store ~/.keysmith -http :8080 -streamable
 # endpoint: http://localhost:8080/mcp
 ```
 
+`-http` 単体は平文です。非 loopback で公開する場合は、`-http-tls-cert` /
+`-http-tls-key` で TLS を終端するか、TLS リバースプロキシの背後に置いてください:
+
+```sh
+keysmith -store ~/.keysmith -http 0.0.0.0:8080 \
+  -http-token "$(openssl rand -hex 16)" \
+  -http-tls-cert server.crt -http-tls-key server.key
+```
+
 ## CLI
 
 MCP server に加えて、同じ store を使う standalone CLI としても動きます。
@@ -112,7 +121,7 @@ keysmith scan [--rotate] [repo-dir]  # git 履歴から漏えいしたシーク�
 |---|---|---|
 | `list` | すべてのキーとマスク済み値 | 値は平文にならない |
 | `get` | 1 つのキーのマスク済み値 | 値は平文にならない |
-| `put` | シークレットを保存 | 値は `value_file` 引数から読み、一時ファイルは自動削除 |
+| `put` | 空でないシークレットを保存 (最大 1 MiB) | 値は `value_file` 引数から読み、一時ファイルは自動削除 |
 | `rotate` | 強力なランダムシークレットを生成して保存 | マスク済み値のみを返す |
 | `delete` | キーを削除 | - |
 
@@ -122,7 +131,7 @@ keysmith scan [--rotate] [repo-dir]  # git 履歴から漏えいしたシーク�
 
 ## Vault backend
 
-HashiCorp Vault を backend として使うと、短 TTL の動的 credential を扱えます。
+HashiCorp Vault を backend として使うと、短 TTL の動的 credential を扱えます。リモートの Vault は `https` を使用してください。平文 `http` は loopback のみ許可されます。
 
 ```sh
 export VAULT_TOKEN=<token>
@@ -140,11 +149,13 @@ keysmith -vault http://127.0.0.1:8200 vault-db-creds app-role
 
 ## セキュリティモデル
 
-- **保存時**: age (X25519) で暗号化し、atomic write と `0600` 権限を使います。
-- **Context 内**: 原則としてマスク済み値だけを返します。
-- **Transcript 内**: `put` は平文を引数に取らず、一時ファイル path から読み取ります。
+- **保存時**: `secrets.enc` は age (X25519) の暗号文で、atomic write と `0600` 権限を使います。`key.txt` は age 秘密鍵であり `0600` を維持する必要があります。`put` の inbox は読み取り後に削除される一時的な平文ファイルです。
+- **Context 内**: 原則としてマスク済み値だけを返し、4 文字以下の値は完全にマスクします。キー名は制御文字と Unicode format 文字を拒否します。
+- **Transcript 内**: `put` は平文を引数に取らず、空でない値を一時ファイル path から読み取ります (最大 1 MiB)。
 - **Masking**: key name、既知 prefix、高 entropy 文字列、URL segment を組み合わせて検出します。
-- **Self-healing**: `keysmith scan --rotate` で git 履歴上の漏えいを検出し、必要に応じてローテーションできます。
+- **Redemption**: `keysmith run` は session-bound token をローカルで子プロセスの環境変数へ差し替えます。fail-closed で、1 コマンド内の異なる session の token を拒否し、`--allow-host` / `--allow-path` / `--allow-header` の binding を `--target` に対して検証します。
+- **Self-healing**: `keysmith scan --rotate` は git 履歴上の漏えいを検出し、同じ key を 1 回の scan で最大 1 回だけローテーションします。
+- **HTTP transport**: `-http` 単体は平文です。非 loopback では TLS flag かリバースプロキシを使用してください。
 
 ## 定期 leak scan
 

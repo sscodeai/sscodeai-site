@@ -46,8 +46,9 @@ AI coding agent に計画、TDD、systematic debugging、code review、完了前
 AI agent が secret value を直接 context に入れずに扱えるようにする MCP server + CLI です。
 
 - age encrypted store、masked views、handle-passing で secret の平文露出を避ける
+- session-bound で fail-closed な redemption により、agent は値を見ずに credential を使える
 - `keysmith scan --rotate` で git 履歴上の漏えい検出と rotation を補助
-- stdio、HTTP/SSE、Streamable HTTP transport に対応
+- stdio、HTTP/SSE、Streamable HTTP transport に対応。HTTP は組み込み TLS も利用可能
 - [keysmith](/keysmith/) に install、MCP 設定、CLI、security model を整理
 
 ### Proctor
